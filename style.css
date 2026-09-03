@@ -1,0 +1,86 @@
+/* One stylesheet, served from this origin. No fonts, scripts, analytics or
+   images are fetched from anywhere — a privacy policy that phones out to a
+   third party contradicts the page it is styling. */
+
+:root {
+  color-scheme: light dark;
+  --ink: #1a1d21;
+  --ink-soft: #52585f;
+  --page: #fdfdfc;
+  --rule: #e2e0dc;
+  --link: #1f6f5c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8e6e3;
+    --ink-soft: #a3a8ae;
+    --page: #16181a;
+    --rule: #2e3236;
+    --link: #6fc0a8;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 3rem 1.5rem 5rem;
+  background: var(--page);
+  color: var(--ink);
+  font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  max-width: 40em;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  margin: 2.5rem 0 0.75rem;
+}
+
+p, li { color: var(--ink); }
+
+ul { padding-left: 1.25rem; }
+
+li { margin-bottom: 0.5rem; }
+
+a { color: var(--link); }
+
+a:hover { text-decoration: none; }
+
+strong { font-weight: 600; }
+
+.effective,
+.footer {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.effective { margin: 0 0 2.5rem; }
+
+.footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.footer a + a { margin-left: 1.25rem; }
+
+/* The landing page only. */
+.lede {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin-bottom: 2.5rem;
+}
