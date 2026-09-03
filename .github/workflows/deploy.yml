@@ -1,0 +1,46 @@
+# Publishes this repo to Cloudflare Pages on every push to main.
+#
+# GitHub Pages already publishes the same commit at preflopapp.github.io, which
+# has to keep working: PaywallLinks.privacy ships that hostname inside the app
+# binary. This workflow keeps the Cloudflare copy — the one preflopapp.com
+# serves — from drifting behind it.
+#
+# Requires two repository secrets:
+#   CLOUDFLARE_API_TOKEN   scoped to Account > Cloudflare Pages > Edit
+#   CLOUDFLARE_ACCOUNT_ID
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pages direct upload publishes every file in the deployed directory,
+      # dotfiles included — deploying the repo root would put .github and
+      # .gitignore on the public site. Copy the site into a clean directory
+      # instead. Dropping every dot-entry is the whole rule: none of them
+      # (.git, .github, .gitignore, .nojekyll) mean anything to Cloudflare.
+      - name: Assemble deploy directory
+        run: |
+          mkdir -p _site
+          rsync -a --exclude='.*' --exclude='_site/' ./ _site/
+          find _site -type f | sort
+
+      - name: Deploy to Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _site --project-name preflopapp --branch main

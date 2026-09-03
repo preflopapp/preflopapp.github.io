@@ -1,0 +1,7 @@
+# Wrangler writes account metadata and deploy caches here. Never commit it,
+# and never let it reach a deployment: Pages publishes every file it uploads,
+# dotfiles included.
+.wrangler/
+
+# Staging directory the deploy assembles; see .github/workflows/deploy.yml
+_site/
