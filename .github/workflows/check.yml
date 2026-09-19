@@ -1,0 +1,17 @@
+name: Check site
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checker unit tests
+        run: python3 -m unittest scripts/test_check_site.py -v
+      - name: Check site
+        run: python3 scripts/check-site.py .

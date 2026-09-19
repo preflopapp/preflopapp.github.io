@@ -3,5 +3,8 @@
 # dotfiles included.
 .wrangler/
 
+# Python build artifacts
+__pycache__/
+
 # Staging directory the deploy assembles; see .github/workflows/deploy.yml
 _site/
