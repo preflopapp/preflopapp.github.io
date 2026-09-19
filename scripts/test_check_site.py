@@ -64,5 +64,10 @@ class CheckSiteTests(unittest.TestCase):
                           ".github/y.html": "Preflop Trainer", "_site/z.html": "Preflop Trainer"})
         self.assertEqual(cs.check_site(root), [])
 
+    def test_sitemap_urls_must_exist(self):
+        root = self.site({"index.html": page(),
+            "sitemap.xml": '<urlset><url><loc>https://preflopapp.com/gone/</loc></url></urlset>'})
+        self.assertTrue(any("sitemap" in e and "/gone/" in e for e in cs.check_site(root)))
+
 if __name__ == "__main__":
     unittest.main()

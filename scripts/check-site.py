@@ -68,6 +68,11 @@ def check_site(root):
                 absolute = ref if ref.startswith("/") else "/" + (page.parent.relative_to(root) / ref).as_posix()
                 if not _resolves(root, absolute):
                     errors.append(f"ERROR {rel}: broken link {ref}")
+    sitemap = root / "sitemap.xml"
+    if sitemap.is_file():
+        for loc in re.findall(r"<loc>https://preflopapp\.com(/[^<]*)</loc>", sitemap.read_text()):
+            if not _resolves(root, loc):
+                errors.append(f"ERROR sitemap.xml: {loc} does not exist")
     return errors
 
 def main(argv):
