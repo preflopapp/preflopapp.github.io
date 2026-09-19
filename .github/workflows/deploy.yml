@@ -26,16 +26,19 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - name: Check site
+        run: python3 scripts/check-site.py .
 
       # Pages direct upload publishes every file in the deployed directory,
       # dotfiles included — deploying the repo root would put .github and
       # .gitignore on the public site. Copy the site into a clean directory
       # instead. Dropping every dot-entry is the whole rule: none of them
       # (.git, .github, .gitignore, .nojekyll) mean anything to Cloudflare.
+      # scripts/ is excluded because the checker is a build tool, not content.
       - name: Assemble deploy directory
         run: |
           mkdir -p _site
-          rsync -a --exclude='.*' --exclude='_site/' ./ _site/
+          rsync -a --exclude='.*' --exclude='_site/' --exclude='scripts/' ./ _site/
           find _site -type f | sort
 
       - name: Deploy to Pages
@@ -44,3 +47,21 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy _site --project-name preflopapp --branch main
+
+      # Proves the deploy actually reached the domain, not just Cloudflare's
+      # API. Pages can take a few seconds to promote, hence the retries.
+      - name: Smoke-test the live site
+        run: |
+          sleep 15
+          status=0
+          for path in $(grep -oE '<loc>https://preflopapp\.com[^<]*' sitemap.xml | sed 's/<loc>https:\/\/preflopapp\.com//'); do
+            url="https://preflopapp.com$path"
+            if curl -fsS --retry 5 --retry-delay 6 --retry-all-errors --max-time 20 -o /tmp/page "$url" \
+               && grep -q "<title>" /tmp/page \
+               && ! grep -q "Preflop Trainer" /tmp/page; then
+              echo "ok   $url"
+            else
+              echo "::error::$url failed after deploy"; status=1
+            fi
+          done
+          exit $status
