@@ -2,6 +2,10 @@
    images are fetched from anywhere — a privacy policy that phones out to a
    third party contradicts the page it is styling. */
 
+html {
+  scroll-padding-top: 5rem;
+}
+
 :root {
   color-scheme: light dark;
   --ink: #1a1d21;
@@ -46,6 +50,7 @@ main {
 .page {
   max-width: 40em;
   margin: 0 auto;
+  padding-top: 2rem;
 }
 
 h1 {

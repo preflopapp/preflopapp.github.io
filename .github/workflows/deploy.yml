@@ -1,9 +1,10 @@
 # Publishes this repo to Cloudflare Pages on every push to main.
 #
-# GitHub Pages already publishes the same commit at preflopapp.github.io, which
-# has to keep working: PaywallLinks.privacy ships that hostname inside the app
-# binary. This workflow keeps the Cloudflare copy — the one preflopapp.com
-# serves — from drifting behind it.
+# The app now links preflopapp.com (see PaywallLinks.swift). GitHub Pages
+# still publishes the same commit at preflopapp.github.io as a continuity
+# mirror — nothing in the app depends on that hostname anymore, but the
+# copy is kept working. This workflow keeps the Cloudflare copy — the one
+# preflopapp.com serves — from drifting behind it.
 #
 # Requires two repository secrets:
 #   CLOUDFLARE_API_TOKEN   scoped to Account > Cloudflare Pages > Edit
@@ -49,18 +50,30 @@ jobs:
           command: pages deploy _site --project-name preflopapp --branch main
 
       # Proves the deploy actually reached the domain, not just Cloudflare's
-      # API. Pages can take a few seconds to promote, hence the retries.
+      # API, and that it's serving the NEW content — not just any 200.
+      # `curl --retry` only retries on HTTP-level failures, so it can't
+      # catch a 200 that serves the previous deploy's page (old titles
+      # contain "Preflop Trainer"). Edge propagation after the first
+      # deploy can lag, so each URL gets its own retry loop that keeps
+      # polling until the content check passes.
       - name: Smoke-test the live site
         run: |
-          sleep 15
           status=0
           for path in $(grep -oE '<loc>https://preflopapp\.com[^<]*' sitemap.xml | sed 's/<loc>https:\/\/preflopapp\.com//'); do
             url="https://preflopapp.com$path"
-            if curl -fsS --retry 5 --retry-delay 6 --retry-all-errors --max-time 20 -o /tmp/page "$url" \
-               && grep -q "<title>" /tmp/page \
-               && ! grep -q "Preflop Trainer" /tmp/page; then
-              echo "ok   $url"
-            else
+            ok=0
+            for attempt in 1 2 3 4 5 6; do
+              if curl -fsS --max-time 20 -o /tmp/page "$url" \
+                 && grep -q "<title>" /tmp/page \
+                 && ! grep -q "Preflop Trainer" /tmp/page; then
+                echo "ok   $url (attempt $attempt)"
+                ok=1
+                break
+              fi
+              echo "retrying $url (attempt $attempt failed)"
+              sleep 10
+            done
+            if [ "$ok" -ne 1 ]; then
               echo "::error::$url failed after deploy"; status=1
             fi
           done
