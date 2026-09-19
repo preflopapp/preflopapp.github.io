@@ -39,6 +39,11 @@ body {
 }
 
 main {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.page {
   max-width: 40em;
   margin: 0 auto;
 }
@@ -74,24 +79,12 @@ a:hover { text-decoration: none; }
 
 strong { font-weight: 600; }
 
-.effective,
-.footer {
+.effective {
   color: var(--ink-soft);
   font-size: 0.9rem;
 }
 
 .effective { margin: 0 0 2.5rem; }
-
-.footer {
-  max-width: 40em;
-  margin: 4rem auto 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-.footer a + a { margin-left: 1.25rem; }
-
-.footer .contact { margin-top: 0.75rem; }
 
 /* The legal pages only. */
 .lede {
@@ -100,13 +93,62 @@ strong { font-weight: 600; }
   margin-bottom: 2.5rem;
 }
 
-/* ---- Site header / brand mark ---- */
-
+/* ---- Header / nav ---- */
 .site-header {
-  max-width: 40em;
-  margin: 0 auto;
-  padding: 2.5rem 0 0;
+  position: sticky; top: 0; z-index: 10;
+  max-width: 64rem; margin: 0 auto; padding: 1rem 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
 }
+.site-nav { display: flex; gap: 1.1rem; font-size: 0.92rem; }
+.site-nav a { color: var(--ink-soft); text-decoration: none; }
+.site-nav a:hover { color: var(--ink); }
+@media (max-width: 30em) { .site-nav a[href="/#features"], .site-nav a[href="/#pricing"] { display: none; } }
+
+/* ---- Footer ---- */
+.site-footer {
+  max-width: 64rem; margin: 5rem auto 0; padding-top: 1.5rem;
+  border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.9rem;
+}
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+.site-footer .contact { margin: 0.75rem 0 0; }
+.site-footer .fineprint { margin: 0.5rem 0 0; font-size: 0.82rem; }
+
+/* ---- Landing ---- */
+.hero { display: grid; gap: 2.5rem; align-items: center; padding: 3rem 0 1rem; }
+@media (min-width: 52em) { .hero { grid-template-columns: 1.15fr 0.85fr; } }
+.hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); }
+.shot {
+  display: block; width: 100%; max-width: 300px; margin: 0 auto; height: auto;
+  border-radius: 36px; border: 6px solid var(--ink); background: var(--panel);
+  box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+.features { display: grid; gap: 4rem; margin-top: 4rem; }
+.feature-row { display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 52em) {
+  .feature-row { grid-template-columns: 1fr 1fr; }
+  .feature-row:nth-child(even) .feature-media { order: -1; }
+}
+.feature-row h2 { margin-top: 0; font-size: 1.5rem; }
+.band { max-width: 40em; margin: 5rem auto 0; }
+.btn {
+  display: inline-block; padding: 0.6rem 1.1rem; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none;
+}
+
+/* ---- FAQ ---- */
+.faq details { border-bottom: 1px solid var(--rule); padding: 0.9rem 0; }
+.faq summary { cursor: pointer; font-weight: 600; list-style-position: outside; }
+.faq details p { margin: 0.6rem 0 0; }
+
+/* ---- Press ---- */
+.press-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.press-grid img { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--rule); }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1.25rem; }
+.facts dt { color: var(--ink-soft); }
+.facts dd { margin: 0; }
 
 .brand {
   display: inline-flex;
@@ -133,14 +175,6 @@ strong { font-weight: 600; }
 
 /* ---- Landing page ---- */
 
-.hero {
-  padding: 3rem 0 0.5rem;
-}
-
-.hero h1 {
-  font-size: 2.4rem;
-}
-
 .hero .lede {
   margin-bottom: 1rem;
 }
@@ -159,8 +193,6 @@ strong { font-weight: 600; }
 @media (prefers-color-scheme: dark) {
   .hero-note { color: var(--accent); }
 }
-
-.feature h2 { margin-top: 3rem; }
 
 .spot-list li { margin-bottom: 0.4rem; }
 
