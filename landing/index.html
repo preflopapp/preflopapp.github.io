@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-nlO8NFLHFA9qfC/5BIgl1+tsMqkoYxYeW597jmDx9Ss='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-jwNpzySHXjCvQoQGC6H1UGIGSsTVncp2AlPkefweAKY='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="canonical" href="https://preflopapp.com/landing/">
 <meta property="og:title" content="Preflop — better decisions before the flop">
 <meta property="og:description" content="Try three real hands, then build your game with over 30,000 practice spots in Preflop for iPhone.">
@@ -325,8 +325,16 @@ nav.links a:hover{color:var(--ink)}
   transition:opacity .3s ease;
 }
 .seat.folded{opacity:.28}
+/* The fan is a sibling of the pod inside this wrapper, not a child of the pod.
+   It used to sit inside .pod at z-index:-1, which paints a child behind its
+   parent's background -- but only for as long as .pod is not a stacking
+   context. The action pop scale-animates the pod, and a transform makes it one
+   for those 360ms, trapping the fan inside and throwing the cards in front of
+   the plate. Ordered as siblings, 0 under 1, the plate is always on top; the
+   wrapper takes the pop so the cards still scale with it. */
+.pod-wrap{position:relative}
 .pod{
-  position:relative; text-align:center; line-height:1.2;
+  position:relative; z-index:1; text-align:center; line-height:1.2;
   padding:calc(6px * var(--s)) calc(8px * var(--s));
   border-radius:calc(var(--r-button) * var(--s));
   background:var(--panel);
@@ -348,7 +356,7 @@ nav.links a:hover{color:var(--ink)}
 .fan{
   position:absolute; left:50%; bottom:calc(26px * var(--s));
   transform:translateX(-50%); display:flex;
-  z-index:-1;                     /* the pod paints over the fan, as the ZStack does */
+  z-index:0;                      /* the pod paints over the fan, as the ZStack does */
 }
 .fan .back{
   width:calc(26px * var(--s)); height:calc(36px * var(--s));
@@ -1533,10 +1541,12 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
       const above = ay > 0.5;
       html += `<div class="seat${folded ? " folded" : ""}${acting ? " acting" : ""}" data-seat="${seat}" style="${at}">
         ${above ? `<div class="bet-slot above">${betHTML(spot, seat, "")}</div>` : ""}
-        <div class="pod">
+        <div class="pod-wrap">
           ${folded ? "" : `<div class="fan"><span class="back"></span><span class="back"></span></div>`}
-          <div class="name">${DISP[seat]}</div>
-          <div class="detail">${folded ? "folded" : "100bb"}</div>
+          <div class="pod">
+            <div class="name">${DISP[seat]}</div>
+            <div class="detail">${folded ? "folded" : "100bb"}</div>
+          </div>
         </div>
         ${above ? "" : `<div class="bet-slot below">${betHTML(spot, seat, "")}</div>`}
       </div>`;
@@ -1611,7 +1621,7 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     }
     const detail = el.querySelector(".detail");
     if (detail) detail.textContent = kind === "fold" ? "folded" : "100bb";
-    if (animate && kind !== "blind") motion(el.querySelector(".pod") || el.querySelector(".hero-badge"), [{scale:"1"},{scale:"1.18",offset:.4},{scale:"1"}], 360);
+    if (animate && kind !== "blind") motion(el.querySelector(".pod-wrap") || el.querySelector(".hero-badge"), [{scale:"1"},{scale:"1.18",offset:.4},{scale:"1"}], 360);
     const total = Object.values(tableState.chips).reduce((n, v) => n + Number(v), 0);
     // Folds and unchanged contributions leave the pot readout untouched.
     if (total !== Number(tableState.pot)) {
