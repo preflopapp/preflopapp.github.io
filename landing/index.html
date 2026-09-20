@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-RNJq+PvCygKJM6yxVpgOwMx3SLaUfYyNfbG13uCg3LM='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-nlO8NFLHFA9qfC/5BIgl1+tsMqkoYxYeW597jmDx9Ss='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="canonical" href="https://preflopapp.com/landing/">
 <meta property="og:title" content="Preflop — better decisions before the flop">
 <meta property="og:description" content="Try three real hands, then build your game with over 30,000 practice spots in Preflop for iPhone.">
@@ -545,7 +545,6 @@ nav.links a:hover{color:var(--ink)}
 #device .prac-head .title{font-size:calc(14.5px * var(--s))}
 .action-line{display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:calc(38px * var(--s)); padding-top:calc(8px * var(--s))}
 .action-line p{font-size:calc(12px * var(--s)); color:var(--ink-2)}
-#skipDeal{font-size:calc(11px * var(--s)); color:var(--accent); cursor:pointer; padding:8px 0; flex:none}
 .demo-controls{min-height:calc(150px * var(--s))}
 #device .decisions{padding-top:calc(8px * var(--s)); gap:calc(8px * var(--s))}
 #device .dbtn{height:calc(48px * var(--s));padding:calc(14px * var(--s)) 0; border-radius:calc(var(--r-button) * var(--s)); transition:opacity .2s,transform .2s,box-shadow .2s}
@@ -923,7 +922,7 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
 
         </div>
 
-        <div class="action-line"><p id="actionStatus" role="status" aria-live="polite">Dealing…</p><button type="button" id="skipDeal">Skip animation</button></div>
+        <div class="action-line"><p id="actionStatus" role="status" aria-live="polite">Dealing…</p></div>
         <div class="demo-controls">
           <div class="decisions" id="decisions" aria-label="Choose your action"></div>
           <div id="fbSlot" aria-live="polite" aria-atomic="true"></div>
@@ -1552,7 +1551,7 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
   const stage = $("#stage"), fbSlot = $("#fbSlot"), decisions = $("#decisions");
   const pracTitle = $("#pracTitle"), handCount = $("#handCount");
   const handDots = $("#handDots"), demoStatus = $("#demoStatus");
-  const actionStatus = $("#actionStatus"), skipDeal = $("#skipDeal");
+  const actionStatus = $("#actionStatus");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const pause = (ms) => new Promise(resolve => setTimeout(resolve, ms));
   let tableState;
@@ -1625,7 +1624,6 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     actionStatus.textContent = spot.spotType === "rfi" ? "You’re first to act. What’s your move?"
       : spot.spotType === "facing_open" ? "UTG raises to 3bb. Your move."
       : "BB 3-bets to 12bb. Your move.";
-    skipDeal.hidden = true;
     decisions.querySelectorAll("button").forEach(b => b.disabled = false);
   }
 
@@ -1634,12 +1632,9 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     state.run++;
     const spot = SPOTS[state.i];
     stage.getAnimations({subtree:true}).forEach(a => a.cancel());
-    const restoreFocus = document.activeElement === skipDeal;
     stage.innerHTML = renderTable(spot);
     finishDeal();
-    if (restoreFocus) decisions.querySelector("button").focus({preventScroll:true});
   }
-  skipDeal.addEventListener("click", skipAnimation);
   reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) skipAnimation(); });
 
   async function renderHand(focus = false) {
@@ -1654,8 +1649,6 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     stage.classList.add("dealing");
     stage.querySelectorAll(".fan,.hero-cards").forEach(el => el.style.visibility = "hidden");
     actionStatus.textContent = "Dealing the next hand…";
-    skipDeal.hidden = false;
-    if (focus) skipDeal.focus({preventScroll:true});
     if (reducedMotion.matches) { skipAnimation(); if (focus) decisions.querySelector("button").focus({preventScroll:true}); return; }
     for (const seat of spot.seatOrder) {
       if (run !== state.run) return;
@@ -1676,7 +1669,7 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     if (run !== state.run) return;
     finishDeal();
     motion($(".hero-cards",stage), [{transform:"rotateY(90deg)"},{transform:"rotateY(0)"}], 260);
-    if (focus && document.activeElement === skipDeal) decisions.querySelector("button").focus({preventScroll:true});
+    if (focus) decisions.querySelector("button").focus({preventScroll:true});
   }
 
   function choose(d) {
