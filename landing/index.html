@@ -581,6 +581,15 @@ nav.links a:hover{color:var(--ink)}
 .chart .grid{
   display:grid; grid-template-columns:repeat(13,minmax(0,1fr));
   gap:2px;                                  /* AppTheme.Spacing.hairline */
+  justify-content:center; container-type:inline-size;
+}
+/* Whole-pixel cells. At a fractional container width the 1fr tracks resolve to
+   fractional widths (30.883 next to 30.891) on fractional offsets, so each
+   column's gap rasterises at a different subpixel phase and the grid reads as
+   though it leans. Rounding the track down to a whole pixel makes the pitch
+   exactly cell+gap everywhere; justify-content centres the few px left over. */
+@supports (width: round(down, 10px, 1px)){
+  .chart .grid{ grid-template-columns:repeat(13, round(down, (100% - 24px)/13, 1px)); }
 }
 .chart .cell{
   position:relative; aspect-ratio:1; border-radius:2px; overflow:hidden;
@@ -589,8 +598,8 @@ nav.links a:hover{color:var(--ink)}
 .chart .band{height:100%; flex:none}
 .chart .cell em{
   position:absolute; inset:0; display:grid; place-items:center;
-  font-style:normal; font-size:clamp(6px,2vw,9px); font-weight:600;
-  letter-spacing:-.02em; color:rgba(0,0,0,.72);   /* dark ink on the fills */
+  font-style:normal; font-size:clamp(7px,2.75cqw,13px); font-weight:700;
+  letter-spacing:-.02em; color:rgba(0,0,0,.88);   /* dark ink on the fills */
 }
 .chart .cell.sel::after{
   content:""; position:absolute; inset:0; border-radius:2px;
