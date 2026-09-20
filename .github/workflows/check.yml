@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checker unit tests
-        run: python3 -m unittest scripts/test_check_site.py -v
+        run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Check site
         run: python3 scripts/check-site.py .

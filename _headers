@@ -5,3 +5,14 @@
 
 /assets/*
   Cache-Control: public, max-age=604800
+
+# The landing page enforces a hash-pinned CSP in its <head>. The site's
+# script-src 'none' header would otherwise block its interactive demo.
+# X-Frame-Options supplies the frame protection unavailable to meta CSP.
+/landing
+  ! Content-Security-Policy
+  X-Frame-Options: DENY
+
+/landing/*
+  ! Content-Security-Policy
+  X-Frame-Options: DENY

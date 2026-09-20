@@ -69,5 +69,25 @@ class CheckSiteTests(unittest.TestCase):
             "sitemap.xml": '<urlset><url><loc>https://preflopapp.com/gone/</loc></url></urlset>'})
         self.assertTrue(any("sitemap" in e and "/gone/" in e for e in cs.check_site(root)))
 
+
+class IndependentLandingTests(unittest.TestCase):
+    def test_landing_layout_exemption_keeps_metadata_and_link_checks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            (root / 'index.html').write_text(page())
+            (root / 'landing').mkdir()
+            landing = root / 'landing/index.html'
+            landing.write_text('<title>Demo</title><meta name="description" content="Demo">'
+                              '<link rel="canonical" href="https://preflopapp.com/landing/">')
+            self.assertEqual(cs.check_site(root), [])
+            landing.write_text('<title>Demo</title><a href="/missing/">Broken</a>')
+            errors = cs.check_site(root)
+            self.assertTrue(any('canonical' in e for e in errors))
+            self.assertTrue(any('description' in e for e in errors))
+            self.assertTrue(any('broken link' in e for e in errors))
+            (root / 'other').mkdir()
+            (root / 'other/index.html').write_text(landing.read_text())
+            self.assertTrue(any('other/index.html: missing shared:header' in e for e in cs.check_site(root)))
+
 if __name__ == "__main__":
     unittest.main()

@@ -9,6 +9,9 @@ import pathlib, re, sys
 from html.parser import HTMLParser
 
 SHARED = ("head", "header", "footer")
+# The playable landing page intentionally uses its own app-matched layout.
+# All metadata, link, asset, and banned-name checks still apply.
+INDEPENDENT_LAYOUTS = {"landing/index.html"}
 BANNED = ("Preflop Trainer",)
 SKIP_DIRS = {"scripts", "_site", "node_modules"}
 
@@ -57,7 +60,7 @@ def check_site(root):
         if not parser.title: errors.append(f"ERROR {rel}: missing <title>")
         if "description" not in parser.meta: errors.append(f"ERROR {rel}: missing meta description")
         if rel != "404.html" and "canonical" not in parser.meta: errors.append(f"ERROR {rel}: missing canonical link")
-        for n in SHARED:
+        for n in (() if rel in INDEPENDENT_LAYOUTS else SHARED):
             block = extract_block(text, n)
             if block is None: errors.append(f"ERROR {rel}: missing shared:{n} block")
             elif canon.get(n) is not None and block != canon[n]:
