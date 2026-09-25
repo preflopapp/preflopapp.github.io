@@ -145,6 +145,7 @@ strong { font-weight: 600; }
 
 /* ---- FAQ ---- */
 .faq details { border-bottom: 1px solid var(--rule); padding: 0.9rem 0; }
+.faq details:target summary { color: var(--link); }
 .faq summary { cursor: pointer; font-weight: 600; list-style-position: outside; }
 .faq details p { margin: 0.6rem 0 0; }
 
