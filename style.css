@@ -82,6 +82,40 @@ a { color: var(--link); }
 
 a:hover { text-decoration: none; }
 
+/* ---- Focus, skip link, motion ---- */
+
+/* One visible ring for every focusable thing, keyboard only. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 20;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus { top: 0.75rem; }
+
+h1, h2, h3 { text-wrap: balance; }
+
+p, li, dd { text-wrap: pretty; }
+
+a, summary { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 strong { font-weight: 600; }
 
 .effective {
@@ -147,11 +181,16 @@ strong { font-weight: 600; }
 .faq details { border-bottom: 1px solid var(--rule); padding: 0.9rem 0; }
 .faq details:target summary { color: var(--link); }
 .faq summary { cursor: pointer; font-weight: 600; list-style-position: outside; }
+.faq summary:hover { color: var(--link); }
 .faq details p { margin: 0.6rem 0 0; }
 
 /* ---- Press ---- */
 .press-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; margin: 1rem 0; }
 .press-grid img { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--rule); }
+.press-grid figure { margin: 0; }
+.press-grid img[src$=".svg"] { padding: 18%; background: var(--panel); }
+.press-grid a { display: block; }
+.press-grid figcaption { margin-top: 0.4rem; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.4; }
 .facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1.25rem; }
 .facts dt { color: var(--ink-soft); }
 .facts dd { margin: 0; }
