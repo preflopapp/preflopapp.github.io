@@ -37,9 +37,9 @@ Pushes to main run the existing Cloudflare Pages deployment and smoke checks.
   and results; the pricing comparison presents Free as daily practice and Pro
   as unlimited, targeted study with detailed accuracy and full history.
 
-## Social card (`assets/og.png`)
+## Social card (`assets/og-v2.png`)
 
-Every page's link preview uses `/assets/og.png` (1200×630). Its source is
+Every page's link preview uses `/assets/og-v2.png` (1200×630). Its source is
 `scripts/og-card.html`, which uses the site's Outfit fonts, the app's dark
 tokens and `assets/screens/explain.png`. After editing it, or after a
 screenshot or copy change it depends on, re-render and commit the PNG:
@@ -51,3 +51,13 @@ scripts/render-og.sh
 It needs Google Chrome (set `CHROME` to use another path). Keep the text in
 the left 630px so a square crop still reads, and keep claims in line with
 the free-tier numbers in `FreeTierConfig`.
+
+**Bump the file name when the card changes** (`og-v3.png`, and so on, in the
+shared head, the press kit and this script). `/assets/*` is served with a
+7-day `Cache-Control`, so Cloudflare keeps an overwritten file for up to a
+week. iMessage, Slack and social sites also cache previews by image URL.
+A new name refreshes all of them at once.
+
+`assets/og.png` is kept as a copy because `/landing/` still points at it:
+`import-landing.py` writes that URL. Move the importer to the current name
+the next time the landing page is re-imported.
