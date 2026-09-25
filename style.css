@@ -189,7 +189,12 @@ a {
   background: var(--panel);
   border: 1px solid var(--rule);
   border-radius: var(--r-panel);
+  grid-template-columns: max-content minmax(0, 1fr);
 }
+
+/* The support address is one unbreakable word; let it wrap on a 320pt
+   screen rather than push the tile past the edge. */
+:root .facts dd { overflow-wrap: anywhere; }
 
 :root .press-grid img { border-radius: var(--r-button); }
 
