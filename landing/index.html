@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-jwNpzySHXjCvQoQGC6H1UGIGSsTVncp2AlPkefweAKY='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-52YAAXq1PphnCeRwRC4ijhLm9Ma1c8mwvnHrJ9/efmA='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="canonical" href="https://preflopapp.com/landing/">
 <meta property="og:title" content="Preflop — better decisions before the flop">
 <meta property="og:description" content="Try three real hands, then build your game with over 30,000 practice spots in Preflop for iPhone.">
@@ -43,26 +43,13 @@
 .header-store .store-badges{width:120px;height:40px}
 .header-store .store-badges img{width:100%;height:auto}
 .header-store>span:last-child{font-size:9px;line-height:1;color:var(--ink-3)}
-.comparison-wrap{margin-top:30px;border:1px solid var(--border);border-radius:var(--r-panel);overflow:hidden}
-.comparison{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;line-height:1.5}
-.comparison caption{text-align:left;padding:20px;font-weight:600;font-size:18px;background:var(--panel)}
-.comparison th,.comparison td{text-align:left;vertical-align:top;padding:18px 20px;border-top:1px solid var(--border);overflow-wrap:anywhere}
-.comparison th{font-weight:600;color:var(--ink)}
-.comparison td{color:var(--ink-2)}
-.comparison th:first-child{width:34%}
-.comparison tr>:last-child{background:color-mix(in srgb,var(--accent) 7%,var(--bg))}
-.comparison thead th:last-child{color:var(--accent)}
-.price .plan-purpose{font-size:15px;color:var(--ink-2);line-height:1.6;margin:20px 0 24px}
-.price .plan-purpose strong{color:var(--ink);display:block;margin-bottom:6px}
+.price .plus{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:22px}
+.price .plus + ul{margin-top:12px}
 @media(max-width:560px){
  #device{height:calc(480px * var(--s) + 36px)}
  #device .quick-result{gap:6px}
  #device .result-copy p{font-size:11px}
  .header-store .store-badges{width:108px;height:36px}
- .comparison{font-size:12px}
- .comparison th,.comparison td{padding:14px 9px}
- .comparison th:first-child{width:32%}
- .comparison caption{padding:16px;font-size:16px}
 }
 </style>
 
@@ -785,22 +772,6 @@ nav.links a:hover{color:var(--ink)}
 .closing .lead{margin-inline:auto; text-align:center}
 .closing .cta-row{justify-content:center; margin-top:28px; display:flex; flex-wrap:wrap; gap:12px}
 
-/* Privacy band */
-.privacy{
-  display:grid; grid-template-columns:auto minmax(0,1fr); gap:20px; align-items:start;
-  padding:clamp(22px,3vw,30px); border-radius:var(--r-panel);
-  background:var(--panel); border:var(--hairline) solid var(--border);
-}
-.privacy .mark{
-  width:42px; height:42px; border-radius:var(--r-button);
-  background:color-mix(in srgb,var(--accent) 14%,transparent); color:var(--accent);
-  display:grid; place-items:center;
-}
-.privacy h3{font-size:20px; margin-bottom:8px}
-.privacy p{color:var(--ink-2); font-size:14.5px; line-height:1.6; max-width:64ch}
-.privacy p + p{margin-top:10px}
-.privacy .disclaim{color:var(--ink-3); font-size:13px}
-
 /* Footer */
 footer{border-top:var(--hairline) solid var(--border); padding-block:36px 44px}
 footer .wrap{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:center}
@@ -829,7 +800,6 @@ footer nav a:hover{color:var(--ink)}
 .under-demo{border-bottom:1px solid var(--border);padding-top:16px;padding-bottom:36px}
 .under-demo .fine{max-width:54ch;font-size:13.5px;color:var(--ink-2)}
 .hero-grid{gap:clamp(28px,6vw,80px)}
-.hero-copy .badge-pill{background:transparent}
 #features{padding-top:24px}
 .fdemo{min-width:0}
 .fdemo>.device{max-width:100%;box-shadow:none;border:1px solid var(--border);border-radius:var(--r-panel);width:100%;padding:22px}
@@ -855,7 +825,6 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
  #device .dbtn{min-height:44px;padding:10px 0}
  #device .dbtn .lab{font-size:15px}
  #device .centre-mark{display:none}
- .hero .badge-pill{font-size:10px}
  .fdemo>.device{padding:14px}
  .fdemo .fb{padding:14px}
  .fdemo .decisions{gap:6px}
@@ -921,9 +890,8 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
     <div class="wrap hero-grid">
 
       <div class="hero-copy">
-        <span class="badge-pill"><span class="dot"></span>Try 3 hands · No signup</span>
-        <h1 class="t-display">Better decisions.<br>Before the <span class="accent">flop.</span></h1>
-        <p class="sub t-body">Try three real poker decisions and see how your instincts stack up.</p>
+        <h1 class="t-display">Know your play before the <span class="accent">flop.</span></h1>
+        <p class="sub t-body">Play three hands from real 100bb charts, then see what the chart does and how close you were.</p>
       </div>
 
       <div class="device-col">
@@ -975,7 +943,7 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
       <div class="frow">
         <div class="fcopy">
           <p class="kicker t-label">Every hand, explained</p>
-          <h3 class="t-title">A reason, not a verdict.</h3>
+          <h3 class="t-title">Every answer comes<br class="nb"> with an explanation.</h3>
           <p class="t-body">See the recommended action and the reasoning behind it after every answer.
             Explore your hand’s frequency mix, then open the full range chart to see
             how it compares with the hands around it.</p>
@@ -1001,9 +969,9 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
         <div class="fcopy">
           <p class="kicker t-label">Find the leak</p>
           <h3 class="t-title">Know where to focus<br class="nb"> your next session.</h3>
-          <p class="t-body">Free tracks your overall accuracy as you build a daily habit. Pro goes deeper:
+          <p class="t-body">Free shows your overall accuracy. Pro breaks it down:
             see your results by seat and situation, choose a weak spot, and drill it
-            without a daily cap until the decisions feel more familiar.</p>
+            without a daily cap until it stops costing you.</p>
         </div>
         <div class="fdemo">
           <div class="leaks" id="leaks"></div>
@@ -1018,7 +986,7 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
       <div class="frow flip">
         <div class="fcopy">
           <p class="kicker t-label">Review every hand</p>
-          <h3 class="t-title">Nothing you played<br class="nb"> disappears.</h3>
+          <h3 class="t-title">Go back to any hand<br class="nb"> you’ve played.</h3>
           <p class="t-body">With Pro, your full history becomes a study tool: revisit the cards, position,
             action, and explanation for every hand. Filter to the decisions you missed
             and put them back on the table. In Free, explanations you’ve unlocked stay available.</p>
@@ -1032,48 +1000,38 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
   <!-- ── Pricing ──────────────────────────────────────────────────────── -->
   <section class="section" id="pricing">
     <div class="wrap">
-      <p class="kicker t-label">A daily habit. A deeper practice.</p>
-      <h2 class="sec t-title">Build your game with Free.<br>Focus your study with Pro.</h2>
-      <p class="lead t-body">Start with 50 hands, then practice 20 more every day, free forever.
-        When you want longer sessions and a clearer picture of where to improve, Pro gives
-        you the tools to turn your practice into a focused study routine.</p>
+      <p class="kicker t-label">Pricing</p>
+      <h2 class="sec t-title">Practice free every day,<br>or go unlimited with Pro.</h2>
+      <p class="lead t-body">Start with 50 hands, then get 20 more every day, free for good.
+        Pro removes the daily cap and shows you which spots to work on.</p>
 
       <div class="price-grid">
         <div class="price panel">
           <p class="tier t-label">Free</p>
           <p class="amt t-display">$0</p>
           <p class="alt">No account, no card, no expiry</p>
-          <p class="plan-purpose"><strong>Make better decisions a daily habit.</strong>
-            A useful session every day, with explanations to learn from and progress to keep
-            you coming back. Keep practicing for free for as long as you like.</p>
+          <ul>
+            <li><span class="m">✓</span><span><b>50 hands</b> to start, then <b>20 every day</b></span></li>
+            <li><span class="m">✓</span><span>An explanation after every hand, and the ones you’ve unlocked stay available</span></li>
+            <li><span class="m">✓</span><span>Streaks, XP, levels, badges, and category unlocks</span></li>
+            <li><span class="m">✓</span><span>Your overall accuracy</span></li>
+            <li><span class="m">✓</span><span>On-device practice, no account or ads</span></li>
+          </ul>
           <a class="btn btn-ghost" href="#demo">Try 3 hands</a>
         </div>
         <div class="price panel pro">
           <p class="tier t-label">Preflop Pro</p>
           <p class="amt t-display">$11.99<span class="per"> / month</span></p>
           <p class="alt">7-day free trial · or <b>$59.99 once</b>, yours for good</p>
-          <p class="plan-purpose"><strong>Know what to work on. Stay with it.</strong>
-            Find your weakest positions, drill them without a daily cap, and revisit every
-            decision. Pro connects your results to your next practice session.</p>
+          <p class="plus">Everything in Free, plus:</p>
+          <ul>
+            <li><span class="m">✓</span><span><b>Unlimited hands.</b> Keep going while a spot is fresh.</span></li>
+            <li><span class="m">✓</span><span><b>Accuracy by position,</b> so you can see where you’re strong and where to focus</span></li>
+            <li><span class="m">✓</span><span><b>Targeted drills.</b> Pick a position and work on it directly.</span></li>
+            <li><span class="m">✓</span><span><b>Full hand history.</b> Search past hands and return to your mistakes.</span></li>
+          </ul>
           <span class="btn btn-accent" style="cursor:default">Available at launch</span>
         </div>
-      </div>
-
-      <!-- Edit comparison rows here; shared benefits are intentionally visible in both plans. -->
-      <div class="comparison-wrap">
-        <table class="comparison">
-          <caption>Choose the practice that fits you</caption>
-          <thead><tr><th scope="col">Your practice</th><th scope="col">Free</th><th scope="col">Pro</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Hands to play</th><td>50 to start, then 20 every day</td><td><strong>Unlimited.</strong> Keep going while a spot is fresh.</td></tr>
-            <tr><th scope="row">Learn from each answer</th><td>Explanations for the hands you play; unlocked explanations stay available</td><td>The same explanations, with unlimited hands to explore</td></tr>
-            <tr><th scope="row">Build consistency</th><td>Streaks, XP, levels, badges, and category unlocks</td><td>Everything in Free</td></tr>
-            <tr><th scope="row">See your progress</th><td>Overall accuracy</td><td><strong>Accuracy by position.</strong> See where you’re strong and where to focus.</td></tr>
-            <tr><th scope="row">Focus your sessions</th><td>Build a habit with daily practice</td><td><strong>Targeted drills.</strong> Choose a position and work on it directly.</td></tr>
-            <tr><th scope="row">Review past decisions</th><td>Keep explanations you’ve unlocked</td><td><strong>Full hand history.</strong> Search past hands and return to mistakes.</td></tr>
-            <tr><th scope="row">Practice privately</th><td>On-device practice, no account or ads</td><td>On-device practice, no account or ads</td></tr>
-          </tbody>
-        </table>
       </div>
 
       <p class="price-fine">The free trial is on the monthly plan only — Apple does not offer trials
@@ -1083,30 +1041,10 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
     </div>
   </section>
 
-  <!-- ── Privacy ──────────────────────────────────────────────────────── -->
-  <section class="section" style="padding-top:0">
-    <div class="wrap">
-      <div class="privacy">
-        <span class="mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
-            <path d="M12 3.2 4.8 6v5.6c0 4.4 3 8.3 7.2 9.4 4.2-1.1 7.2-5 7.2-9.4V6L12 3.2Z"/>
-          </svg>
-        </span>
-        <div>
-          <h3 class="t-title-s">No account, no tracking</h3>
-          <p>There is no sign-up, and nothing you do leaves your device. No analytics, no ads,
-            no network calls at all. Your practice is yours.</p>
-          <p class="disclaim">This is a training app. There is no real money, no wagering, and
-            nothing to win.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
   <section class="section" id="faq" style="padding-top:0">
     <div class="wrap">
-      <p class="kicker t-label">Questions</p>
+      <p class="kicker t-label">FAQ</p>
       <h2 class="sec t-title">Before you download.</h2>
       <div class="faq">
         <details open>
@@ -1147,8 +1085,8 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
   <!-- ── Closing ──────────────────────────────────────────────────────── -->
   <section class="section closing">
     <div class="wrap">
-      <h2 class="t-title">One street. Every hand. Solved.</h2>
-      <p class="lead t-body">50 hands to start, then 20 a day, free forever — no account, no card.</p>
+      <h2 class="t-title">Play your first 50 hands free.</h2>
+      <p class="lead t-body">Then 20 more every day, with no account or card needed.</p>
       <div class="cta-row">
 
         <span class="store-preview">
@@ -1596,7 +1534,7 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     handCount.textContent = `${Math.min(state.i + 1, SPOTS.length)} / ${SPOTS.length}`;
     demoStatus.textContent = state.i < SPOTS.length
       ? `Hand ${state.i + 1} of 3 · ${SPOTS[state.i].context}`
-      : "Three hands. A taste of Preflop.";
+      : "That’s all three hands.";
   }
 
   function updateTable(action, animate = true) {
@@ -1736,12 +1674,12 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
     decisions.hidden = true;
     actionStatus.textContent = "Demo complete";
     const closing = kept === 3
-      ? {title: "Strong start. Keep your edge.", copy: "Three good decisions are just the beginning. Keep sharpening your instincts with over 30,000 spots to practice in Preflop."}
+      ? {title: "You matched the chart on all three.", copy: "Preflop has over 30,000 more spots like these, each with the full frequency mix and an explanation."}
       : kept === 2
-      ? {title: "Nearly there. Make it second nature.", copy: "Turn a good instinct into a consistent one. Practice over 30,000 spots in Preflop and learn from the decisions that trip you up."}
-      : {title: "Your next session starts here.", copy: "Every missed hand is a place to improve. Build your confidence with over 30,000 spots to practice in Preflop, with an explanation behind every answer."};
+      ? {title: "Two out of three.", copy: "Preflop tracks the spots you miss so you can drill them. There are over 30,000 to practice, each with an explanation."}
+      : {title: "These spots are hard.", copy: "Most players get them wrong. Preflop explains every answer and tracks which spots you miss, across over 30,000 hands."};
     fbSlot.innerHTML = `<div class="quick-score">
-      <div class="score-heading"><strong class="t-figure">${kept}<span> / 3</span></strong><span class="score-label">${kept === 3 ? "Nicely played" : "Practice pays off"}</span></div>
+      <div class="score-heading"><strong class="t-figure">${kept}<span> / 3</span></strong><span class="score-label">Your score</span></div>
       <h3>${closing.title}</h3>
       <p>${closing.copy}</p>
       <div class="score-actions">
