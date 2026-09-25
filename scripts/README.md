@@ -36,3 +36,18 @@ Pushes to main run the existing Cloudflare Pages deployment and smoke checks.
   the owner supplies a listing. The demo frame stays fixed through feedback
   and results; the pricing comparison presents Free as daily practice and Pro
   as unlimited, targeted study with detailed accuracy and full history.
+
+## Social card (`assets/og.png`)
+
+Every page's link preview uses `/assets/og.png` (1200×630). Its source is
+`scripts/og-card.html`, which uses the site's Outfit fonts, the app's dark
+tokens and `assets/screens/explain.png`. After editing it, or after a
+screenshot or copy change it depends on, re-render and commit the PNG:
+
+```sh
+scripts/render-og.sh
+```
+
+It needs Google Chrome (set `CHROME` to use another path). Keep the text in
+the left 630px so a square crop still reads, and keep claims in line with
+the free-tier numbers in `FreeTierConfig`.

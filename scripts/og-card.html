@@ -1,0 +1,63 @@
+<!doctype html>
+<!-- Source for /assets/og.png, the 1200×630 link-preview card every page
+     shares. Render with scripts/render-og.sh; see scripts/README.md.
+     Colours are AppTheme.swift's dark tokens and the type is the site's own
+     Outfit, so the card matches the site and the app. Kept out of the deploy
+     (scripts/ is excluded) and out of check-site.py. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>og card</title>
+<style>
+@font-face { font-family: Outfit; font-weight: 400; src: url("../assets/fonts/Outfit-Regular.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-weight: 500; src: url("../assets/fonts/Outfit-Medium.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-weight: 600; src: url("../assets/fonts/Outfit-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-weight: 700; src: url("../assets/fonts/Outfit-Bold.woff2") format("woff2"); }
+
+:root {
+  --bg: #0e0f14; --panel: #191a22; --rule: #2a2b33;
+  --ink: #ffffff; --ink-2: #9b9dab;
+  --accent: #f5b942; --bezel: #07080b;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1200px; height: 630px; overflow: hidden; }
+body {
+  font-family: Outfit, sans-serif; color: var(--ink);
+  background:
+    radial-gradient(640px 420px at 860px 300px, rgba(245, 185, 66, 0.13), transparent 70%) no-repeat,
+    var(--bg);
+  position: relative;
+}
+/* Everything that must survive a square crop stays in the left 630px. */
+.copy { position: absolute; left: 80px; top: 0; bottom: 0; width: 640px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand svg { width: 44px; height: 44px; fill: var(--accent); }
+.brand span { font-size: 34px; font-weight: 600; letter-spacing: -0.01em; }
+h1 { font-size: 66px; line-height: 1.04; font-weight: 700; letter-spacing: -0.035em; }
+h1 em { font-style: normal; color: var(--accent); }
+.meta { display: flex; gap: 12px; }
+.meta span {
+  font-size: 21px; font-weight: 500; color: var(--ink-2);
+  padding: 8px 18px; border-radius: 999px; border: 1px solid var(--rule); background: var(--panel);
+}
+.phone {
+  position: absolute; left: 846px; top: 52px; width: 272px;
+  border: 7px solid var(--bezel); border-radius: 42px; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 70px -20px rgba(0, 0, 0, 0.7);
+  transform: rotate(4deg); transform-origin: 50% 0;
+}
+.phone img { display: block; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+  <div class="copy">
+    <div class="brand">
+      <svg viewBox="0 0 96 96" aria-hidden="true"><rect x="0" y="0" width="28" height="28" rx="3"/><rect x="34" y="0" width="28" height="28" rx="3"/><rect x="68" y="0" width="28" height="28" rx="3"/><rect x="0" y="34" width="28" height="28" rx="3"/><rect x="34" y="34" width="28" height="28" rx="3"/><rect x="0" y="68" width="28" height="28" rx="3"/></svg>
+      <span>Preflop</span>
+    </div>
+    <h1>Every preflop decision, <em>explained.</em></h1>
+    <div class="meta"><span>For iPhone</span><span>50 hands free, then 20 a day</span></div>
+  </div>
+  <div class="phone"><img src="../assets/screens/explain.png" alt=""></div>
+</body>
+</html>
