@@ -3,7 +3,9 @@
 
 Fails on: an internal link or asset that does not exist, a shared block
 (head/header/footer) that differs from index.html's copy, a page missing its
-<title>/description/canonical, or the old product name.
+<title>/description/canonical, a canonical page whose og:title/og:description/
+og:url are missing or whose og:url is not its canonical, a page without exactly
+one <h1>, an <img> without alt/width/height, or the old product name.
 """
 import pathlib, re, sys
 from html.parser import HTMLParser
@@ -18,6 +20,7 @@ SKIP_DIRS = {"scripts", "_site", "node_modules"}
 class _Refs(HTMLParser):
     def __init__(self):
         super().__init__(); self.refs = []; self.meta = set(); self.title = False
+        self.canonical = None; self.og = {}; self.h1 = 0; self.bad_imgs = []
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         for key in ("href", "src"):
@@ -25,8 +28,14 @@ class _Refs(HTMLParser):
         if a.get("srcset"):
             self.refs += [part.strip().split()[0] for part in a["srcset"].split(",")]
         if tag == "title": self.title = True
+        if tag == "h1": self.h1 += 1
+        if tag == "img":
+            missing = [k for k in ("alt", "width", "height") if k not in a]
+            if missing: self.bad_imgs.append(f"{a.get('src')} (no {'/'.join(missing)})")
+        if tag == "meta" and (a.get("property") or "").startswith("og:"): self.og[a["property"]] = a.get("content") or ""
         if tag == "meta" and a.get("name") == "description" and a.get("content"): self.meta.add("description")
-        if tag == "link" and a.get("rel") == "canonical" and a.get("href"): self.meta.add("canonical")
+        if tag == "link" and a.get("rel") == "canonical" and a.get("href"):
+            self.meta.add("canonical"); self.canonical = a["href"]
 
 def html_pages(root):
     out = []
@@ -60,6 +69,14 @@ def check_site(root):
         if not parser.title: errors.append(f"ERROR {rel}: missing <title>")
         if "description" not in parser.meta: errors.append(f"ERROR {rel}: missing meta description")
         if rel != "404.html" and "canonical" not in parser.meta: errors.append(f"ERROR {rel}: missing canonical link")
+        # Link previews (iMessage, Slack, social) read these, not <title>.
+        if parser.canonical:
+            for prop in ("og:title", "og:description", "og:url"):
+                if not parser.og.get(prop): errors.append(f"ERROR {rel}: missing {prop}")
+            if parser.og.get("og:url") and parser.og["og:url"] != parser.canonical:
+                errors.append(f"ERROR {rel}: og:url {parser.og['og:url']} differs from canonical {parser.canonical}")
+        if parser.h1 != 1: errors.append(f"ERROR {rel}: {parser.h1} <h1> elements, expected 1")
+        for img in parser.bad_imgs: errors.append(f"ERROR {rel}: <img> {img}")
         for n in (() if rel in INDEPENDENT_LAYOUTS else SHARED):
             block = extract_block(text, n)
             if block is None: errors.append(f"ERROR {rel}: missing shared:{n} block")
