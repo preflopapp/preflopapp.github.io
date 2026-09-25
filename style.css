@@ -1,33 +1,52 @@
 /* One stylesheet, served from this origin. No fonts, scripts, analytics or
    images are fetched from anywhere — a privacy policy that phones out to a
-   third party contradicts the page it is styling. */
+   third party contradicts the page it is styling. Outfit is the app's own
+   typeface (AppFont.swift), subset to Latin and self-hosted under
+   /assets/fonts with its OFL licence. */
+
+@font-face { font-family: Outfit; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/Outfit-Regular.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-style: normal; font-weight: 500; font-display: swap; src: url("/assets/fonts/Outfit-Medium.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-style: normal; font-weight: 600; font-display: swap; src: url("/assets/fonts/Outfit-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-style: normal; font-weight: 700; font-display: swap; src: url("/assets/fonts/Outfit-Bold.woff2") format("woff2"); }
 
 html {
   scroll-padding-top: 5rem;
 }
 
 :root {
+  /* AppTheme.swift, light. accent-ink stays dark rather than the app's
+     white: white on this gold is 3.2:1, under AA for button text. Links use
+     the darker accentEdge for the same reason. */
   color-scheme: light dark;
-  --ink: #1a1d21;
-  --ink-soft: #52585f;
-  --page: #fdfdfc;
-  --panel: #f2f0ec;
-  --rule: #e2e0dc;
-  --link: #1f6f5c;
-  --accent: #b8790f;
-  --accent-ink: #1a1204;
+  --ink: #0b0b10;
+  --ink-soft: #51525e;
+  --page: #f4f4f7;
+  --panel: #ffffff;
+  --well: #e6e6ec;
+  --rule: rgba(0, 0, 0, 0.13);
+  --link: #7e5505;
+  --accent: #b87d08;
+  --accent-ink: #150f02;
+  --bezel: #07080b;
+  --glow: rgba(255, 241, 214, 0.9);
+  --r-panel: 20px;
+  --r-button: 16px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #e8e6e3;
-    --ink-soft: #a3a8ae;
-    --page: #16181a;
-    --panel: #1e2124;
-    --rule: #2e3236;
-    --link: #6fc0a8;
+    /* AppTheme.swift, dark — the app's default appearance. */
+    --ink: #ffffff;
+    --ink-soft: #9b9dab;
+    --page: #0e0f14;
+    --panel: #191a22;
+    --well: #24252f;
+    --rule: #2a2b33;
+    --link: #f5b942;
     --accent: #f5b942;
-    --accent-ink: #1a1204;
+    --accent-ink: #150f02;
+    --bezel: #07080b;
+    --glow: rgba(245, 185, 66, 0.11);
   }
 }
 
@@ -97,6 +116,82 @@ strong { font-weight: 600; }
   color: var(--ink-soft);
   margin-bottom: 2.5rem;
 }
+
+/* ---- App design language ----
+   Outfit, the app's surfaces and radii, gold links. The component
+   overrides are prefixed with :root so they win over the section rules
+   further down without reordering the file. */
+
+body {
+  font-family: Outfit, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17.5px;
+  font-weight: 400;
+  /* Warm light behind the hero, like the app's ambient backdrop, but
+     still: nothing here moves. */
+  background:
+    radial-gradient(56rem 30rem at 72% 10rem, var(--glow), transparent 70%) no-repeat,
+    var(--page);
+}
+
+h1 { font-weight: 700; letter-spacing: -0.03em; }
+h2, h3, .faq summary, .brand .wordmark { font-weight: 600; }
+strong { font-weight: 600; }
+
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+/* The header is capped at the content width; paint its frosted band out to
+   both edges so it never reads as a box floating over the backdrop. */
+:root .site-header {
+  background: none;
+  border-image: linear-gradient(color-mix(in srgb, var(--page) 86%, transparent), color-mix(in srgb, var(--page) 86%, transparent)) fill 0 / 0 / 0 100vmax;
+}
+
+:root .site-footer nav a { color: var(--ink-soft); text-decoration: none; }
+:root .site-footer nav a:hover { color: var(--ink); }
+
+:root .btn { border-radius: var(--r-button); padding: 0.7rem 1.2rem; }
+:root .btn:hover { filter: brightness(1.08); }
+
+:root .shot {
+  border-color: var(--bezel);
+  /* A hairline so the black bezel still has an edge on the dark page, and
+     a shadow that is always a shadow (the old one mixed from --ink, which
+     turned into a white halo in dark mode). */
+  box-shadow: 0 0 0 1px var(--rule), 0 24px 60px -24px rgba(0, 0, 0, 0.5);
+}
+
+:root .plan {
+  border-radius: var(--r-panel);
+  background: var(--panel);
+  padding: 1.5rem 1.6rem;
+}
+
+:root .plan-pro { border-color: var(--accent); }
+
+/* The FAQ as one tile group, the way the app lists its settings. */
+:root .faq details {
+  padding: 1rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-bottom-width: 0;
+}
+:root .faq details:first-of-type { border-radius: var(--r-panel) var(--r-panel) 0 0; }
+:root .faq details:last-of-type { border-bottom-width: 1px; border-radius: 0 0 var(--r-panel) var(--r-panel); }
+:root .faq summary { list-style-position: inside; }
+:root .faq details:target { box-shadow: inset 3px 0 0 var(--accent); }
+:root .faq h1 { margin-bottom: 1.5rem; }
+
+:root .facts {
+  padding: 1rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-panel);
+}
+
+:root .press-grid img { border-radius: var(--r-button); }
 
 /* ---- Header / nav ---- */
 .site-header {
