@@ -11,9 +11,10 @@ import pathlib, re, sys
 from html.parser import HTMLParser
 
 SHARED = ("head", "header", "footer")
-# The playable landing page intentionally uses its own app-matched layout.
+# The playable landing page and the shared-hand page (s/) intentionally use
+# their own app-matched layouts.
 # All metadata, link, asset, and banned-name checks still apply.
-INDEPENDENT_LAYOUTS = {"landing/index.html"}
+INDEPENDENT_LAYOUTS = {"landing/index.html", "s/index.html"}
 BANNED = ("Preflop Trainer",)
 SKIP_DIRS = {"scripts", "_site", "node_modules"}
 

@@ -16,3 +16,18 @@
 /landing/*
   ! Content-Security-Policy
   X-Frame-Options: DENY
+
+# Shared-hand page (/s/<spot id>): like the landing page, it enforces its own
+# hash-pinned CSP in its <head>, since it decodes the hand in a script.
+/s
+  ! Content-Security-Policy
+  X-Frame-Options: DENY
+
+/s/*
+  ! Content-Security-Policy
+  X-Frame-Options: DENY
+
+# Universal Links: iOS fetches this to let preflopapp.com/s/* open the app.
+# It has to be JSON, served without a redirect.
+/.well-known/apple-app-site-association
+  Content-Type: application/json

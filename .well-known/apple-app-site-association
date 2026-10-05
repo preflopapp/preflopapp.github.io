@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["AM9C8WPMAT.com.prefloptrainer.app", "AM9C8WPMAT.com.prefloptrainer.app.dev"],
+        "components": [
+          { "/": "/s/*", "comment": "A shared hand: opens it in the app" }
+        ]
+      }
+    ]
+  }
+}

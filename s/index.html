@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; font-src 'self'; style-src 'unsafe-inline'; script-src 'sha256-qjUncEK08ZLOnESIl/redVtPy2NGjs9Q2zRQefiklUE='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Your move? A preflop hand from Preflop</title>
+<meta name="description" content="A friend shared a preflop poker hand. Pick your action, then see what the charts do and what your friend picked.">
+<link rel="canonical" href="https://preflopapp.com/s/">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Your move? A preflop hand from Preflop">
+<meta property="og:description" content="A friend shared a preflop poker hand. Pick your action, then see what the charts do and what your friend picked.">
+<meta property="og:url" content="https://preflopapp.com/s/">
+<meta property="og:site_name" content="Preflop">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://preflopapp.com/assets/og-v2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Preflop, the iPhone app for practising preflop poker decisions">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e0f14">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<style>
+@font-face { font-family: Outfit; font-weight: 400; font-display: swap; src: url("/assets/fonts/Outfit-Regular.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-weight: 600; font-display: swap; src: url("/assets/fonts/Outfit-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: Outfit; font-weight: 700; font-display: swap; src: url("/assets/fonts/Outfit-Bold.woff2") format("woff2"); }
+/* The app's dark tokens (AppTheme), always dark: the hand is drawn the way the app draws it. */
+:root {
+  --page: #0e0f14; --panel: #191a22; --well: #24252f; --rule: #2a2b33;
+  --ink: #ffffff; --ink-soft: #9b9dab; --ink-faint: #787b8a;
+  --accent: #f5b942; --accent-ink: #150f02;
+  --fold: #e0574f; --call: #4f93e0; --raise: #3fbf7a; --allin: #a97be8;
+  --r-panel: 20px; --r-button: 16px; --r-card: 9px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--page); color: var(--ink); }
+body { font-family: Outfit, -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+main { max-width: 440px; margin: 0 auto; padding: 20px 16px 40px; }
+.brand { display: flex; align-items: center; gap: 8px; color: var(--ink); text-decoration: none; font-weight: 700; font-size: 17px; }
+.brand img { width: 20px; height: 20px; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; }
+.seat { background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 13px; padding: 4px 11px; border-radius: 999px; }
+.stakes { color: var(--ink-soft); font-size: 14px; }
+h1, .title { font-size: 30px; line-height: 1.15; font-weight: 700; margin: 18px 0 14px; letter-spacing: -0.01em; }
+.tile { background: var(--panel); border-radius: var(--r-panel); padding: 16px; }
+.hand { display: flex; align-items: center; gap: 20px; }
+.cards { display: flex; }
+.card { width: 64px; height: 92px; border-radius: var(--r-card); background: #f4f2ee; color: #16161a; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.card + .card { margin-left: -14px; transform: rotate(3deg); }
+.card:first-child { transform: rotate(-6deg); }
+.card .r { font-size: 30px; line-height: 1; }
+.card .s { font-size: 26px; line-height: 1; }
+.card.red { color: #c8352d; }
+.hand-name { font-size: 22px; font-weight: 700; }
+.facing { color: var(--ink-soft); font-size: 15px; margin-top: 3px; }
+.path { display: flex; align-items: flex-start; margin-top: 20px; }
+.node { width: 44px; flex: none; text-align: center; }
+.dot { width: 12px; height: 12px; border-radius: 50%; margin: 1px auto 0; border: 2px solid var(--ink-faint); }
+.dot.raised { background: var(--raise); border-color: var(--raise); }
+.dot.hero { width: 14px; height: 14px; margin-top: 0; background: var(--accent); border-color: var(--accent); }
+.link { flex: 1; height: 2px; background: rgba(120,123,138,.45); margin-top: 6px; }
+.link.hero { background: var(--accent); }
+.node .seat-name { font-size: 11px; font-weight: 600; margin-top: 6px; color: var(--ink-faint); }
+.node.raised .seat-name { color: var(--ink); }
+.node.hero .seat-name { color: var(--accent); }
+.node .sub { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+.actions { display: flex; gap: 8px; margin-top: 18px; }
+.actions button { flex: 1; min-height: 48px; border: 0; border-radius: var(--r-button); color: var(--ink); font: 600 15px Outfit, system-ui, sans-serif; cursor: pointer; position: relative; overflow: hidden; background: var(--c); }
+.actions button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actions.revealed button { background: linear-gradient(to right, var(--c) var(--f), var(--well) var(--f)); cursor: default; }
+.actions.revealed button.mine { box-shadow: inset 0 0 0 2px var(--ink); }
+.result { margin-top: 18px; }
+.result p { margin: 0 0 6px; font-size: 18px; font-weight: 600; line-height: 1.35; }
+.result .mine-line { color: var(--ink-soft); font-size: 15px; font-weight: 400; }
+.cta { margin-top: 26px; background: var(--panel); border-radius: var(--r-panel); padding: 18px; }
+.cta h2 { font-size: 18px; margin: 0 0 6px; }
+.cta p { color: var(--ink-soft); margin: 0 0 14px; font-size: 15px; line-height: 1.45; }
+.cta .soon { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 700; padding: 11px 16px; border-radius: var(--r-button); }
+.cta a { color: var(--accent); }
+footer { margin-top: 28px; color: var(--ink-faint); font-size: 13px; line-height: 1.5; }
+footer a { color: var(--ink-soft); }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="/"><img src="/assets/mark.svg" alt="" width="20" height="20">Preflop</a>
+
+  <section id="hand" hidden>
+    <div class="top"><span class="seat" id="seat"></span><span class="stakes" id="stakes"></span></div>
+    <h1 id="headline">Your move?</h1>
+    <div class="tile">
+      <div class="hand">
+        <div class="cards" id="cards"></div>
+        <div><div class="hand-name" id="hand-name"></div><div class="facing" id="facing"></div></div>
+      </div>
+      <div class="path" id="path" aria-label="The action before you"></div>
+    </div>
+    <div class="actions" id="actions" role="group" aria-label="Your action"></div>
+    <div class="result" id="result" aria-live="polite" hidden>
+      <p id="compare"></p>
+      <p class="mine-line" id="mine"></p>
+    </div>
+  </section>
+
+  <section id="broken" hidden>
+    <h2 class="title">This hand link is incomplete</h2>
+    <p class="facing">It may have been cut short when it was copied. Ask your friend to share it again.</p>
+  </section>
+
+  <section class="cta">
+    <h2>Practise spots like this</h2>
+    <p>Preflop deals you real preflop decisions and shows what the charts do, with the reasoning behind every answer. Free to start, no account.</p>
+    <span class="soon">Coming soon for iPhone</span>
+    <p style="margin:12px 0 0"><a href="/">More about Preflop</a></p>
+  </section>
+
+  <footer>A training tool, not real-money play. Nothing about this hand is sent anywhere: it lives in the link. <a href="/privacy/">Privacy</a></footer>
+</main>
+<script>
+(function () {
+  "use strict";
+  // Decodes the app's shared-hand payload (SharedSpotPayload in the iOS app, v1):
+  // version . table . stack . hero . spot type . cards . sequence . correct . freqs . buttons
+  var SEATS = { utg: "UTG", utg1: "UTG+1", lj: "LJ", hj: "HJ", co: "CO", btn: "BTN", sb: "SB", bb: "BB" };
+  var SPOKEN = { utg: "under the gun", utg1: "UTG+1", lj: "the lojack", hj: "the hijack", co: "the cutoff", btn: "the button", sb: "the small blind", bb: "the big blind" };
+  var TYPES = { o: "rfi", v: "facing_open", t: "facing_three_bet", j: "facing_all_in" };
+  var DEFAULT_BUTTONS = { rfi: ["fold", "call"], facing_open: ["fold", "call", "three_bet"], facing_three_bet: ["fold", "call", "four_bet"], facing_all_in: ["fold", "call"] };
+  var DECISIONS = { f: "fold", c: "call", "3": "three_bet", "4": "four_bet", a: "all_in" };
+  var ORDER = ["fold", "call", "three_bet", "four_bet", "all_in"];
+  var ACTIONS = { f: "fold", c: "call", r: "raise", a: "all_in" };
+  var RANKS = { "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, T: 10, J: 11, Q: 12, K: 13, A: 14 };
+  var SUITS = { s: "♠", h: "♥", d: "♦", c: "♣" };
+
+  function decode(p) {
+    var f = (p || "").split(".");
+    if (f.length !== 10 || f[0] !== "1") return null;
+    var table = { "6": "6-max", "8": "8-max" }[f[1]];
+    var stack = { "20": 20, "30": 30, "100": 100 }[f[2]];
+    var type = TYPES[f[4]];
+    if (!table || !stack || !SEATS[f[3]] || !type) return null;
+    if (f[5].length !== 4) return null;
+    var cards = [];
+    for (var i = 0; i < 4; i += 2) {
+      var r = f[5][i], s = f[5][i + 1];
+      if (!RANKS[r] || !SUITS[s]) return null;
+      cards.push({ rank: r, suit: s });
+    }
+    var seq = [];
+    if (f[6]) {
+      var items = f[6].split("_");
+      for (var k = 0; k < items.length; k++) {
+        var parts = items[k].split("-");
+        if ((parts.length !== 2 && parts.length !== 3) || !SEATS[parts[0]] || !ACTIONS[parts[1]]) return null;
+        var size = null;
+        if (parts.length === 3) { var t = parseInt(parts[2], 10); if (!(t > 0)) return null; size = t / 10; }
+        seq.push({ seat: parts[0], action: ACTIONS[parts[1]], size: size });
+      }
+    }
+    var correct = DECISIONS[f[7]];
+    if (!correct) return null;
+    var freqs = null;
+    if (f[8] !== "-") {
+      freqs = {};
+      var fs = f[8].split("_");
+      for (var m = 0; m < fs.length; m++) {
+        var fp = fs[m].split("-"), d = DECISIONS[fp[0]], pm = parseInt(fp[1], 10);
+        if (fp.length !== 2 || !d || !(pm >= 0 && pm <= 1000) || d in freqs) return null;
+        freqs[d] = pm / 1000;
+      }
+    }
+    var buttons = null;
+    if (f[9] !== "-") {
+      buttons = [];
+      for (var b = 0; b < f[9].length; b++) { var bd = DECISIONS[f[9][b]]; if (!bd) return null; buttons.push(bd); }
+    }
+    return { table: table, stack: stack, hero: f[3], type: type, cards: cards, seq: seq, correct: correct, freqs: freqs, buttons: buttons || DEFAULT_BUTTONS[type] };
+  }
+
+  // Grading, as AnswerResult.grade: on whole percents, the top action is
+  // correct, anything within 10 points of it or played 15%+ is close.
+  function pct(spot, d) { return spot.freqs ? Math.round((spot.freqs[d] || 0) * 100) : 0; }
+  function top(spot) {
+    if (!spot.freqs) return spot.correct;
+    var best = null;
+    ORDER.forEach(function (d) { if (d in spot.freqs && (best === null || spot.freqs[d] > spot.freqs[best])) best = d; });
+    return best || spot.correct;
+  }
+  function grade(spot, d) {
+    if (!spot.freqs) return d === spot.correct ? "correct" : "wrong";
+    var t = top(spot);
+    if (d === t) return "correct";
+    if (pct(spot, t) - pct(spot, d) <= 10 || pct(spot, d) >= 15) return "close";
+    return "wrong";
+  }
+  function counts(g) { return g !== "wrong"; }
+
+  function label(d, type) {
+    return { fold: "Fold", call: type === "rfi" ? "Raise" : "Call", three_bet: "3-Bet", four_bet: "4-Bet", all_in: "All-in" }[d];
+  }
+  function color(d, type) {
+    return { fold: "var(--fold)", call: type === "rfi" ? "var(--raise)" : "var(--call)", three_bet: "var(--raise)", four_bet: "var(--raise)", all_in: "var(--allin)" }[d];
+  }
+  function handName(cards) {
+    var a = cards[0], b = cards[1];
+    var hi = RANKS[a.rank] >= RANKS[b.rank] ? a : b, lo = hi === a ? b : a;
+    if (a.rank === b.rank) return a.rank + b.rank;
+    return hi.rank + lo.rank + (a.suit === b.suit ? "s" : "o");
+  }
+  function bb(n) { return (Math.round(n * 10) / 10) + "bb"; }
+  function facing(spot) {
+    var raise = null;
+    spot.seq.forEach(function (e) { if ((e.action === "raise" || e.action === "all_in") && e.seat !== spot.hero) raise = e; });
+    if (!raise) return "Folded to you";
+    if (raise.action === "all_in") return "vs a " + SEATS[raise.seat] + " jam";
+    var name = spot.type === "facing_three_bet" ? "3-bet" : "open";
+    return raise.size ? "vs a " + bb(raise.size) + " " + SEATS[raise.seat] + " " + name : "vs a " + SEATS[raise.seat] + " " + name;
+  }
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  function drawPath(spot, box) {
+    var nodes = [];
+    spot.seq.forEach(function (e) {
+      if (e.action === "fold") {
+        var last = nodes[nodes.length - 1];
+        if (last && last.kind === "fold") last.seats.push(e.seat); else nodes.push({ kind: "fold", seats: [e.seat] });
+      } else {
+        nodes.push({ kind: "raised", seat: e.seat, sub: e.action === "all_in" ? "all-in" : e.action === "call" ? "call" : (e.size ? bb(e.size) : "") });
+      }
+    });
+    nodes.push({ kind: "hero", seat: spot.hero });
+    nodes.forEach(function (n, i) {
+      if (i > 0) box.appendChild(el("div", "link" + (n.kind === "hero" ? " hero" : "")));
+      var node = el("div", "node " + n.kind);
+      node.appendChild(el("div", "dot " + (n.kind === "fold" ? "" : n.kind)));
+      var seat = n.kind === "fold" ? (n.seats.length === 1 ? SEATS[n.seats[0]] : n.seats.length + " seats") : SEATS[n.seat];
+      node.appendChild(el("div", "seat-name", seat));
+      node.appendChild(el("div", "sub", n.kind === "fold" ? "fold" : n.kind === "hero" ? "you" : n.sub));
+      box.appendChild(node);
+    });
+  }
+
+  // The same sentences as the app's SharedHandComparison.
+  function comparison(spot, yours, friends) {
+    var yg = grade(spot, yours);
+    if (!friends) return null;
+    var fg = grade(spot, friends);
+    var picks = yours === friends ? "You both picked " + label(friends, spot.type) + "." : "Your friend picked " + label(friends, spot.type) + ".";
+    var verdict;
+    if (yours === friends) verdict = counts(yg) ? "The charts agree." : "The charts don't.";
+    else if (counts(yg) && !counts(fg)) verdict = "The charts side with you.";
+    else if (!counts(yg) && counts(fg)) verdict = "The charts side with your friend.";
+    else if (!counts(yg) && !counts(fg)) verdict = "The charts play neither.";
+    else if (yg === "correct") verdict = "Both are played; yours is the main line.";
+    else if (fg === "correct") verdict = "Both are played; your friend's is the main line.";
+    else verdict = "The charts play both.";
+    return picks + " " + verdict;
+  }
+
+  var params = new URLSearchParams(location.search);
+  var spot = decode(params.get("p"));
+  var friends = DECISIONS[{ fold: "f", call: "c", three_bet: "3", four_bet: "4", all_in: "a" }[params.get("a")]] || null;
+  if (!spot) { document.getElementById("broken").hidden = false; return; }
+
+  document.getElementById("hand").hidden = false;
+  document.getElementById("seat").textContent = SEATS[spot.hero];
+  document.getElementById("stakes").textContent = spot.stack + "bb · " + spot.table;
+  var cardsBox = document.getElementById("cards");
+  spot.cards.forEach(function (c) {
+    var card = el("div", "card" + (c.suit === "h" || c.suit === "d" ? " red" : ""));
+    card.setAttribute("aria-hidden", "true");
+    card.appendChild(el("span", "r", c.rank));
+    card.appendChild(el("span", "s", SUITS[c.suit]));
+    cardsBox.appendChild(card);
+  });
+  var name = handName(spot.cards);
+  document.getElementById("hand-name").textContent = name;
+  document.getElementById("hand-name").setAttribute("aria-label", name + " from " + SPOKEN[spot.hero]);
+  document.getElementById("facing").textContent = facing(spot);
+  drawPath(spot, document.getElementById("path"));
+
+  var actions = document.getElementById("actions");
+  spot.buttons.forEach(function (d) {
+    var b = el("button", null, label(d, spot.type));
+    b.type = "button";
+    b.style.setProperty("--c", color(d, spot.type));
+    b.addEventListener("click", function () { answer(d); });
+    b.dataset.decision = d;
+    actions.appendChild(b);
+  });
+
+  function answer(yours) {
+    if (actions.classList.contains("revealed")) return;
+    actions.classList.add("revealed");
+    Array.prototype.forEach.call(actions.children, function (b) {
+      var d = b.dataset.decision, p = pct(spot, d);
+      b.style.setProperty("--f", p + "%");
+      if (spot.freqs) b.textContent = label(d, spot.type) + " " + p + "%";
+      if (d === yours) { b.classList.add("mine"); b.setAttribute("aria-pressed", "true"); }
+      b.disabled = true;
+    });
+    var t = top(spot);
+    document.getElementById("headline").textContent = "Charts: " + label(t, spot.type) + (spot.freqs ? " " + pct(spot, t) + "%" : "");
+    var line = comparison(spot, yours, friends);
+    var g = grade(spot, yours);
+    document.getElementById("compare").textContent = line || { correct: "That's the chart's main line.", close: "The chart plays that too.", wrong: "Not quite: the chart rarely does that." }[g];
+    document.getElementById("mine").textContent = "You picked " + label(yours, spot.type) + ".";
+    document.getElementById("result").hidden = false;
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# A shared hand's link, /s/<spot id>?p=…, is one static page that reads the
+# hand out of the link itself. The id in the path is for the app.
+/s/*  /s/index.html  200
