@@ -1,3 +1,8 @@
 # A shared hand's link, /s/<spot id>?p=…, is one static page that reads the
 # hand out of the link itself. The id in the path is for the app.
-/s/*  /s/index.html  200
+#
+# The target is /s/, not /s/index.html: Pages answers /s/index.html with a
+# 308 to /s/, and a rewrite to a redirect serves the 404 page instead.
+# :id matches one non-empty segment, so /s/ itself is left to the static
+# page and /s/a/b stays a 404.
+/s/:id  /s/  200
