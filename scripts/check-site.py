@@ -5,9 +5,10 @@ Fails on: an internal link or asset that does not exist, a shared block
 (head/header/footer) that differs from index.html's copy, a page missing its
 <title>/description/canonical, a canonical page whose og:title/og:description/
 og:url are missing or whose og:url is not its canonical, a page without exactly
-one <h1>, an <img> without alt/width/height, or the old product name.
+one <h1>, an <img> without alt/width/height, the old product name, or a price
+or free-tier number that disagrees with facts.json (see check_facts).
 """
-import pathlib, re, sys
+import json, pathlib, re, sys
 from html.parser import HTMLParser
 
 SHARED = ("head", "header", "footer")
@@ -57,6 +58,49 @@ def _resolves(root, ref):
     if path.endswith("/"): return (target / "index.html").is_file()
     return target.is_file() or (target / "index.html").is_file()
 
+# A dollar amount written on a page, and "20 hands a day" / "20 more every
+# day" / "20 free hands every day" and the like.
+PRICE = re.compile(r"\$(\d+\.\d\d)")
+DAILY = re.compile(r"\b(\d+) (?:more |new |free )?hands? (?:a day|every day|each day)", re.I)
+FACT = re.compile(r"<!-- fact:(\w+) -->(.*?)<!-- /fact -->", re.S)
+
+def check_facts(root, pages):
+    """Every price and daily-hand figure on the site against facts.json.
+
+    The site sold $11.99 a month and a $59.99 lifetime for days after the app
+    moved to other prices, because nothing tied the two together. facts.json is
+    that tie: the iOS repo checks it against the app's StoreKit configuration,
+    and this checks every page against it. A `<!-- fact:key -->` marker must
+    hold that fact's value exactly; any other dollar amount must be one of the
+    plan prices; any "N hands a day" must be the daily free figure.
+    """
+    errors = []
+    path = root / "facts.json"
+    if not path.is_file():
+        return [f"ERROR facts.json: missing"]
+    facts = json.loads(path.read_text())
+    values = {**facts["prices"], "annualPerMonth": facts["annualPerMonth"],
+              "dailyFreeHands": str(facts["dailyFreeHands"]),
+              "freeHistoryHands": str(facts["freeHistoryHands"])}
+    # The plan prices, and annual as a monthly figure ("about $3.33 a month").
+    prices = set(facts["prices"].values()) | {facts["annualPerMonth"]}
+    for page in pages:
+        rel = page.relative_to(root).as_posix()
+        # Inline images and fonts are base64; nothing in them is a claim.
+        text = re.sub(r"data:[\w/+.-]+;base64,[A-Za-z0-9+/=]+", "", page.read_text())
+        for key, value in FACT.findall(text):
+            if key not in values:
+                errors.append(f"ERROR {rel}: unknown fact '{key}'")
+            elif value.strip() != values[key]:
+                errors.append(f"ERROR {rel}: fact {key} says {value.strip()}, facts.json says {values[key]}")
+        for amount in PRICE.findall(text):
+            if amount not in prices:
+                errors.append(f"ERROR {rel}: price ${amount} is not a plan price in facts.json")
+        for count in DAILY.findall(text):
+            if count != values["dailyFreeHands"]:
+                errors.append(f"ERROR {rel}: '{count} hands a day' but facts.json says {values['dailyFreeHands']}")
+    return errors
+
 def check_site(root):
     root = pathlib.Path(root); errors = []
     pages = html_pages(root)
@@ -89,6 +133,7 @@ def check_site(root):
                 absolute = ref if ref.startswith("/") else "/" + (page.parent.relative_to(root) / ref).as_posix()
                 if not _resolves(root, absolute):
                     errors.append(f"ERROR {rel}: broken link {ref}")
+    errors += check_facts(root, pages)
     sitemap = root / "sitemap.xml"
     if sitemap.is_file():
         for loc in re.findall(r"<loc>https://preflopapp\.com(/[^<]*)</loc>", sitemap.read_text()):
