@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-52YAAXq1PphnCeRwRC4ijhLm9Ma1c8mwvnHrJ9/efmA='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src data:; style-src 'unsafe-inline'; script-src 'sha256-RY5eJwx6LMmgzF4M4sLBKENJppIq1GaDPIZTX2d4Dfs='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="canonical" href="https://preflopapp.com/landing/">
 <meta property="og:title" content="Preflop — better decisions before the flop">
 <meta property="og:description" content="Try three real hands, then build your game with over 30,000 practice spots in Preflop for iPhone.">
@@ -969,9 +969,8 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
         <div class="fcopy">
           <p class="kicker t-label">Find the leak</p>
           <h3 class="t-title">Know where to focus<br class="nb"> your next session.</h3>
-          <p class="t-body">Free shows your overall accuracy. Pro breaks it down:
-            see your results by seat and situation, choose a weak spot, and drill it
-            without a daily cap until it stops costing you.</p>
+          <p class="t-body">With Pro, see your results by seat and situation, choose a
+            weak spot, and drill it without a daily cap until it stops costing you.</p>
         </div>
         <div class="fdemo">
           <div class="leaks" id="leaks"></div>
@@ -989,7 +988,7 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
           <h3 class="t-title">Go back to any hand<br class="nb"> you’ve played.</h3>
           <p class="t-body">With Pro, your full history becomes a study tool: revisit the cards, position,
             action, and explanation for every hand. Filter to the decisions you missed
-            and put them back on the table. In Free, explanations you’ve unlocked stay available.</p>
+            and put them back on the table. In Free, your latest hands stay reviewable.</p>
         </div>
         <div class="fdemo"><div class="hist" id="hist"></div></div>
       </div>
@@ -1027,7 +1026,9 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
             <li><span class="m">✓</span><span><b>Unlimited hands.</b> Keep going while a spot is fresh.</span></li>
             <li><span class="m">✓</span><span><b>Your stats,</b> by situation and by seat, with your leaks named</span></li>
             <li><span class="m">✓</span><span><b>Practice Filters.</b> Drill any situation, seat, stack depth or table size.</span></li>
+            <li><span class="m">✓</span><span><b>Your dashboard.</b> Accuracy and its trend, the spot to fix next, the hands to revisit.</span></li>
             <li><span class="m">✓</span><span><b>Full hand history.</b> Search past hands and return to your mistakes.</span></li>
+            <li><span class="m">✓</span><span><b>A daily goal</b> you set yourself.</span></li>
           </ul>
           <span class="btn btn-accent" style="cursor:default">Available at launch</span>
         </div>
@@ -1069,7 +1070,7 @@ html{scroll-padding-top:80px;scroll-behavior:smooth}
           <p class="a">20 hands every day, forever — no account and no card — with the answer, the
             chart’s mix and the reason after every hand. Your streak, XP, levels and badges are free
             too. Pro adds unlimited hands, your stats by situation and seat with your leaks named,
-            Practice Filters to drill any spot, and your full hand history.</p>
+            your dashboard, Practice Filters to drill any spot, your full hand history and a daily goal.</p>
         </details>
         <details>
           <summary>I already use a solver. Is this for me?</summary>
@@ -1685,7 +1686,7 @@ const RANGE_ID = "HJ vs UTG open · 100bb · 6-max";
         <a class="next" href="#features">Explore Preflop <span aria-hidden="true">→</span></a>
         <button class="replay" id="again" type="button">Play again <span aria-hidden="true">↻</span></button>
       </div>
-      <p class="score-availability">Coming soon for iPhone · 50 free hands to start</p>
+      <p class="score-availability">Coming soon for iPhone · 20 free hands every day</p>
     </div>`;
     $("#again").addEventListener("click", () => {state.i=0;state.answers=[];renderHand(true);});
     $(".score-actions .next",fbSlot).focus({preventScroll:true});
