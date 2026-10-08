@@ -1,0 +1,16 @@
+{
+  "_about": "The app's prices and free-tier numbers, as the site states them. The iOS repo's scripts/check_site_facts.py compares this file (as served at https://preflopapp.com/facts.json) against Preflop.storekit and FreeTierConfig, and scripts/check-site.py here fails any page whose numbers disagree with it. Change a price or a free-tier number in the app, then here, then in the pages; the two checks catch whichever was forgotten.",
+  "prices": {
+    "monthly": "7.99",
+    "annual": "39.99",
+    "lifetime": "59.99"
+  },
+  "trial": {
+    "plan": "annual",
+    "days": 7
+  },
+  "dailyFreeHands": 20,
+  "freeHistoryHands": 5,
+  "annualPerMonth": "3.33",
+  "lifetimeInMonthsOfAnnual": 18
+}

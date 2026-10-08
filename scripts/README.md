@@ -27,7 +27,7 @@ Pushes to main run the existing Cloudflare Pages deployment and smoke checks.
 - The owner plans to hand-edit the copy later. Keep meaningful supporting
   paragraphs, with each heading and paragraph together in `landing/index.html`.
 - The current local update compacts the mobile demo and distinguishes the
-  three-hand website demo from the app's 50 starting hands and 20 daily hands.
+  three-hand website demo from the app's 20 daily hands.
   Example grading is outside this update's scope.
 - These HTML/CSS edits were made in this repository. Before importing a fresh
   iOS landing build, carry them into `web/landing/src/` to avoid overwriting them.
@@ -61,3 +61,9 @@ A new name refreshes all of them at once.
 `assets/og.png` is kept as a copy because `/landing/` still points at it:
 `import-landing.py` writes that URL. Move the importer to the current name
 the next time the landing page is re-imported.
+
+## Prices and the free tier (`facts.json`)
+
+`check-site.py` holds every page's dollar amounts and "N hands a day" to
+`facts.json`, which the app repo's `scripts/check_site_facts.py` holds to the
+app. See `CLAUDE.md` at the root.

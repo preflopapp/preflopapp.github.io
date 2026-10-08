@@ -20,8 +20,15 @@ def page(title="T", canonical="https://preflopapp.com/", desc=True, body="<h1>T<
 {BLOCKS['footer']}
 </body></html>""")
 
+# Every test site gets a facts.json, as the real one has; check_facts fails
+# a site without one.
+FACTS = ('{"prices": {"monthly": "7.99", "annual": "39.99", "lifetime": "59.99"},'
+         ' "trial": {"plan": "annual", "days": 7}, "annualPerMonth": "3.33",'
+         ' "lifetimeInMonthsOfAnnual": 18, "dailyFreeHands": 20, "freeHistoryHands": 5}')
+
 class CheckSiteTests(unittest.TestCase):
     def site(self, files):
+        files = {"facts.json": FACTS, **files}
         tmp = pathlib.Path(tempfile.mkdtemp())
         for rel, text in files.items():
             p = tmp / rel; p.parent.mkdir(parents=True, exist_ok=True); p.write_text(text)
@@ -99,6 +106,7 @@ class IndependentLandingTests(unittest.TestCase):
     def test_landing_layout_exemption_keeps_metadata_and_link_checks(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
+            (root / 'facts.json').write_text(FACTS)
             (root / 'index.html').write_text(page())
             (root / 'landing').mkdir()
             landing = root / 'landing/index.html'
@@ -115,6 +123,31 @@ class IndependentLandingTests(unittest.TestCase):
             (root / 'other').mkdir()
             (root / 'other/index.html').write_text(landing.read_text())
             self.assertTrue(any('other/index.html: missing shared:header' in e for e in cs.check_site(root)))
+
+class FactsTests(unittest.TestCase):
+    def site(self, files):
+        return CheckSiteTests.site(self, files)
+
+    def test_plan_prices_pass(self):
+        root = self.site({"index.html": page(body="<h1>T</h1><p>$39.99 a year, $7.99 a month, $59.99 once. 20 hands a day.</p>")})
+        self.assertEqual(cs.check_site(root), [])
+
+    def test_retired_price_fails(self):
+        root = self.site({"index.html": page(body="<h1>T</h1><p>$11.99 a month</p>")})
+        self.assertTrue(any("$11.99" in e for e in cs.check_site(root)))
+
+    def test_wrong_daily_hands_fails(self):
+        root = self.site({"index.html": page(body="<h1>T</h1><p>then 50 more hands every day</p>")})
+        self.assertTrue(any("'50 hands a day'" in e for e in cs.check_site(root)))
+
+    def test_fact_marker_must_match(self):
+        root = self.site({"index.html": page(body="<h1>T</h1><p><!-- fact:annual -->49.99<!-- /fact --></p>")})
+        self.assertTrue(any("fact annual says 49.99" in e for e in cs.check_site(root)))
+
+    def test_missing_facts_file_fails(self):
+        tmp = pathlib.Path(tempfile.mkdtemp())
+        (tmp / "index.html").write_text(page())
+        self.assertIn("ERROR facts.json: missing", cs.check_site(tmp))
 
 if __name__ == "__main__":
     unittest.main()

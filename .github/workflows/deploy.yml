@@ -39,11 +39,12 @@ jobs:
       # .nojekyll mean nothing to Cloudflare), except .well-known: it holds
       # apple-app-site-association, which iOS must fetch for preflopapp.com/s/*
       # to open the app. A blanket --exclude='.*' dropped it, so it 404'd.
-      # scripts/ is excluded because the checker is a build tool, not content.
+      # scripts/ is excluded because the checker is a build tool, not content,
+      # and CLAUDE.md because it is notes for the repo, not a page.
       - name: Assemble deploy directory
         run: |
           mkdir -p _site
-          rsync -a --include='.well-known/' --exclude='.*' --exclude='_site/' --exclude='scripts/' ./ _site/
+          rsync -a --include='.well-known/' --exclude='.*' --exclude='_site/' --exclude='scripts/' --exclude='CLAUDE.md' ./ _site/
           test -f _site/.well-known/apple-app-site-association
           find _site -type f | sort
 
