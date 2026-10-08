@@ -33,7 +33,7 @@ def prepare(source):
 <meta property="og:site_name" content="Preflop">
 <meta property="og:image" content="https://preflopapp.com/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/mark-v2.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">'''
     source = source.replace('<meta charset="utf-8">', metadata, 1)
     source = source.replace('<title>Preflop</title>', '<title>Preflop — better decisions before the flop</title>', 1)
