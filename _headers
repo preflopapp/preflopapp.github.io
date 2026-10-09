@@ -31,3 +31,10 @@
 # It has to be JSON, served without a redirect.
 /.well-known/apple-app-site-association
   Content-Type: application/json
+
+# Which plans the app's paywall offers (PaywallLineup in the app repo). The
+# app reads it at launch; a short cache so a switch reaches users within
+# minutes. Names: monthly, annual, lifetime. Order = paywall order.
+/paywall.json
+  Cache-Control: public, max-age=300
+  Content-Type: application/json
