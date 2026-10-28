@@ -4,7 +4,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--space-5); }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + var(--space-2)); }
 
 body {
   margin: 0;
@@ -69,6 +69,7 @@ a { color: var(--accent); }
 .btn--secondary { background: transparent; color: var(--text); border-color: var(--border); }
 .btn--secondary:hover { background: var(--well); }
 
+.btn--sm { padding: 0.5rem var(--space-2); }
 .btn--block { width: 100%; }
 
 /* "Coming soon": the fallback for a CTA slot when the TestFlight link is off.
@@ -157,6 +158,173 @@ a { color: var(--accent); }
    sets the start state itself, so with no JS (or Reduce Motion) the content is
    simply there. Never put it on the headline or the primary CTA. */
 
+/* ---- Nav ------------------------------------------------------------------
+   Sticky, translucent, one hairline underneath. The bar is a container, so it
+   collapses by its own width (the style guide shows the narrow form in a
+   narrow box). Without JS the links sit in a row under the bar; site.js sets
+   [data-enhanced], turns that row into a menu behind the toggle and runs it
+   (aria-expanded, focus trap, Escape) and sets [data-open] while it is open. The CTA stays in the bar at every
+   width. Open and close fade and rise 12px: transform and opacity only. */
+
+:root { --nav-h: 4rem; }
+
+.nav {
+  position: sticky; top: 0; z-index: 10;
+  container-type: inline-size;
+  background: var(--bg);
+  border-bottom: var(--stroke) solid var(--border);
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .nav {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
+  }
+}
+.nav--static { position: relative; }
+
+.nav__bar {
+  display: flex; align-items: center; flex-wrap: wrap;
+  column-gap: var(--space-1); min-height: var(--nav-h);
+}
+.nav__brand {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  min-height: var(--hit); margin-right: auto;
+  color: var(--text); text-decoration: none;
+  font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em;
+}
+.nav__mark { width: 1.5rem; height: 1.5rem; }
+
+.nav__links { display: flex; flex-wrap: wrap; gap: var(--space-half); }
+.nav__links a {
+  display: inline-flex; align-items: center; min-height: var(--hit);
+  padding: 0 var(--space-2); border-radius: var(--r-button);
+  color: var(--text-2); text-decoration: none; font-weight: 500;
+  transition: color var(--dur-snappy) var(--ease-out);
+}
+.nav__links a:hover { color: var(--text); }
+
+.nav__toggle {
+  display: none; position: relative; flex: none;
+  width: var(--hit); height: var(--hit); padding: 0; cursor: pointer;
+  background: transparent; color: var(--text);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
+}
+.nav__toggle::before, .nav__toggle::after {
+  content: ""; position: absolute; left: 0.75rem; right: 0.75rem; top: 50%;
+  height: 2px; margin-top: -1px; border-radius: 1px; background: currentColor;
+  transition: transform var(--dur-settle) var(--ease-out);
+}
+.nav__toggle::before { transform: translateY(-4px); }
+.nav__toggle::after { transform: translateY(4px); }
+.nav__toggle[aria-expanded="true"]::before { transform: rotate(45deg); }
+.nav__toggle[aria-expanded="true"]::after { transform: rotate(-45deg); }
+
+.nav__scrim { display: none; }
+
+/* Wide: links inline between brand and CTA. */
+@container (min-width: 40rem) {
+  .nav__bar { flex-wrap: nowrap; column-gap: var(--space-2); }
+  .nav__panel { order: 1; }
+  .nav__bar > .btn, .nav__bar > .badge-soon { order: 2; }
+}
+
+/* Narrow: no JS keeps a row of links under the bar; enhanced gets the menu. */
+@container (max-width: 39.99rem) {
+  .nav__panel { order: 5; flex-basis: 100%; padding-bottom: var(--space-1); }
+  .nav__links { margin-inline: calc(var(--space-2) * -1); }
+  .nav[data-enhanced] .nav__toggle { display: block; }
+  .nav[data-enhanced] .nav__panel {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 2;
+    padding: var(--space-1) calc(var(--gutter) - var(--space-2)) var(--space-2);
+    background: var(--panel);
+    border-bottom: var(--stroke) solid var(--border);
+  }
+  .nav[data-enhanced]:not([data-open]) .nav__panel { display: none; }
+  .nav[data-enhanced] .nav__links { flex-direction: column; margin-inline: 0; }
+  .nav[data-enhanced] .nav__links a { color: var(--text); font-size: var(--fs-section); }
+  .nav[data-enhanced][data-open] .nav__panel { animation: nav-in var(--dur-entrance) var(--ease-out) both; }
+  .nav[data-enhanced][data-open] .nav__scrim {
+    display: block; position: absolute; top: 100%; left: 0; right: 0; height: 100vh;
+    background: var(--bg); opacity: 0.6;
+    animation: scrim-in var(--dur-entrance) var(--ease-out) both;
+  }
+}
+@keyframes nav-in {
+  from { opacity: 0; transform: translateY(calc(var(--entrance-rise) * -1)); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes scrim-in { from { opacity: 0; } to { opacity: 0.6; } }
+
+/* ---- Footer ---------------------------------------------------------------
+   Brand and one line on the left, three short link groups, then the contact
+   address, the fine print and the theme toggle. A hairline above. */
+
+.footer { border-top: var(--stroke) solid var(--border); padding-block: var(--space-5) var(--space-4); }
+.footer__grid { display: grid; gap: var(--space-4) var(--space-3); grid-template-columns: repeat(2, 1fr); }
+.footer__about { grid-column: 1 / -1; max-width: 22rem; }
+.footer__brand {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  color: var(--text); text-decoration: none;
+  font-size: var(--fs-section); font-weight: 700; letter-spacing: -0.02em;
+}
+.footer__line { margin: var(--space-1) 0 0; color: var(--text-2); }
+.footer__group { margin: 0; padding: 0; list-style: none; }
+.footer__head { margin: 0 0 var(--space-1); color: var(--text-3); }
+.footer__group a {
+  display: inline-flex; align-items: center; min-height: var(--hit);
+  color: var(--text-2); text-decoration: none;
+}
+.footer__group a:hover { color: var(--text); text-decoration: underline; }
+.footer__base {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-4); padding-top: var(--space-3);
+  border-top: var(--stroke) solid var(--border);
+  color: var(--text-2); font-size: var(--fs-meta);
+}
+.footer__base p { margin: 0; }
+.footer__base a { color: var(--text-2); }
+.footer__base a:hover { color: var(--text); }
+.footer__base .btn { margin-left: auto; }
+@media (min-width: 48rem) {
+  .footer__grid { grid-template-columns: 2fr repeat(3, 1fr); }
+  .footer__about { grid-column: auto; }
+}
+
+/* ---- CTA band --------------------------------------------------------------
+   The mid-page and closing call to action: a panel with a headline, one line
+   and the same [data-cta] button as the nav and hero. */
+
+.cta-band {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  padding: var(--space-4) var(--space-3);
+  background: var(--panel); color: var(--text);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.cta-band__title { margin: 0; }
+.cta-band__line { margin: var(--space-1) 0 0; color: var(--text-2); max-width: var(--measure); }
+@media (min-width: 48rem) {
+  .cta-band { flex-direction: row; align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-4); }
+}
+
+/* ---- Page scaffold ---------------------------------------------------------
+   What /next/ is made of until the real sections land: a hero with its CTA, and
+   a section with a header and a "Placeholder" panel. The hero has no reveal:
+   the headline and button are in the HTML and never wait on JS. */
+
+.hero-stub { padding-block: var(--space-6) var(--space-5); }
+.hero-stub__title { max-width: 16ch; }
+.hero-stub__line { margin: var(--space-3) 0 0; max-width: var(--measure); color: var(--text-2); font-size: var(--fs-section); }
+.hero-stub__actions { margin: var(--space-4) 0 0; }
+
+.stub { padding-block: var(--space-5); }
+.stub__panel {
+  margin-top: var(--space-3); padding: var(--space-4) var(--space-3);
+  background: var(--panel); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.stub__panel p { margin: 0; color: var(--text-2); }
+.stub__panel .t-label { display: block; margin-bottom: var(--space-half); color: var(--text-3); }
+
 /* ---- Style guide page ------------------------------------------------------ */
 
 .sg-bar {
@@ -179,6 +347,7 @@ a { color: var(--accent); }
   border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
   min-width: 0;
 }
+.sg-pair.sg-pair--one { grid-template-columns: 1fr; }
 .sg-pair__tag { display: block; margin-bottom: var(--space-3); color: var(--text-3); }
 .sg-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
 .sg-stack--col { flex-direction: column; align-items: stretch; }
@@ -219,6 +388,13 @@ a { color: var(--accent); }
 .sg-motion th { color: var(--text-2); font-weight: 600; }
 .sg-motion td:first-child { color: var(--text); font-weight: 600; }
 .sg-table-wrap { overflow-x: auto; }
+
+.sg-demo { position: relative; overflow: hidden; border-radius: var(--r-panel); border: var(--stroke) solid var(--border); background: var(--bg); }
+.sg-demo--narrow { max-width: 22rem; min-height: 24rem; }
+.sg-demo .nav { border-radius: var(--r-panel) var(--r-panel) 0 0; }
+.sg-demo .wrap { padding-inline: var(--space-1); }
+@media (min-width: 48rem) { .sg-demo .wrap { padding-inline: var(--space-3); } }
+.sg-demo .footer { padding-block: var(--space-4) var(--space-3); }
 
 .sg-foot { padding-block: var(--space-5) var(--space-6); color: var(--text-3); font-size: var(--fs-meta); }
 

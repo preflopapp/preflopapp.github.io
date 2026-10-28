@@ -1,4 +1,5 @@
-/* Behaviour for /next/ pages: CTA slots, the theme toggle and scroll reveals.
+/* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle and
+   scroll reveals.
    Everything here is enhancement. With no JS, or with Reduce Motion, the page
    is complete and nothing is hidden. Animates transform and opacity only, with
    the durations and easing parsed from tokens.css so the numbers live once. */
@@ -20,6 +21,76 @@
       }
     });
   }
+
+  /* ---- Nav menu ----------------------------------------------------------
+     Below the nav's container breakpoint the links sit behind a toggle. Open:
+     aria-expanded is true, focus moves to the first link, Tab stays inside the
+     bar, and the rest of the page is inert. Escape, a click outside, a link,
+     or growing to the wide layout closes it and Escape returns focus to the
+     toggle. Without JS the links are a plain row under the bar. */
+  doc.querySelectorAll("[data-nav]").forEach(function (nav) {
+    var toggle = nav.querySelector(".nav__toggle");
+    var panel = toggle && doc.getElementById(toggle.getAttribute("aria-controls"));
+    if (!toggle || !panel) return;
+    nav.setAttribute("data-enhanced", "");
+
+    var inerted = [];
+    function setInert(on) {
+      if (!on) { inerted.forEach(function (el) { el.inert = false; }); inerted = []; return; }
+      for (var node = nav; node && node !== doc.body; node = node.parentNode) {
+        Array.prototype.forEach.call(node.parentNode.children, function (sib) {
+          if (sib !== node && sib.tagName !== "SCRIPT" && !sib.inert) { sib.inert = true; inerted.push(sib); }
+        });
+      }
+    }
+    function focusables() {
+      return Array.prototype.filter.call(
+        nav.querySelectorAll("a[href], button"),
+        function (el) { return el.offsetParent !== null; });
+    }
+    function isOpen() { return nav.hasAttribute("data-open"); }
+    function locks() { return getComputedStyle(nav).position === "sticky"; }
+
+    function open() {
+      nav.setAttribute("data-open", "");
+      toggle.setAttribute("aria-expanded", "true");
+      setInert(true);
+      if (locks()) root.style.overflow = "hidden";
+      var first = panel.querySelector("a[href]");
+      if (first) first.focus();
+    }
+    function close(returnFocus) {
+      nav.removeAttribute("data-open");
+      toggle.setAttribute("aria-expanded", "false");
+      setInert(false);
+      root.style.overflow = "";
+      if (returnFocus) toggle.focus();
+    }
+
+    toggle.addEventListener("click", function () { if (isOpen()) close(true); else open(); });
+    panel.addEventListener("click", function (e) { if (e.target.closest("a")) close(false); });
+    doc.addEventListener("click", function (e) {
+      if (isOpen() && (!nav.contains(e.target) || e.target.closest(".nav__scrim"))) close(false);
+    });
+    doc.addEventListener("keydown", function (e) {
+      if (!isOpen()) return;
+      if (e.key === "Escape") { e.preventDefault(); close(true); return; }
+      if (e.key !== "Tab") return;
+      var items = focusables();
+      if (!items.length) return;
+      var first = items[0], last = items[items.length - 1], at = doc.activeElement;
+      if (!nav.contains(at)) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+    });
+    /* Growing past the breakpoint (rotating a tablet) leaves the links inline,
+       so a menu left open would hold the page inert for nothing. */
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () {
+        if (isOpen() && getComputedStyle(toggle).display === "none") close(false);
+      }).observe(nav);
+    }
+  });
 
   /* ---- Theme toggle: system by default, data-theme once the visitor picks - */
   var light = matchMedia("(prefers-color-scheme: light)");
