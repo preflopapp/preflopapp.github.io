@@ -20,7 +20,7 @@ paths:
   `facts.json`'s free-tier numbers change.
 - **The site CSP is `script-src 'none'`.** Only `/` (the homepage, `script-src 'self'`),
   the text pages (`/faq`, `/support`, `/press`, `/privacy`, `/terms`), `/next/*`,
-  `/landing` and `/s` replace it, each with its own CSP in its
+  and `/s` replace it, each with its own CSP in its
   `<head>` (see `_headers`; `/` is the exact path, so no other page is affected). An inline
   script anywhere else is silently blocked. Test in a browser, not just the
   checker.

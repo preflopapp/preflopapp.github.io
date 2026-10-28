@@ -24,10 +24,9 @@ import gzip, json, pathlib, re, sys
 from html.parser import HTMLParser
 
 SHARED = ("head", "header", "footer")
-# The playable landing page and the shared-hand page (s/) intentionally use
-# their own app-matched layouts.
+# The shared-hand page (s/) intentionally uses its own app-matched layout.
 # All metadata, link, asset, and banned-name checks still apply.
-INDEPENDENT_LAYOUTS = {"landing/index.html", "s/index.html"}
+INDEPENDENT_LAYOUTS = {"s/index.html"}
 NEXT_PREFIX = "next/"  # the /next/ preview: independent layout, see check_next
 # Since the Phase 5 cutover the homepage is built on the /next/ system: no
 # shared blocks, its own CSP. It gets check_next's rules, but is public (no
@@ -264,7 +263,7 @@ def check_next(root, next_pages):
 
     Not linked, so it must say noindex and stay out of the sitemap. Its pages
     carry their own CSP (the _headers rule removes the site-wide one, as for
-    /landing and /s) allowing scripts from 'self' only, which means no inline
+    /s) allowing scripts from 'self' only, which means no inline
     script, no inline style and no event-handler attributes, and scripts that
     do not block first paint. Every a[data-cta] must link where
     next/js/config.js says, since without JS the HTML's href is what loads.

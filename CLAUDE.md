@@ -60,9 +60,8 @@ python3 scripts/check-site.py .
 ```
 
 `/check` runs both with filtered output. Both run before every deploy. The homepage (`/`) is the redesigned
-page built on the `next/` assets (Phase 5 cutover); `/landing/` and `/next/` redirect to it. The old landing page
-file (`landing/index.html`, built from the app repo's `web/landing/src/`) is kept only as a way back; see
-`scripts/README.md`.
+page built on the `next/` assets (Phase 5 cutover); `/landing/` and `/next/` redirect to it (the old landing page was deleted in
+Phase 8).
 
 ## Learning loop
 
@@ -72,7 +71,7 @@ see it:
 
 - **A trap tied to some files:** a line in `.claude/rules/<area>.md`; rules
   load only when matching files are opened. Areas: `cache-and-headers`,
-  `landing`, `next`.
+  `shared-hand`, `next`.
 - **Mechanically detectable:** a check in `scripts/check-site.py` (with a test)
   or a hook, not prose.
 - **A procedure:** the matching file in `.claude/commands/` or
