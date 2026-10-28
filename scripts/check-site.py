@@ -15,7 +15,8 @@ local stylesheet): the privacy page promises no third-party requests.
 Pages under /next/ (the redesign preview) have their own rules, see
 check_next: noindex and out of the sitemap, a page CSP that allows only
 'self' scripts, no inline script or style, no render-blocking script, the CTA
-link in step with next/js/config.js, and JS/CSS byte budgets.
+link in step with next/js/config.js, unique ids with aria-controls pointing at
+one (the nav menu toggle), and JS/CSS byte budgets.
 """
 import gzip, json, pathlib, re, sys
 from html.parser import HTMLParser
@@ -42,6 +43,7 @@ class _Refs(HTMLParser):
         self.canonical = None; self.og = {}; self.h1 = 0; self.bad_imgs = []
         self.assets = []; self.scripts = []; self.stylesheets = []; self.inline = []
         self.robots = ""; self.csp = ""; self.ctas = []; self._script = None
+        self.ids = []; self.controls = []
     def handle_endtag(self, tag):
         if tag == "script": self._script = None
     def handle_data(self, data):
@@ -56,6 +58,8 @@ class _Refs(HTMLParser):
         if "style" in a: self.inline.append("style= attribute")
         if tag == "meta" and (a.get("name") or "").lower() == "robots": self.robots = (a.get("content") or "").lower()
         if tag == "meta" and (a.get("http-equiv") or "").lower() == "content-security-policy": self.csp = a.get("content") or ""
+        if a.get("id"): self.ids.append(a["id"])
+        if a.get("aria-controls"): self.controls += a["aria-controls"].split()
         if tag == "a" and "data-cta" in a: self.ctas.append(a.get("href") or "")
         if tag == "link":
             rels = set((a.get("rel") or "").lower().split())
@@ -212,6 +216,10 @@ def check_next(root, next_pages):
         scripts = re.findall(r"script-src ([^;]*)", p.csp)
         if not scripts: errors.append(f"ERROR {rel}: missing page CSP with script-src")
         elif scripts[0].split() != ["'self'"]: errors.append(f"ERROR {rel}: script-src must be exactly 'self', found {scripts[0].strip()}")
+        for dup in sorted({i for i in p.ids if p.ids.count(i) > 1}):
+            errors.append(f"ERROR {rel}: id {dup} is used more than once")
+        for target in sorted(set(p.controls) - set(p.ids)):
+            errors.append(f"ERROR {rel}: aria-controls names {target}, no element has that id")
         for what in sorted(set(p.inline)): errors.append(f"ERROR {rel}: {what} (blocked by the page CSP)")
         for a in p.scripts:
             if "defer" not in a and "async" not in a and a.get("type") != "module":

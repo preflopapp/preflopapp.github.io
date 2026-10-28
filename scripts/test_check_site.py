@@ -250,6 +250,14 @@ class NextTests(unittest.TestCase):
         self.errors("a[data-cta] links to https://example.com/x",
                     body='<h1>x</h1><a data-cta href="https://example.com/x">j</a>')
 
+    def test_aria_controls_must_name_an_id_and_ids_are_unique(self):
+        self.errors("aria-controls names menu, no element has that id",
+                    body='<h1>x</h1><button aria-controls="menu">m</button>')
+        self.errors("id menu is used more than once",
+                    body='<h1>x</h1><div id="menu"></div><div id="menu"></div>')
+        ok = self.site(body='<h1>x</h1><button aria-controls="menu">m</button><div id="menu"></div>')
+        self.assertEqual(cs.check_site(ok), [])
+
     def test_images_need_pixel_dimensions(self):
         self.errors("is not a pixel count", body='<h1>x</h1><img src="/a.png" alt="" width="100%" height="1">',
                     files={"a.png": ""})
