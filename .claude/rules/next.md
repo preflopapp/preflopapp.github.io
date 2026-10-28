@@ -32,10 +32,17 @@ paths:
   button plain HTML with no `data-reveal`, keep SemiBold preloaded (the display
   weight), and never make the demo a background-image or a big `<img>`. Check
   with a `largest-contentful-paint` observer, not by eye (Phase 2).
-- **One transform/opacity-only rule covers bars too:** the mix bar is
-  `scaleX(var(--f))`, not a width. And `light-dark()` is not used for the table
-  skin on purpose: an unsupported browser would drop the whole token, so the
-  skin is the same three-way switch as `tokens.css` (Phase 2).
+- **The demo is drawn from the page's tokens, not the app's table palette.**
+  Screen `--panel`, rail `--well`, felt `--bg`, pods `--panel`, card backs
+  `--well`. The app's tan felt and red card backs read as a foreign block on the
+  page (Stan: "disconnected", Phase 2) and red is spent on fold. Don't bring a
+  fixed colour into `demo.css` that isn't a token; only the action-button ink
+  needs a scheme switch (`light-dark()` is avoided: an unsupported browser would
+  drop the whole token).
+- **The mix bar is `scaleX(var(--f))`, not a width** (transform/opacity only).
+- **Line the hero up with the grid.** The phone is `justify-self: end` so its
+  right edge meets the nav button and the proof bar; centred in its column it
+  floated. No glow in light: it bands into rings at 8 bits.
 - **Action-button ink is per scheme and per colour.** In light, white on the
   green raise slab is 3.9:1; dark ink clears it, so `--act-ink-raise` differs
   from `--act-ink` (Phase 2).

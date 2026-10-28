@@ -13,72 +13,52 @@
    whole diagram shrinks together on a phone. --s steps down below; it has to
    stay unitless. */
 
-/* Table skin: the app's TableSkinPalette. Same three-way switch as
-   tokens.css: dark by default, light with the system or the manual toggle. */
+/* The table is drawn from the page's own tokens, not the app's felt palette:
+   a --panel screen, a --well rail, a --bg felt, --panel pods. It sits in the
+   page the way a card does, in either scheme, with no colour of its own (the
+   app's tan felt and red card backs read as a foreign block, and red is spent
+   on "fold"). Only the action-button ink needs a scheme switch, the same
+   three-way one as tokens.css. */
 .phone {
   --s: 1;
-  --rail: #1c1d26;
-  --felt: #15161e;
-  --table-edge: rgba(255, 255, 255, 0.11);
-  --centre-mark: rgba(255, 255, 255, 0.09);
-  --chip-blind: #b4b6c4;
-  --chip-live: #787b8a;
-  --chip-rim: rgba(14, 15, 20, 0.55);
-  --pot-bar: #787b8a;
-  --bet-fill: var(--well);
+  --rail: var(--well);
+  --felt: var(--bg);
+  --table-edge: var(--border);
+  --centre-mark: var(--text-3);
+  --chip-blind: var(--text-3);
+  --chip-live: var(--text-2);
+  --chip-rim: var(--panel);
+  --pot-bar: var(--text-3);
+  --bet-fill: var(--panel);
+  --card-back: var(--well);
+  --dealer-fill: var(--text);
+  --dealer-ink: var(--bg);
   --act-ink: #0e0f14;
   --act-ink-raise: #0e0f14;
-  --card-back: #c0392b;
-  --dealer-fill: #f7f6f4;
-  --dealer-ink: #14161c;
 }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) .phone {
-    --rail: #bfb8ad;
-    --felt: #d2ccc2;
-    --table-edge: rgba(0, 0, 0, 0.16);
-    --centre-mark: rgba(0, 0, 0, 0.09);
-    --chip-blind: #8b9198;
-    --chip-live: #5a6067;
-    --chip-rim: rgba(255, 255, 255, 0.7);
-    --pot-bar: #767d84;
-    --bet-fill: var(--panel);
-    --act-ink: #ffffff;
-    --act-ink-raise: #150f02;
-  }
+  :root:not([data-theme]) .phone { --act-ink: #ffffff; --act-ink-raise: #150f02; }
 }
-[data-theme="light"] .phone {
-  --rail: #bfb8ad;
-  --felt: #d2ccc2;
-  --table-edge: rgba(0, 0, 0, 0.16);
-  --centre-mark: rgba(0, 0, 0, 0.09);
-  --chip-blind: #8b9198;
-  --chip-live: #5a6067;
-  --chip-rim: rgba(255, 255, 255, 0.7);
-  --pot-bar: #767d84;
-  --bet-fill: var(--panel);
-  --act-ink: #ffffff;
-  --act-ink-raise: #150f02;
-}
+[data-theme="light"] .phone { --act-ink: #ffffff; --act-ink-raise: #150f02; }
 
-/* Scale: 374 * s + the frame must fit the gutter. */
+/* Scale: the frame is 402 * s wide and has to fit the gutter. */
 @media (max-width: 426px) { .phone { --s: 0.9; } }
-@media (max-width: 392px) { .phone { --s: 0.85; } }
-@media (max-width: 360px) { .phone { --s: 0.8; } }
-@media (max-width: 344px) { .phone { --s: 0.75; } }
-@media (max-width: 320px) { .phone { --s: 0.68; } }
+@media (max-width: 393px) { .phone { --s: 0.85; } }
+@media (max-width: 373px) { .phone { --s: 0.8; } }
+@media (max-width: 353px) { .phone { --s: 0.75; } }
+@media (max-width: 333px) { .phone { --s: 0.68; } }
 
 /* ---- Frame ----------------------------------------------------------------
-   A bezel in the well colour with a hairline around it, a screen in the page
-   background. Fixed height, so feedback and the score never move the page. */
+   Built like the page's cards: a --panel screen, a hairline, and a slim --well
+   bezel. Fixed height, so feedback and the score never move the page. */
 
 .phone {
   position: relative; flex: none;
-  width: calc(374px * var(--s) + 2 * calc(8px * var(--s)));
-  height: calc(612px * var(--s));
-  background: var(--bg);
-  border: calc(8px * var(--s)) solid var(--well);
-  border-radius: calc(40px * var(--s));
+  width: calc(402px * var(--s));
+  height: calc(608px * var(--s));
+  background: var(--panel);
+  border: calc(6px * var(--s)) solid var(--well);
+  border-radius: calc(38px * var(--s));
   box-shadow: 0 0 0 var(--stroke) var(--border);
   overflow: hidden;
   color: var(--text);
@@ -99,7 +79,7 @@
 }
 .phone__table {
   display: flex; justify-content: center; flex: none;
-  margin-inline: calc(-18px * var(--s));
+  margin-inline: calc(-10px * var(--s));
   padding-block: calc(6px * var(--s));
 }
 .phone__line {
@@ -113,7 +93,7 @@
 /* Below 560px the felt is shorter so the first decision stays on the screen;
    seats are percentages, so their positions hold. */
 @media (max-width: 560px) {
-  .phone { height: calc(490px * var(--s)); }
+  .phone { height: calc(486px * var(--s)); }
   .phone__table { padding-block: calc(2px * var(--s)); }
   .phone__line { min-height: calc(30px * var(--s)); padding-top: calc(4px * var(--s)); }
 }
@@ -198,13 +178,13 @@
   position: relative;
   width: calc(26px * var(--s)); height: calc(36px * var(--s));
   border-radius: calc(var(--r-card) * var(--s) * 0.46 + 2px);
-  background: var(--card-back); border: var(--stroke) solid rgba(0, 0, 0, 0.2);
+  background: var(--card-back); border: var(--stroke) solid var(--text-3);
 }
 .fan__back:first-child { transform: rotate(-10deg); }
 .fan__back:last-child { transform: rotate(9deg); margin-left: calc(-11px * var(--s)); }
 .fan__back::after {
   content: ""; position: absolute; inset: calc(2.3px * var(--s));
-  border-radius: calc(2px * var(--s)); border: var(--stroke) solid rgba(255, 255, 255, 0.32);
+  border-radius: calc(2px * var(--s)); border: var(--stroke) solid var(--border);
 }
 
 /* Bet pill: chip and amount, on the side of the pod facing the pot. */
@@ -233,6 +213,7 @@
   width: calc(56px * var(--s)); height: calc(80px * var(--s));
   gap: calc(5px * var(--s)); font-size: calc(25px * var(--s)); letter-spacing: -0.02em;
 }
+.phone .pcard { border-color: var(--text-3); }
 .phone .pcard__suit { width: calc(23px * var(--s)); height: calc(23px * var(--s)); }
 .hero-badge {
   padding: calc(5px * var(--s)) calc(15px * var(--s));

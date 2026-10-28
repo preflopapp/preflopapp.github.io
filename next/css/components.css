@@ -320,40 +320,51 @@ a { color: var(--accent); }
    disc, blurred, that swells slowly: transform and opacity only, still under
    Reduce Motion. */
 
-.hero { position: relative; overflow: clip; padding-block: var(--space-5) var(--space-6); }
+.hero { position: relative; overflow: clip; padding-block: var(--space-5) var(--space-5); }
 .hero__grid { display: grid; gap: var(--space-5); }
 .hero__title { max-width: 11em; text-wrap: balance; }
 .hero__accent { color: var(--accent); }
-.hero__line { margin: var(--space-3) 0 0; max-width: 30rem; color: var(--text-2); font-size: var(--fs-section); }
-.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-top: var(--space-4); }
-.hero__note { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-meta); }
+.hero__line { margin: var(--space-3) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-section); }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.hero__cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+.hero__note { margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
 
 .hero__demo { position: relative; isolation: isolate; justify-self: center; display: flex; flex-direction: column; align-items: center; }
 .hero__glow {
   position: absolute; z-index: -1; left: 50%; top: 50%; pointer-events: none;
   width: 24rem; height: 24rem; margin: -12rem 0 0 -12rem; border-radius: 50%;
-  background: var(--accent); opacity: 0.1; filter: blur(64px);
+  --glow-lo: 0.07; --glow-hi: 0.14;
+  background: var(--accent); opacity: var(--glow-lo); filter: blur(64px);
   animation: glow calc(var(--dur-breath) * 6) var(--ease-in-out) infinite alternate;
 }
+/* No glow on light: a faint amber over off-white bands into visible rings at
+   8 bits, and there is nothing to see through the panel anyway. */
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .hero__glow { display: none; } }
+[data-theme="light"] .hero__glow { display: none; }
 @keyframes glow {
-  from { opacity: 0.07; transform: scale(0.9); }
-  to { opacity: 0.14; transform: scale(1.08); }
+  from { opacity: var(--glow-lo); transform: scale(0.9); }
+  to { opacity: var(--glow-hi); transform: scale(1.08); }
 }
 @media (prefers-reduced-motion: reduce) { .hero__glow { animation: none; } }
 
 @media (min-width: 60rem) {
-  .hero { padding-block: var(--space-6) var(--space-7); }
-  .hero__grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-6); }
+  .hero { padding-block: var(--space-6) var(--space-6); }
+  .hero__grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-5); }
   .hero__demo { justify-self: end; }
-  .hero__glow { width: 36rem; height: 36rem; margin: -18rem 0 0 -18rem; filter: blur(96px); }
+  .hero__glow { width: 32rem; height: 32rem; margin: -16rem 0 0 -16rem; filter: blur(80px); }
 }
 
-/* The QR sits beside the button on a desktop and nowhere else: a phone has
-   the button, and the code is for opening the link on one. A static SVG made
-   offline by scripts/make-qr.py from the same URL the button uses. */
-.qr { display: none; align-items: center; gap: var(--space-2); margin: 0; }
-.qr__img { width: 7rem; height: 7rem; border: var(--stroke) solid var(--border); border-radius: var(--r-card); }
-.qr__cap { max-width: 9rem; margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
+/* The QR sits beside the button on a desktop with a pointer and nowhere else:
+   a phone has the button, and the code is for opening the link on one. A card
+   like the rest, around a static SVG made offline by scripts/make-qr.py from
+   the same URL the button uses. */
+.qr {
+  display: none; align-items: center; gap: var(--space-2); margin: 0;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+  background: var(--panel); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.qr__img { width: 6.5rem; height: 6.5rem; border-radius: var(--r-card); }
+.qr__cap { max-width: 8rem; margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
 @media (min-width: 60rem) and (hover: hover) { .qr { display: flex; } }
 
 /* ---- Proof bar --------------------------------------------------------------
