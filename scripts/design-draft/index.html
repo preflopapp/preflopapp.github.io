@@ -1,0 +1,171 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Design draft</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:"Outfit";font-weight:400;font-display:swap;src:url(fonts/Outfit-Regular.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-weight:500;font-display:swap;src:url(fonts/Outfit-Medium.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-weight:600;font-display:swap;src:url(fonts/Outfit-SemiBold.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-weight:700;font-display:swap;src:url(fonts/Outfit-Bold.woff2) format("woff2")}
+@font-face{font-family:"Geist";font-weight:400;font-display:swap;src:url(fonts/geist-400.woff2) format("woff2")}
+@font-face{font-family:"Geist";font-weight:500;font-display:swap;src:url(fonts/geist-500.woff2) format("woff2")}
+@font-face{font-family:"Geist";font-weight:600;font-display:swap;src:url(fonts/geist-600.woff2) format("woff2")}
+@font-face{font-family:"Geist";font-weight:700;font-display:swap;src:url(fonts/geist-700.woff2) format("woff2")}
+@font-face{font-family:"Hanken";font-weight:400;font-display:swap;src:url(fonts/hanken-grotesk-400.woff2) format("woff2")}
+@font-face{font-family:"Hanken";font-weight:500;font-display:swap;src:url(fonts/hanken-grotesk-500.woff2) format("woff2")}
+@font-face{font-family:"Hanken";font-weight:600;font-display:swap;src:url(fonts/hanken-grotesk-600.woff2) format("woff2")}
+@font-face{font-family:"Hanken";font-weight:700;font-display:swap;src:url(fonts/hanken-grotesk-700.woff2) format("woff2")}
+@font-face{font-family:"Instrument";font-weight:400;font-display:swap;src:url(fonts/instrument-sans-400.woff2) format("woff2")}
+@font-face{font-family:"Instrument";font-weight:500;font-display:swap;src:url(fonts/instrument-sans-500.woff2) format("woff2")}
+@font-face{font-family:"Instrument";font-weight:600;font-display:swap;src:url(fonts/instrument-sans-600.woff2) format("woff2")}
+@font-face{font-family:"Instrument";font-weight:700;font-display:swap;src:url(fonts/instrument-sans-700.woff2) format("woff2")}
+@font-face{font-family:"Schibsted";font-weight:400;font-display:swap;src:url(fonts/schibsted-grotesk-400.woff2) format("woff2")}
+@font-face{font-family:"Schibsted";font-weight:500;font-display:swap;src:url(fonts/schibsted-grotesk-500.woff2) format("woff2")}
+@font-face{font-family:"Schibsted";font-weight:600;font-display:swap;src:url(fonts/schibsted-grotesk-600.woff2) format("woff2")}
+@font-face{font-family:"Schibsted";font-weight:700;font-display:swap;src:url(fonts/schibsted-grotesk-700.woff2) format("woff2")}
+@font-face{font-family:"Plex";font-weight:400;font-display:swap;src:url(fonts/ibm-plex-sans-400.woff2) format("woff2")}
+@font-face{font-family:"Plex";font-weight:500;font-display:swap;src:url(fonts/ibm-plex-sans-500.woff2) format("woff2")}
+@font-face{font-family:"Plex";font-weight:600;font-display:swap;src:url(fonts/ibm-plex-sans-600.woff2) format("woff2")}
+@font-face{font-family:"Plex";font-weight:700;font-display:swap;src:url(fonts/ibm-plex-sans-700.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-weight:500;font-display:swap;src:url(fonts/newsreader-500.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-weight:600;font-display:swap;src:url(fonts/newsreader-600.woff2) format("woff2")}
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#0b0b10;color:#ddd;font:15px/1.4 system-ui,sans-serif}
+/* ---- controls ---- */
+.ctl{position:sticky;top:0;z-index:5;background:#15161d;border-bottom:1px solid #2a2b33;padding:10px 16px;display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px}
+.ctl fieldset{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.ctl legend{float:left;margin-right:8px;color:#9b9dab;font-weight:600}
+.ctl label{cursor:pointer} .ctl input{position:absolute;opacity:0}
+.ctl span{display:inline-block;padding:5px 10px;border:1px solid #33343d;border-radius:6px;color:#ddd}
+.ctl input:checked+span{background:#f5b942;color:#150f02;border-color:#f5b942}
+.ctl input:focus-visible+span{outline:2px solid #fff}
+.stage{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:900px){.stage{grid-template-columns:1fr}}
+/* ---- tokens ---- */
+.scope{--bg:#0e0f14;--panel:#191a22;--well:#24252f;--border:#2a2b33;--text:#fff;--text-2:#9b9dab;--text-3:#787b8a;--accent:#f5b942;--accent-fill:#f5b942;--fill-ink:#150f02;--good:#3fbf7a;--mid:#e0a93f;--bad:#e0574f;--raise:#3fbf7a;--call:#4f93e0;--fold:#e0574f;--link:var(--accent);--card:#fff;--card-ink:#15161d;--card-red:#c8443c;
+ background:var(--bg);color:var(--text);padding:28px clamp(16px,3vw,40px) 40px;font-family:var(--font-body);min-width:0}
+.scope[data-theme=light]{--bg:#f4f4f7;--panel:#fff;--well:#e6e6ec;--border:rgba(0,0,0,.13);--text:#3c3d48;--text-2:#62636f;--text-3:#787985;--accent:#8f6006;--accent-fill:#f2ae2e;--good:#177644;--mid:#9e7112;--bad:#b93830;--raise:#219459;--call:#2f72be;--fold:#c8443c;--card:#fff;--card-ink:#15161d}
+/* light palette B: airy, burnt amber text */
+html[data-lp=b] .scope[data-theme=light]{--bg:#fafafc;--panel:#fff;--well:#f0f0f5;--border:rgba(20,20,45,.10);--text:#32333e;--text-2:#6b6c78;--text-3:#8a8b96;--accent:#b04f00;--accent-fill:#f5b53a;--good:#1b8650;--mid:#b07a10;--bad:#c4413a;--raise:#2a9d62;--call:#3a7fcb;--fold:#d24d45}
+/* light palette C: ink-first, amber only as fill and marker, never as text */
+html[data-lp=c] .scope[data-theme=light]{--bg:#fafafc;--panel:#fff;--well:#f0f0f5;--border:rgba(20,20,45,.10);--text:#32333e;--text-2:#6b6c78;--text-3:#8a8b96;--accent:#32333e;--accent-fill:#f5b53a;--good:#1b8650;--mid:#b07a10;--bad:#c4413a;--raise:#2a9d62;--call:#3a7fcb;--fold:#d24d45}
+/* fonts */
+html{--font-body:Outfit,sans-serif;--font-display:Outfit,sans-serif;--fw-d:700;--tr-d:-.03em;--fw-t:600}
+html[data-font=geist]{--font-body:Geist,sans-serif;--font-display:Geist,sans-serif;--fw-d:600;--tr-d:-.04em;--fw-t:600}
+html[data-font=hanken]{--font-body:Hanken,sans-serif;--font-display:Hanken,sans-serif;--fw-d:600;--tr-d:-.035em;--fw-t:600}
+html[data-font=instrument]{--font-body:Instrument,sans-serif;--font-display:Instrument,sans-serif;--fw-d:600;--tr-d:-.035em;--fw-t:600}
+html[data-font=schibsted]{--font-body:Schibsted,sans-serif;--font-display:Schibsted,sans-serif;--fw-d:600;--tr-d:-.03em;--fw-t:600}
+html[data-font=plex]{--font-body:Plex,sans-serif;--font-display:Plex,sans-serif;--fw-d:600;--tr-d:-.03em;--fw-t:600}
+html[data-font=serif]{--font-body:Hanken,sans-serif;--font-display:Newsreader,Georgia,serif;--fw-d:500;--tr-d:-.02em;--fw-t:600}
+/* radii */
+html{--r-panel:20px;--r-button:16px;--r-card:9px}
+html[data-r=tight]{--r-panel:14px;--r-button:10px;--r-card:6px}
+html[data-r=crisp]{--r-panel:10px;--r-button:8px;--r-card:4px}
+/* ---- components ---- */
+.tag{font-size:11px;letter-spacing:.14em;color:var(--text-3);margin-bottom:14px;font-weight:600}
+.nav{display:flex;align-items:center;gap:20px;margin-bottom:44px}
+.brand{font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-.02em;margin-right:auto}
+.links{display:flex;gap:18px;color:var(--text-2);font-size:14px} .links a{cursor:default}
+@media(max-width:560px){.links{display:none}}
+.eyebrow{margin:0 0 12px;color:var(--accent);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+html[data-lp=c] .scope[data-theme=light] .eyebrow{color:var(--text-2)}
+html[data-lp=c] .scope[data-theme=light] .eyebrow::before{content:"";display:inline-block;width:8px;height:8px;background:var(--accent-fill);margin-right:8px;border-radius:2px}
+.display{margin:0;font:var(--fw-d) clamp(2.4rem,4.2vw,3.8rem)/1.04 var(--font-display);letter-spacing:var(--tr-d)}
+.lede{color:var(--text-2);font-size:18px;line-height:1.5;max-width:30rem;margin:18px 0 26px}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px}
+.btn{display:inline-flex;align-items:center;min-height:46px;padding:0 22px;border-radius:var(--r-button);font:600 16px var(--font-body);border:1px solid transparent;cursor:default}
+.btn.sm{min-height:38px;padding:0 16px;font-size:14px}
+.primary{background:var(--accent-fill);color:var(--fill-ink)}
+.secondary{border-color:var(--border);color:var(--text)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-panel);padding:20px;margin-bottom:14px}
+.title{margin:0;font:var(--fw-t) 19px var(--font-body)} .muted{color:var(--text-2);margin:6px 0 0} .small{font-size:14px}
+.label{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-2)}
+.hand-top{display:flex;justify-content:space-between;align-items:center}
+.cards{display:flex;gap:10px;margin:18px 0}
+.pcard{width:62px;height:88px;border-radius:var(--r-card);background:var(--card);color:var(--card-ink);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 30px/1 var(--font-body)}
+.pcard small{font-size:24px} .pcard.red{color:var(--card-red)}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.act{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:var(--r-button);border:1px solid var(--border);font-weight:600;color:var(--text)}
+.act i,.chip i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.act i{background:var(--c)} .fold{--c:var(--fold)} .call{--c:var(--call)} .raise{--c:var(--raise)}
+.act.raise{border-color:var(--raise)}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:var(--well);font-size:13px;font-weight:600;color:var(--text)}
+.chip.good i{background:var(--good)} .chip.mid i{background:var(--mid)} .chip.bad i{background:var(--bad)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px} .grid2 .panel{margin:0}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.well{background:var(--well);border-radius:var(--r-card);padding:12px 14px;margin-top:14px}
+.figure{display:block;font:700 26px/1.1 var(--font-body);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.link{color:var(--link);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+html[data-lp=c] .scope[data-theme=light] .link{color:var(--text);text-decoration-color:var(--accent-fill);text-decoration-thickness:3px}
+.faq{margin-top:22px;border-bottom:1px solid var(--border)}
+.q{display:flex;justify-content:space-between;align-items:center;font:600 19px var(--font-body);padding:14px 0 6px}
+.q b{width:8px;height:8px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.a{margin:0 0 16px}
+</style></head><body>
+<div class="ctl">
+<fieldset><legend>Font</legend>
+<label><input type="radio" name="font" value="outfit" checked><span>Outfit (now)</span></label>
+<label><input type="radio" name="font" value="geist"><span>Geist</span></label>
+<label><input type="radio" name="font" value="hanken"><span>Hanken Grotesk</span></label>
+<label><input type="radio" name="font" value="instrument"><span>Instrument Sans</span></label>
+<label><input type="radio" name="font" value="schibsted"><span>Schibsted Grotesk</span></label>
+<label><input type="radio" name="font" value="plex"><span>IBM Plex Sans</span></label>
+<label><input type="radio" name="font" value="serif"><span>Newsreader + Hanken</span></label></fieldset>
+<fieldset><legend>Corners</legend>
+<label><input type="radio" name="r" value="soft" checked><span>Soft 20/16/9 (now)</span></label>
+<label><input type="radio" name="r" value="tight"><span>Tighter 14/10/6</span></label>
+<label><input type="radio" name="r" value="crisp"><span>Crisp 10/8/4</span></label></fieldset>
+<fieldset><legend>Light palette</legend>
+<label><input type="radio" name="lp" value="a" checked><span>A: now</span></label>
+<label><input type="radio" name="lp" value="b"><span>B: airy, burnt amber</span></label>
+<label><input type="radio" name="lp" value="c"><span>C: ink-first, no amber text</span></label></fieldset>
+</div>
+<div class="stage">
+<div class="scope" data-theme="dark">
+  <div class="tag">DARK</div>
+  <div class="nav"><span class="brand">Preflop</span><span class="links"><a>Features</a><a>Pricing</a><a>FAQ</a></span><a class="btn primary sm">Join the beta</a></div>
+  <p class="eyebrow">Preflop trainer</p>
+  <h1 class="display">Know your play before the flop.</h1>
+  <p class="lede">Real spots, one hand at a time. Every answer explained, nothing to sign up for.</p>
+  <div class="row"><a class="btn primary">Join the beta</a><a class="btn secondary">See how it works</a></div>
+
+  <div class="panel hand">
+    <div class="hand-top"><span class="label">Button, 100bb</span><span class="chip good"><i></i>Correct</span></div>
+    <div class="cards"><span class="pcard">A<small>♠</small></span><span class="pcard red">K<small>♦</small></span></div>
+    <div class="actions"><span class="act fold"><i></i>Fold</span><span class="act call"><i></i>Call</span><span class="act raise"><i></i>Raise</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><h3 class="title">Streaks</h3><p class="muted">Practice daily, keep the run.</p><div class="well"><span class="figure">30,000+</span><span class="muted small">spots</span></div></div>
+    <div class="panel"><h3 class="title">Leaks</h3><p class="muted">See where you lose the most.</p><p class="small"><a class="link">Open the range chart</a></p><span class="chip mid"><i></i>Close</span> <span class="chip bad"><i></i>Missed</span></div>
+  </div>
+
+  <div class="faq"><div class="q"><span>Is it free to start?</span><b></b></div><p class="muted a">Yes. Daily hands are free, no account.</p></div>
+</div>
+<div class="scope" data-theme="light">
+  <div class="tag">LIGHT</div>
+  <div class="nav"><span class="brand">Preflop</span><span class="links"><a>Features</a><a>Pricing</a><a>FAQ</a></span><a class="btn primary sm">Join the beta</a></div>
+  <p class="eyebrow">Preflop trainer</p>
+  <h1 class="display">Know your play before the flop.</h1>
+  <p class="lede">Real spots, one hand at a time. Every answer explained, nothing to sign up for.</p>
+  <div class="row"><a class="btn primary">Join the beta</a><a class="btn secondary">See how it works</a></div>
+
+  <div class="panel hand">
+    <div class="hand-top"><span class="label">Button, 100bb</span><span class="chip good"><i></i>Correct</span></div>
+    <div class="cards"><span class="pcard">A<small>♠</small></span><span class="pcard red">K<small>♦</small></span></div>
+    <div class="actions"><span class="act fold"><i></i>Fold</span><span class="act call"><i></i>Call</span><span class="act raise"><i></i>Raise</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><h3 class="title">Streaks</h3><p class="muted">Practice daily, keep the run.</p><div class="well"><span class="figure">30,000+</span><span class="muted small">spots</span></div></div>
+    <div class="panel"><h3 class="title">Leaks</h3><p class="muted">See where you lose the most.</p><p class="small"><a class="link">Open the range chart</a></p><span class="chip mid"><i></i>Close</span> <span class="chip bad"><i></i>Missed</span></div>
+  </div>
+
+  <div class="faq"><div class="q"><span>Is it free to start?</span><b></b></div><p class="muted a">Yes. Daily hands are free, no account.</p></div>
+</div></div>
+<script>
+const h=document.documentElement;
+document.querySelectorAll('.ctl input').forEach(i=>i.addEventListener('change',()=>{
+ const m={font:'data-font',r:'data-r',lp:'data-lp'}; h.setAttribute(m[i.name],i.value);}));
+// read state from the URL hash, e.g. #font=geist&r=tight&lp=b
+new URLSearchParams(location.hash.slice(1)).forEach((v,k)=>{const el=document.querySelector(`.ctl input[name=${k}][value=${v}]`); if(el){el.checked=true; el.dispatchEvent(new Event('change'))}});
+</script></body></html>
