@@ -107,6 +107,26 @@ a { color: var(--accent); }
 }
 .card__figure-label { display: block; margin-top: var(--space-half); color: var(--text-2); font-size: var(--fs-meta); }
 
+/* ---- Playing card ----------------------------------------------------------
+   White face in either scheme, a hairline edge, the card radius. Rank in the
+   suit's colour with the suit shape beneath it: <img class="pcard__suit"
+   src="/assets/suits/spade.svg" alt="" width="26" height="26">. Add
+   .pcard--red for hearts and diamonds. Name the card for assistive tech on the
+   element, e.g. aria-label="Ace of spades". Two-colour deck only on the site. */
+
+.pcard {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--space-half); width: 3.875rem; height: 5.5rem;
+  background: var(--card-face); color: var(--suit-ink);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-card);
+  font-size: 1.875rem; font-weight: 700; line-height: 1;
+}
+.pcard--red { color: var(--suit-red); }
+.pcard__suit { width: 1.625rem; height: 1.625rem; }
+
+.cards { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
+.cards__group { display: flex; gap: var(--space-1); }
+
 /* ---- FAQ item: a plain <details>, so it works without JS ------------------- */
 
 .faq { border-bottom: var(--stroke) solid var(--border); }
