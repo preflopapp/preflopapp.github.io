@@ -166,7 +166,8 @@ a { color: var(--accent); }
 /* ---- Nav ------------------------------------------------------------------
    Sticky, translucent, one hairline underneath. The bar is a container, so it
    collapses by its own width (the style guide shows the narrow form in a
-   narrow box). Without JS the links sit in a row under the bar; site.js sets
+   narrow box). Without JS a wide bar shows its links inline and a narrow one just the brand
+   and the button (the footer has the links); site.js sets
    [data-enhanced], turns that row into a menu behind the toggle and runs it
    (aria-expanded, focus trap, Escape) and sets [data-open] while it is open. The CTA stays in the bar at every
    width. Open and close fade and rise 12px: transform and opacity only. */
@@ -238,6 +239,10 @@ a { color: var(--accent); }
 @container (max-width: 39.99rem) {
   .nav__panel { order: 5; flex-basis: 100%; padding-bottom: var(--space-1); }
   .nav__links { margin-inline: calc(var(--space-2) * -1); }
+  /* Before JS has built the menu a narrow bar shows brand and button only (the
+     links are in the footer). A row of links here made the bar taller until JS
+     collapsed it into the menu, shifting the whole page once on load. */
+  .nav:not([data-enhanced]) .nav__panel { display: none; }
   .nav[data-enhanced] .nav__toggle { display: block; }
   .nav[data-enhanced] .nav__panel {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 2;

@@ -133,4 +133,6 @@ on the headline or primary CTA, and nothing is hidden until JS runs.
 `next/js/config.js` (`pip install segno`, then `python3 scripts/make-qr.py`).
 Re-run it whenever that URL changes; `check-site.py` fails a QR that encodes a
 different URL. `scripts/capture-demo-static.js` prints the demo's first-hand
-markup for `next/index.html` (see its header).
+markup for `next/index.html` (see its header). `scripts/gen-range-chart.py`
+prints the 13x13 range-chart cells for the bento card from the landing demo's
+range data; paste its output into `.chart__grid` if that data changes.

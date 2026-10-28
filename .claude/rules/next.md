@@ -48,7 +48,12 @@ paths:
   from `--act-ink` (Phase 2).
 - **Headless Chromium defaults to the light scheme.** Set `colorScheme` on the
   context or every "dark" screenshot is light.
-- **Known, not fixed (Phase 1 shell):** below the nav's container breakpoint
-  the no-JS links row collapses into the menu when JS sets `data-enhanced`,
-  which moves the page about 32px once (mobile CLS about 0.07). Fixing it means
-  changing the nav's no-JS fallback; ask Stan first.
+- **A narrow nav with no JS shows brand and button only.** A row of links under
+  the bar made it taller until JS collapsed it into the menu, shifting the page
+  about 32px on load (mobile CLS 0.07). The footer carries the same links
+  (Phase 2).
+- **`data-pin` goes on the `.story` section, not the inner grid.** The CSS keys
+  off the section; set on the child, nothing pins and nothing errors.
+- **Sections are `--section-y` apart.** Use `.section` (or `.band` for the one
+  panel-coloured break) rather than ad-hoc padding, and `.section--flush` when a
+  section follows another with the same background, or the gaps stack to 16rem.

@@ -13,6 +13,7 @@
 <link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/next/css/tokens.css">
 <link rel="stylesheet" href="/next/css/components.css">
+<link rel="stylesheet" href="/next/css/sections.css">
 <script defer src="/next/js/config.js"></script>
 <script defer src="/assets/vendor/gsap/gsap.min.js"></script>
 <script defer src="/assets/vendor/gsap/ScrollTrigger.min.js"></script>
@@ -483,6 +484,78 @@
 <div class="scope" data-theme="light">
 <span class="t-label sg-pair__tag">Light</span>
 <figure class="qr"><img class="qr__img" src="/assets/qr/testflight.svg" alt="QR code that opens the Preflop beta on TestFlight" width="104" height="104" loading="lazy"><figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption></figure>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="shot">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Phone frame</h2>
+<p>An app screenshot (600 x 1304) in the demo&rsquo;s slim bezel. Width is <code>--shot-w</code>. Used in the story and the closing panel.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<figure class="shot"><img src="/assets/screens/explain.webp" alt="The explanation screen in the app" width="600" height="1304" loading="lazy" decoding="async"></figure>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<figure class="shot"><img src="/assets/screens/explain.webp" alt="The explanation screen in the app" width="600" height="1304" loading="lazy" decoding="async"></figure>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="spots">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Spot chip</h2>
+<p>A spot named the way the app names it, scrolling in the marquee. Pure CSS; Reduce Motion wraps it into a still row.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<ul class="chips"><li class="spot"><b>UTG</b> opening</li><li class="spot"><b>BTN</b> vs BB 3-bet</li><li class="spot"><b>UTG+1</b> vs UTG open</li></ul>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<ul class="chips"><li class="spot"><b>UTG</b> opening</li><li class="spot"><b>BTN</b> vs BB 3-bet</li><li class="spot"><b>UTG+1</b> vs UTG open</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="bento">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Bento card</h2>
+<p>A <code>.card</code> with a title, a line and a small picture that plays once as it scrolls in.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<article class="card bento__card"><div class="bento__text"><h3 class="t-section bento__title">A card with a picture.</h3><p>Title, one line, then the picture at the foot. Lifts 4px on hover.</p></div><div class="bento__visual"><ul class="chips"><li class="pos">UTG</li><li class="pos">HJ</li><li class="pos">CO</li><li class="pos">BTN</li></ul></div></article>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<article class="card bento__card"><div class="bento__text"><h3 class="t-section bento__title">A card with a picture.</h3><p>Title, one line, then the picture at the foot. Lifts 4px on hover.</p></div><div class="bento__visual"><ul class="chips"><li class="pos">UTG</li><li class="pos">HJ</li><li class="pos">CO</li><li class="pos">BTN</li></ul></div></article>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="plan">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Plan card</h2>
+<p>Free and Pro. The Pro card has an amber stroke. Prices sit behind <code>facts.json</code> markers.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<article class="plan plan--pro"><div><p class="t-label plan__tier">Preflop Pro</p><p class="plan__price">$<!-- fact:lifetime -->59.99<!-- /fact --><span class="plan__per"> once</span></p><p class="plan__alt">Yours for good, or <b>$<!-- fact:monthly -->7.99<!-- /fact --> a month</b>.</p></div><ul class="plan__list"><li><b>Unlimited hands</b>, no daily cap</li><li>A line that earns its place</li></ul><span class="badge-soon">Available at launch</span></article>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<article class="plan plan--pro"><div><p class="t-label plan__tier">Preflop Pro</p><p class="plan__price">$<!-- fact:lifetime -->59.99<!-- /fact --><span class="plan__per"> once</span></p><p class="plan__alt">Yours for good, or <b>$<!-- fact:monthly -->7.99<!-- /fact --> a month</b>.</p></div><ul class="plan__list"><li><b>Unlimited hands</b>, no daily cap</li><li>A line that earns its place</li></ul><span class="badge-soon">Available at launch</span></article>
 </div>
 </div>
 </div>

@@ -97,8 +97,8 @@ panel fill. The app icon is final.
 | 0 | Foundation | done |
 | 1 | Shell | done |
 | 2 | Hero + demo + proof bar + QR | this PR |
-| 3 | Scroll story (desktop pin, mobile stack) | |
-| 4 | Bento + pricing + FAQ + closing | |
+| 3 | Scroll story (desktop pin, mobile stack) | built in the Phase 2 PR at Stan's request (sticky phone, real app screenshots) |
+| 4 | Bento + pricing + FAQ + closing | built in the Phase 2 PR at Stan's request (plus marquee, scrubbed statement, progress line) |
 | 5 | Cutover | |
 | 6 | Secondary pages | |
 

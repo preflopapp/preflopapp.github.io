@@ -110,11 +110,9 @@
     });
   });
 
-  /* ---- Scroll reveals ---------------------------------------------------- */
+  /* ---- Motion helpers --------------------------------------------------- */
   var gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!gsap || !ScrollTrigger || reduce) return;
-  gsap.registerPlugin(ScrollTrigger);
 
   var css = getComputedStyle(root);
   function token(name, fallback) { return css.getPropertyValue(name).trim() || fallback; }
@@ -142,6 +140,16 @@
   var rise = px("--entrance-rise", "12");
   var step = ms("--entrance-step", "40ms");
   var maxDelay = ms("--entrance-max-delay", "160ms");
+
+  /* The tokens, parsed once, for the other page scripts (home.js). */
+  window.PreflopMotion = Object.freeze({
+    reduce: reduce, ease: ease, rise: rise, step: step, maxDelay: maxDelay,
+    dur: { entrance: dur, reveal: ms("--dur-reveal", "550ms"), count: ms("--dur-count", "900ms"), slide: ms("--dur-slide", "330ms") }
+  });
+
+  /* ---- Scroll reveals ---------------------------------------------------- */
+  if (!gsap || !ScrollTrigger || reduce) return;
+  gsap.registerPlugin(ScrollTrigger);
 
   function play(els) {
     gsap.fromTo(els,
