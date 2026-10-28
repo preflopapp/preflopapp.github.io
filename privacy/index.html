@@ -55,11 +55,12 @@
 
 <h1>Privacy Policy</h1>
 <p class="effective"><strong>Effective date:</strong> 2 September 2026<br>
-<strong>Last updated:</strong> 9 October 2026</p>
+<strong>Last updated:</strong> 28 October 2026</p>
 
 <p>Preflop has no accounts, no analytics, no ads and no tracking. Your
 practice stays on your device. The only personal data the app sends us is
-feedback you choose to send, described below.</p>
+feedback you choose to send. Everything else the app does online is listed
+below, under <a href="#online">Everything the app does online</a>.</p>
 
 <h2>What the app stores, and where</h2>
 
@@ -72,6 +73,10 @@ storage. It is never transmitted. That includes:</p>
     position, situation, stack depth and table size each hand was played at.</li>
   <li><strong>Your progress</strong> — streak, XP, level, daily goal, personal
     records, and which badges you have earned.</li>
+  <li><strong>Your bankroll sessions</strong> — if you use the bankroll
+    tracker: the sessions you log (cash or tournament, venue, game, buy-ins,
+    cash-out, time played, an optional mood and note), your home currency and
+    your bankroll goal. They are kept in their own store on your device.</li>
   <li><strong>Your settings</strong> — appearance, card faces and backs,
     animation speed, sound, haptics and background motion, practice filters,
     the hand timer, your daily goal, and whether reminders are on.</li>
@@ -82,7 +87,9 @@ storage. It is never transmitted. That includes:</p>
 
 <p>The Home Screen widget shows your streak, your remaining free hands and a
 hand to answer. It reads them from storage shared only between Preflop and its
-own widget, on the same device.</p>
+own widget, on the same device. If you start a live bankroll session, the
+Lock Screen shows it as a Live Activity, drawn by iOS from data on your
+device.</p>
 
 <p>If you turn on practice reminders, they are scheduled by iOS on your device.
 No push service or server is involved, and you can turn them off in the app's
@@ -120,12 +127,42 @@ for a moment to stop the form from being flooded, and is not stored. We keep
 feedback for as long as it helps us improve the app. To have yours deleted,
 email us from the address you used, or tell us roughly when you sent it.</p>
 
-<h2>What else the app sends</h2>
+<h2 id="online">Everything the app does online</h2>
 
-<p>When it opens, the app downloads a small file from preflopapp.com listing
-which plans to offer. That request carries no information about you. Like any
-web request, it reveals your IP address to the server; we do not log or store
-it.</p>
+<p>Practice works offline. The app goes online for four things only, and none
+of them sends your practice history, progress or bankroll:</p>
+
+<ul>
+  <li><strong>The plan list.</strong> When it opens, the app downloads a small
+    file from preflopapp.com listing which plans to offer. The request carries
+    no information about you. Like any web request, it reveals your IP address
+    to the server; we do not log or store it.</li>
+  <li><strong>Your subscription, with Apple.</strong> The app asks Apple
+    whether you have a valid purchase or subscription; see Purchases below.</li>
+  <li><strong>Feedback you choose to send</strong>, described above.</li>
+  <li><strong>A currency rate, for the bankroll tracker.</strong> Only when you
+    log a session in a currency other than your home currency, the app asks a
+    third-party exchange-rate service (Frankfurter, which publishes European
+    Central Bank rates) for the rate between the two. The request carries the
+    two currency codes and nothing else, and like any web request it reveals
+    your IP address to that service. We do not receive it, and it is covered by
+    that service's own practices, not ours.</li>
+</ul>
+
+<h2>Sharing a hand</h2>
+
+<p>You can share a hand as a link. The app builds it on your device, from the
+hand and the answer you picked, and gives it to the iOS share sheet; it goes
+only where you send it, through the app you choose. Anyone who opens it sees
+that hand. The page at preflopapp.com reads the link in the browser to draw the
+hand, and we do not store it.</p>
+
+<h2>Beta testing</h2>
+
+<p>While Preflop is in beta, you install it through Apple's TestFlight. Apple
+runs TestFlight and your TestFlight account, and may pass us crash reports and
+any feedback you choose to send through TestFlight, under Apple's terms and
+privacy policy. We use them only to fix the app.</p>
 
 <h2>What we do not do</h2>
 
@@ -156,8 +193,8 @@ with an email address, contact us and we will delete it.</p>
 <h2>Deleting your data</h2>
 
 <p>Deleting the app from your device removes everything it has stored,
-including your entire practice history and progress. The only thing we hold is
-feedback you sent; see above for how to have it deleted.</p>
+including your entire practice history, progress and bankroll sessions. The
+only thing we hold is feedback you sent; see above for how to have it deleted.</p>
 
 <p>To clear your history and progress without deleting the app, use
 <strong>Settings → Help → Reset Progress</strong>. It deletes your hand

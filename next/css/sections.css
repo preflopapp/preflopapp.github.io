@@ -9,6 +9,7 @@
    one token, --section-y; a --panel band breaks it up once, around the story. */
 
 .section { padding-block: var(--section-y); }
+.section--cta { padding-block: var(--space-5); }
 .section--flush { padding-top: 0; }
 .band { background: var(--panel); border-block: var(--stroke) solid var(--border); }
 
@@ -57,7 +58,7 @@
    its list twice (the copy is aria-hidden) so the loop has no seam. Reduce
    Motion: one wrapped row, no movement. */
 
-.marquee { display: grid; gap: var(--space-1); padding-block: var(--space-5); overflow: clip; }
+.marquee { display: grid; gap: var(--space-1); padding-block: var(--space-4); overflow: clip; }
 .marquee__row { display: flex; overflow: hidden; user-select: none; }
 .marquee__track {
   display: flex; flex: none; align-items: center; justify-content: space-around; gap: var(--space-1);
@@ -84,7 +85,7 @@
    One sentence, large. home.js dims its words and lights them as it scrolls
    through; without it (or with Reduce Motion) it is just text. */
 
-.statement { padding-block: var(--space-6) var(--section-y); }
+.statement { padding-block: var(--space-5) var(--section-y); }
 .statement__text {
   margin: 0 auto; max-width: 18em; text-align: center; text-wrap: balance;
   font-size: var(--fs-statement); font-weight: var(--fw-display);
@@ -127,7 +128,7 @@
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-5);
 }
 .story[data-pin] .story__chapter {
-  display: flex; align-items: center; min-height: 90svh;
+  display: flex; align-items: center; min-height: 72svh;
   opacity: 0.3; transition: opacity var(--dur-reveal) var(--ease-out);
 }
 .story[data-pin] .story__chapter.is-active { opacity: 1; }

@@ -183,7 +183,7 @@
   --space-7: 6rem;
   --space-8: 8rem;
 
-  --section-y: clamp(4rem, 2.5rem + 6vw, 8rem);  /* vertical rhythm between sections */
+  --section-y: clamp(3.25rem, 2.25rem + 4.5vw, 6.5rem);  /* vertical rhythm between sections */
   --gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
   --measure: 40rem;   /* reading width */
   --page-max: 72rem;
