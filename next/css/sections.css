@@ -331,14 +331,11 @@
 
 .pieces { position: absolute; inset: 0; pointer-events: none; }
 .piece {
-  --act-ink: #0e0f14; --act-ink-raise: #0e0f14;
   position: absolute; z-index: 3; width: max-content; max-width: 11.5rem;
   background: var(--bg); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
   box-shadow: 0 14px 32px -14px color-mix(in srgb, var(--text) 38%, transparent);
   font-size: 0.8125rem; line-height: 1.35;
 }
-@media (prefers-color-scheme: light) { :root:not([data-theme]) .piece { --act-ink: #ffffff; --act-ink-raise: #150f02; } }
-[data-theme="light"] .piece { --act-ink: #ffffff; --act-ink-raise: #150f02; }
 .piece__in { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.65rem 0.8rem; animation: bob calc(var(--dur-breath) * 3.4) var(--ease-in-out) infinite alternate; }
 .piece[data-i="1"] .piece__in { animation-duration: calc(var(--dur-breath) * 4.1); animation-delay: -1.1s; }
 .piece[data-i="2"] .piece__in { animation-duration: calc(var(--dur-breath) * 3.7); animation-delay: -2.3s; }
@@ -365,7 +362,7 @@
 .pbtn { display: inline-block; padding: 0.4rem 0.7rem; border-radius: var(--r-button); font-weight: 600; background: var(--well); }
 .pbtn--fold { background: var(--act-fold); color: var(--act-ink); }
 .pbtn--call { background: var(--act-call); color: var(--act-ink); }
-.pbtn--raise { background: var(--act-raise); color: var(--act-ink-raise); }
+.pbtn--raise { background: var(--act-raise); color: var(--act-ink); }
 .pbtn--accent { margin-top: 0.35rem; text-align: center; background: var(--accent-fill); color: var(--accent-fill-ink); }
 .piece--hand .piece__in { flex-direction: row; align-items: center; gap: 0.4rem; }
 .piece--hand .pcard { width: 2.25rem; height: 3.1rem; font-size: 1.0625rem; }
