@@ -50,6 +50,11 @@
   --act-call: #4f93e0;
   --act-fold: #e0574f;
   --act-allin: #a97be8;
+  --badge-bronze: #b87333;
+  --badge-silver: #b8bcc0;
+  --badge-gold: #d4a02c;
+  --badge-diamond: #8fd4e0;
+  --badge-unearned: #6c6e7c;
 }
 
 @media (prefers-color-scheme: light) {
@@ -73,6 +78,11 @@
     --act-call: #2f72be;
     --act-fold: #c8443c;
     --act-allin: #9a6ede;
+    --badge-bronze: #a2602a;
+    --badge-silver: #6e747b;
+    --badge-gold: #a37100;
+    --badge-diamond: #1f8ca3;
+    --badge-unearned: #8a8c99;
   }
 }
 
@@ -96,6 +106,11 @@
   --act-call: #2f72be;
   --act-fold: #c8443c;
   --act-allin: #9a6ede;
+  --badge-bronze: #a2602a;
+  --badge-silver: #6e747b;
+  --badge-gold: #a37100;
+  --badge-diamond: #1f8ca3;
+  --badge-unearned: #8a8c99;
 }
 
 /* ---- Playing cards ---------------------------------------------------------

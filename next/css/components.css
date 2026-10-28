@@ -352,7 +352,7 @@ a { color: var(--accent); }
 }
 @media (prefers-reduced-motion: reduce) { .hero__glow { animation: none; } }
 
-@media (min-width: 60rem) {
+@media (min-width: 48rem) {
   .hero { padding-block: var(--space-6) var(--space-6); }
   .hero__grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-5); }
   .hero__demo { justify-self: end; }

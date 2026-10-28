@@ -1,0 +1,715 @@
+{
+ "note": "Levels are numbers only; the app has NO level names. XP: 15 per correct (Mixed counts) hand. xpToNext = round5(100*1.15^(level-1)). Badge name/detail follow Models/BadgeStrings.swift ('Bronze \u00b7 UTG', 'N correct answers from UTG.'). Gallery section footers: 'Earned by answering correctly from a seat.' / 'Earned by answering correctly within a category. Spots often belong to more than one.'",
+ "xpPerCorrectHand": 15,
+ "levels": [
+  {
+   "level": 1,
+   "xpToNext": 100,
+   "totalXPToReach": 0
+  },
+  {
+   "level": 2,
+   "xpToNext": 115,
+   "totalXPToReach": 100
+  },
+  {
+   "level": 3,
+   "xpToNext": 130,
+   "totalXPToReach": 215
+  },
+  {
+   "level": 4,
+   "xpToNext": 150,
+   "totalXPToReach": 345
+  },
+  {
+   "level": 5,
+   "xpToNext": 175,
+   "totalXPToReach": 495
+  },
+  {
+   "level": 6,
+   "xpToNext": 200,
+   "totalXPToReach": 670
+  },
+  {
+   "level": 7,
+   "xpToNext": 230,
+   "totalXPToReach": 870
+  },
+  {
+   "level": 8,
+   "xpToNext": 265,
+   "totalXPToReach": 1100
+  },
+  {
+   "level": 9,
+   "xpToNext": 305,
+   "totalXPToReach": 1365
+  },
+  {
+   "level": 10,
+   "xpToNext": 350,
+   "totalXPToReach": 1670
+  },
+  {
+   "level": 11,
+   "xpToNext": 405,
+   "totalXPToReach": 2020
+  },
+  {
+   "level": 12,
+   "xpToNext": 465,
+   "totalXPToReach": 2425
+  },
+  {
+   "level": 13,
+   "xpToNext": 535,
+   "totalXPToReach": 2890
+  },
+  {
+   "level": 14,
+   "xpToNext": 615,
+   "totalXPToReach": 3425
+  },
+  {
+   "level": 15,
+   "xpToNext": 710,
+   "totalXPToReach": 4040
+  },
+  {
+   "level": 16,
+   "xpToNext": 815,
+   "totalXPToReach": 4750
+  },
+  {
+   "level": 17,
+   "xpToNext": 935,
+   "totalXPToReach": 5565
+  },
+  {
+   "level": 18,
+   "xpToNext": 1075,
+   "totalXPToReach": 6500
+  },
+  {
+   "level": 19,
+   "xpToNext": 1240,
+   "totalXPToReach": 7575
+  },
+  {
+   "level": 20,
+   "xpToNext": 1425,
+   "totalXPToReach": 8815
+  }
+ ],
+ "situationUnlocks": [
+  {
+   "situation": "Opening",
+   "unlockLevel": 1
+  },
+  {
+   "situation": "Facing an open",
+   "unlockLevel": 3
+  },
+  {
+   "situation": "Facing a 3-bet",
+   "unlockLevel": 5
+  },
+  {
+   "situation": "Facing an all-in",
+   "unlockLevel": 6
+  },
+  {
+   "situation": "Blind vs blind",
+   "unlockLevel": 3
+  },
+  {
+   "situation": "Blind Defense",
+   "unlockLevel": "Pro focus drill (no level)"
+  },
+  {
+   "situation": "Suited Ax",
+   "unlockLevel": "Pro focus drill (no level)"
+  },
+  {
+   "situation": "Broadway Hands",
+   "unlockLevel": "Pro focus drill (no level)"
+  },
+  {
+   "situation": "Pocket Pairs",
+   "unlockLevel": "Pro focus drill (no level)"
+  }
+ ],
+ "badgeCount": 60,
+ "badgeTiers": [
+  "bronze",
+  "silver",
+  "gold",
+  "diamond (situations/hand types only)"
+ ],
+ "badgeColours": {
+  "bronze": {
+   "dark": "#B87333",
+   "light": "#A2602A"
+  },
+  "silver": {
+   "dark": "#B8BCC0",
+   "light": "#6E747B"
+  },
+  "gold": {
+   "dark": "#D4A02C",
+   "light": "#A37100"
+  },
+  "diamond": {
+   "dark": "#8FD4E0",
+   "light": "#1F8CA3"
+  },
+  "unearned": {
+   "dark": "#6C6E7C",
+   "light": "#8A8C99"
+  }
+ },
+ "badges": [
+  {
+   "id": "position.utg.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 UTG",
+   "detail": "25 correct answers from UTG.",
+   "subject": "UTG",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.utg.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 UTG",
+   "detail": "100 correct answers from UTG.",
+   "subject": "UTG",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.utg.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 UTG",
+   "detail": "500 correct answers from UTG.",
+   "subject": "UTG",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.utg1.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 UTG+1",
+   "detail": "25 correct answers from UTG+1.",
+   "subject": "UTG+1",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.utg1.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 UTG+1",
+   "detail": "100 correct answers from UTG+1.",
+   "subject": "UTG+1",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.utg1.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 UTG+1",
+   "detail": "500 correct answers from UTG+1.",
+   "subject": "UTG+1",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.lj.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 LJ",
+   "detail": "25 correct answers from LJ.",
+   "subject": "LJ",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.lj.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 LJ",
+   "detail": "100 correct answers from LJ.",
+   "subject": "LJ",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.lj.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 LJ",
+   "detail": "500 correct answers from LJ.",
+   "subject": "LJ",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.hj.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 HJ",
+   "detail": "25 correct answers from HJ.",
+   "subject": "HJ",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.hj.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 HJ",
+   "detail": "100 correct answers from HJ.",
+   "subject": "HJ",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.hj.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 HJ",
+   "detail": "500 correct answers from HJ.",
+   "subject": "HJ",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.co.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 CO",
+   "detail": "25 correct answers from CO.",
+   "subject": "CO",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.co.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 CO",
+   "detail": "100 correct answers from CO.",
+   "subject": "CO",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.co.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 CO",
+   "detail": "500 correct answers from CO.",
+   "subject": "CO",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.btn.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 BTN",
+   "detail": "25 correct answers from BTN.",
+   "subject": "BTN",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.btn.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 BTN",
+   "detail": "100 correct answers from BTN.",
+   "subject": "BTN",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.btn.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 BTN",
+   "detail": "500 correct answers from BTN.",
+   "subject": "BTN",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.sb.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 SB",
+   "detail": "25 correct answers from SB.",
+   "subject": "SB",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.sb.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 SB",
+   "detail": "100 correct answers from SB.",
+   "subject": "SB",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.sb.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 SB",
+   "detail": "500 correct answers from SB.",
+   "subject": "SB",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "position.bb.bronze",
+   "family": "Positions",
+   "name": "Bronze \u00b7 BB",
+   "detail": "25 correct answers from BB.",
+   "subject": "BB",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "position.bb.silver",
+   "family": "Positions",
+   "name": "Silver \u00b7 BB",
+   "detail": "100 correct answers from BB.",
+   "subject": "BB",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "position.bb.gold",
+   "family": "Positions",
+   "name": "Gold \u00b7 BB",
+   "detail": "500 correct answers from BB.",
+   "subject": "BB",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.rfi.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Opening",
+   "detail": "25 correct answers in Opening.",
+   "subject": "Opening",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.rfi.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Opening",
+   "detail": "100 correct answers in Opening.",
+   "subject": "Opening",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.rfi.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Opening",
+   "detail": "500 correct answers in Opening.",
+   "subject": "Opening",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.rfi.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Opening",
+   "detail": "1000 correct answers in Opening.",
+   "subject": "Opening",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.facing_open.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Facing an open",
+   "detail": "25 correct answers in Facing an open.",
+   "subject": "Facing an open",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.facing_open.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Facing an open",
+   "detail": "100 correct answers in Facing an open.",
+   "subject": "Facing an open",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.facing_open.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Facing an open",
+   "detail": "500 correct answers in Facing an open.",
+   "subject": "Facing an open",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.facing_open.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Facing an open",
+   "detail": "1000 correct answers in Facing an open.",
+   "subject": "Facing an open",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.facing_three_bet.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Facing a 3-bet",
+   "detail": "25 correct answers in Facing a 3-bet.",
+   "subject": "Facing a 3-bet",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.facing_three_bet.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Facing a 3-bet",
+   "detail": "100 correct answers in Facing a 3-bet.",
+   "subject": "Facing a 3-bet",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.facing_three_bet.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Facing a 3-bet",
+   "detail": "500 correct answers in Facing a 3-bet.",
+   "subject": "Facing a 3-bet",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.facing_three_bet.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Facing a 3-bet",
+   "detail": "1000 correct answers in Facing a 3-bet.",
+   "subject": "Facing a 3-bet",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.facing_all_in.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Facing an all-in",
+   "detail": "25 correct answers in Facing an all-in.",
+   "subject": "Facing an all-in",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.facing_all_in.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Facing an all-in",
+   "detail": "100 correct answers in Facing an all-in.",
+   "subject": "Facing an all-in",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.facing_all_in.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Facing an all-in",
+   "detail": "500 correct answers in Facing an all-in.",
+   "subject": "Facing an all-in",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.facing_all_in.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Facing an all-in",
+   "detail": "1000 correct answers in Facing an all-in.",
+   "subject": "Facing an all-in",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.blind_vs_blind.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Blind vs blind",
+   "detail": "25 correct answers in Blind vs blind.",
+   "subject": "Blind vs blind",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.blind_vs_blind.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Blind vs blind",
+   "detail": "100 correct answers in Blind vs blind.",
+   "subject": "Blind vs blind",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.blind_vs_blind.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Blind vs blind",
+   "detail": "500 correct answers in Blind vs blind.",
+   "subject": "Blind vs blind",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.blind_vs_blind.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Blind vs blind",
+   "detail": "1000 correct answers in Blind vs blind.",
+   "subject": "Blind vs blind",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.blind_defense.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Blind Defense",
+   "detail": "25 correct answers in Blind Defense.",
+   "subject": "Blind Defense",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.blind_defense.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Blind Defense",
+   "detail": "100 correct answers in Blind Defense.",
+   "subject": "Blind Defense",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.blind_defense.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Blind Defense",
+   "detail": "500 correct answers in Blind Defense.",
+   "subject": "Blind Defense",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.blind_defense.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Blind Defense",
+   "detail": "1000 correct answers in Blind Defense.",
+   "subject": "Blind Defense",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.suited_aces.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Suited Ax",
+   "detail": "25 correct answers in Suited Ax.",
+   "subject": "Suited Ax",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.suited_aces.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Suited Ax",
+   "detail": "100 correct answers in Suited Ax.",
+   "subject": "Suited Ax",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.suited_aces.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Suited Ax",
+   "detail": "500 correct answers in Suited Ax.",
+   "subject": "Suited Ax",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.suited_aces.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Suited Ax",
+   "detail": "1000 correct answers in Suited Ax.",
+   "subject": "Suited Ax",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.broadway.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Broadway Hands",
+   "detail": "25 correct answers in Broadway Hands.",
+   "subject": "Broadway Hands",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.broadway.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Broadway Hands",
+   "detail": "100 correct answers in Broadway Hands.",
+   "subject": "Broadway Hands",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.broadway.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Broadway Hands",
+   "detail": "500 correct answers in Broadway Hands.",
+   "subject": "Broadway Hands",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.broadway.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Broadway Hands",
+   "detail": "1000 correct answers in Broadway Hands.",
+   "subject": "Broadway Hands",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  },
+  {
+   "id": "category.pocket_pairs.bronze",
+   "family": "Categories",
+   "name": "Bronze \u00b7 Pocket Pairs",
+   "detail": "25 correct answers in Pocket Pairs.",
+   "subject": "Pocket Pairs",
+   "tier": "bronze",
+   "correctAnswersNeeded": 25
+  },
+  {
+   "id": "category.pocket_pairs.silver",
+   "family": "Categories",
+   "name": "Silver \u00b7 Pocket Pairs",
+   "detail": "100 correct answers in Pocket Pairs.",
+   "subject": "Pocket Pairs",
+   "tier": "silver",
+   "correctAnswersNeeded": 100
+  },
+  {
+   "id": "category.pocket_pairs.gold",
+   "family": "Categories",
+   "name": "Gold \u00b7 Pocket Pairs",
+   "detail": "500 correct answers in Pocket Pairs.",
+   "subject": "Pocket Pairs",
+   "tier": "gold",
+   "correctAnswersNeeded": 500
+  },
+  {
+   "id": "category.pocket_pairs.diamond",
+   "family": "Categories",
+   "name": "Diamond \u00b7 Pocket Pairs",
+   "detail": "1000 correct answers in Pocket Pairs.",
+   "subject": "Pocket Pairs",
+   "tier": "diamond",
+   "correctAnswersNeeded": 1000
+  }
+ ]
+}

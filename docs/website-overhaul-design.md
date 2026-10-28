@@ -31,7 +31,8 @@ Phase 0 (no CDN, no request leaving the origin).
    Store badge. It lives in ONE constant in the shell so every CTA slot and the
    QR change together. If it breaks, the constant flips back to a "Coming soon"
    badge. No email capture.
-3. Proof is real numbers from the app only (30,000+ spots, 20 free hands a day,
+3. Proof is real numbers from the app only (25,000+ spots (the app bundles 25,479; the
+   brief's 30,000+ was wrong, corrected 2026-10-28), 20 free hands a day,
    no ads, no tracking; take them from `facts.json`). No ratings, testimonials
    or superlatives like "#1".
 4. Keep the headline "Know your play before the flop." One primary CTA in the

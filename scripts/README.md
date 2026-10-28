@@ -145,3 +145,19 @@ different URL. `scripts/capture-demo-static.js` prints the demo's first-hand
 markup for the root `index.html` (see its header). `scripts/gen-range-chart.py`
 prints the 13x13 range-chart cells for the bento card from the landing demo's
 range data; paste its output into `.chart__grid` if that data changes.
+
+## Real app data on the homepage (Phase 7)
+
+`docs/app-handoff/` holds what a session in the app repo exported: the facts
+audit (`FACTS.md`), the app's tokens and motion (`motion-and-design.md`) and
+real spots, range charts, badges and widget text (`data/`). `gen-app-data.py`
+turns it into `next/js/app-data.js` (the three charts the explorer draws) and
+the badge grid in `index.html`; re-run it when the data changes. The stats and
+home numbers in that folder are MOCK (a dev sample profile) and are labelled
+Sample profile wherever the page shows them.
+
+`facts.json` gained `practiceSpots` (what the app bundles), `practiceSpotsShown`
+(rounded down, written as "25,000+") and `stackDepths`. `check-site.py` fails
+any "N,NNN+" in a page or a `next/js` script that is not the shown figure, and a
+shown figure above the bundled count. The app repo's `check_site_facts.py`
+ignores these keys (confirmed by the app session).

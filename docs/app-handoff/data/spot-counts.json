@@ -1,0 +1,120 @@
+{
+ "note": "Counted from ContentPipeline/Normalized/spots_*.json at commit 1006e29. One spot = one hand class in one chart.",
+ "total": 25479,
+ "charts": 424,
+ "by_stack_depth_bb": {
+  "20": 9496,
+  "30": 9552,
+  "100": 6431
+ },
+ "by_table_size": {
+  "6max": 9994,
+  "8max": 15485
+ },
+ "by_situation": {
+  "blind_vs_blind": 1992,
+  "facing_all_in": 4122,
+  "facing_open": 11272,
+  "facing_three_bet": 5456,
+  "rfi": 2637
+ },
+ "by_depth_and_table": {
+  "100bb/6max": 2562,
+  "100bb/8max": 3869,
+  "20bb/6max": 3650,
+  "20bb/8max": 5846,
+  "30bb/6max": 3782,
+  "30bb/8max": 5770
+ },
+ "by_situation_depth": {
+  "blind_vs_blind/100bb": 654,
+  "blind_vs_blind/20bb": 670,
+  "blind_vs_blind/30bb": 668,
+  "facing_all_in/20bb": 2461,
+  "facing_all_in/30bb": 1661,
+  "facing_open/100bb": 3007,
+  "facing_open/20bb": 4163,
+  "facing_open/30bb": 4102,
+  "facing_three_bet/100bb": 1948,
+  "facing_three_bet/20bb": 1321,
+  "facing_three_bet/30bb": 2187,
+  "rfi/100bb": 822,
+  "rfi/20bb": 881,
+  "rfi/30bb": 934
+ },
+ "hero_seats_by_table_and_situation": {
+  "6max/blind_vs_blind": [
+   "bb",
+   "sb"
+  ],
+  "6max/facing_all_in": [
+   "bb",
+   "btn",
+   "co",
+   "hj",
+   "sb",
+   "utg"
+  ],
+  "6max/facing_open": [
+   "bb",
+   "btn",
+   "co",
+   "hj",
+   "sb"
+  ],
+  "6max/facing_three_bet": [
+   "btn",
+   "co",
+   "hj",
+   "sb",
+   "utg"
+  ],
+  "6max/rfi": [
+   "btn",
+   "co",
+   "hj",
+   "utg"
+  ],
+  "8max/blind_vs_blind": [
+   "bb",
+   "sb"
+  ],
+  "8max/facing_all_in": [
+   "bb",
+   "btn",
+   "co",
+   "hj",
+   "lj",
+   "sb",
+   "utg",
+   "utg1"
+  ],
+  "8max/facing_open": [
+   "bb",
+   "btn",
+   "co",
+   "hj",
+   "lj",
+   "sb",
+   "utg1"
+  ],
+  "8max/facing_three_bet": [
+   "btn",
+   "co",
+   "hj",
+   "lj",
+   "sb",
+   "utg",
+   "utg1"
+  ],
+  "8max/rfi": [
+   "btn",
+   "co",
+   "hj",
+   "lj",
+   "utg",
+   "utg1"
+  ]
+ },
+ "recommended_site_figure": "25,000+"
+}

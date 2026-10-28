@@ -1,0 +1,19 @@
+{
+ "MOCK": true,
+ "note": "MOCK. Transcribed by eye from website-handoff/screens/home-dashboard-dark.webp and hand-history-dark.webp, which were captured from the Dev build's 'regular' sample profile (scripts/screen.sh -PreflopProfile regular -PreflopStatus lifetime). These are sample-user numbers, not real users, but the SHAPE and labels are exactly what the UI shows. The Statistics screen has no current capture (only the outdated 2026-09-19 one), so its shape is given from code labels, not numbers: sections 'Where the hands go' (rows: '<seat> · <situation> · <hand type>', '4 of 5 hands wrong · ~21.9 bb/100 vs chart', accuracy pill) and 'What you keep doing' (e.g. 'You 3-bet too much at HJ', '40% of the time facing an open, where the charts 3-bet 29%. 20 hands.').",
+ "home_pro": {
+  "accuracy_card": {"title": "Your accuracy", "handsPlayedLabel": "560 hands", "window": "Last 200 of 560 hands", "accuracyPercent": 74, "weekChange": "1pt this week (up)", "strongest": {"percent": 83, "situation": "Opening"}, "mostImproved": {"points": 17, "situation": "UTG+1"}},
+  "fix_next": {"title": "Fix next", "scope": "20 hands, all time", "situation": "CO facing a 3-bet", "accuracyPercent": 30, "diagnosis": "Folding too much", "missesOnChart": "12 hands missed on this 20bb chart", "button": "Drill this seat"},
+  "revisit": {"title": "Revisit", "count": "8 hands", "items": [{"label": "BTN vs CO open", "yourPlay": "3-Bet", "chart": "Call"}, {"label": "BTN vs SB jam", "yourPlay": "Call", "chart": "Fold"}, {"label": "CO opening", "yourPlay": "Fold", "chart": "Raise"}], "action": "Replay"},
+  "skill_pills": [{"name": "Opening", "percent": 83}, {"name": "Facing an open", "percent": 76}]
+ },
+ "hand_history_rows": [
+  {"title": "BB vs BTN open", "yourPlay": "All-in", "stack": "20bb", "when": "9 Oct 2026 at 0:59", "grade": "Mixed"},
+  {"title": "BB vs BTN jam", "yourPlay": "Fold", "stack": "20bb", "grade": "Correct"},
+  {"title": "SB vs BB 3-bet", "yourPlay": "4-Bet", "stack": "100bb", "grade": "Mixed"},
+  {"title": "BTN vs CO open", "yourPlay": "3-Bet", "stack": "20bb", "grade": "Wrong"}
+ ],
+ "hand_history_header": "560 hands (filter menu)",
+ "profile_free_vs_pro_note": "A free Profile shows the session score, not overall accuracy (docs/STATUS.md).",
+ "paywall_screen_note": "The captured paywall (screens/paywall-SUPERSEDED-dark.webp) shows Monthly + Annual with a trial. That is OLD. Live paywall: Monthly $7.99 and Lifetime $59.99 (preselected), no trial."
+}
