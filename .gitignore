@@ -8,3 +8,9 @@ __pycache__/
 
 # Staging directory the deploy assembles; see .github/workflows/deploy.yml
 _site/
+
+# Claude Code: share rules, skills, hooks and commands; keep local state out.
+# launch.json holds this machine's scratchpad path.
+.claude/worktrees/
+.claude/settings.local.json
+.claude/launch.json
