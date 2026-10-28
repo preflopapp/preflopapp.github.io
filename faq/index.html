@@ -9,6 +9,7 @@
 <meta property="og:description" content="Answers about Preflop: the free tier, Preflop Pro, restoring purchases, devices, and your data.">
 <meta property="og:url" content="https://preflopapp.com/faq/">
 <!-- shared:head -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0f14" media="(prefers-color-scheme: dark)">
@@ -22,138 +23,157 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/mark-v2.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" href="/assets/fonts/Outfit-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style.css">
+<link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/next/css/tokens.css">
+<link rel="stylesheet" href="/next/css/components.css">
+<link rel="stylesheet" href="/next/css/pages.css">
+<script defer src="/next/js/config.js"></script>
+<script defer src="/next/js/site.js"></script>
 <!-- /shared:head -->
 </head>
 <body>
 <!-- shared:header -->
 <a class="skip-link" href="#content">Skip to content</a>
-<header class="site-header">
-  <a class="brand" href="/" aria-label="Preflop home">
-    <svg class="mark" viewBox="0 0 96 96" aria-hidden="true">
-      <circle cx="14" cy="14" r="14"/>
-      <circle cx="48" cy="14" r="14"/>
-      <circle cx="82" cy="14" r="14"/>
-      <circle cx="14" cy="48" r="14"/>
-      <circle cx="48" cy="48" r="14"/>
-      <circle cx="14" cy="82" r="14"/>
-    </svg>
-    <span class="wordmark" translate="no">Preflop</span>
-  </a>
-  <nav class="site-nav" aria-label="Main">
-    <a href="/#features">Features</a>
-    <a href="/#pricing">Pricing</a>
-    <a href="/faq/">FAQ</a>
-    <a href="/support/">Support</a>
-  </nav>
+<header class="nav" data-nav>
+<div class="wrap nav__bar">
+<a class="nav__brand" href="/"><img class="nav__mark" src="/assets/mark-v2.svg" alt="" width="24" height="24"><span translate="no">Preflop</span></a>
+<div class="nav__panel" id="nav-menu">
+<nav class="nav__links" aria-label="Main">
+<a href="/#features">Features</a>
+<a href="/#pricing">Pricing</a>
+<a href="/faq/">FAQ</a>
+</nav>
+</div>
+<a class="btn btn--primary btn--sm" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu"></button>
+</div>
+<div class="nav__scrim"></div>
 </header>
 <!-- /shared:header -->
-<main id="content" class="page faq">
+<main id="content" class="page">
 <h1>Frequently asked questions</h1>
 
-<details id="free" open><summary>Is Preflop free?</summary>
-<p>Yes. You can play <!-- fact:dailyFreeHands -->20<!-- /fact --> hands every day, free forever, with
+<div class="faqs__list">
+<details class="faq" id="free" open><summary class="faq__q">Is Preflop free?</summary>
+<p class="faq__a">Yes. You can play <!-- fact:dailyFreeHands -->20<!-- /fact --> hands every day, free forever, with
 the answer, the chart's mix and the reason after every hand. Your streak, XP, levels and
 badges are free too.</p></details>
 
-<details id="pro"><summary>What does Preflop Pro add?</summary>
-<p>Pro is for studying your own game: unlimited hands with no daily cap, your
+<details class="faq" id="pro"><summary class="faq__q">What does Preflop Pro add?</summary>
+<p class="faq__a">Pro is for studying your own game: unlimited hands with no daily cap, your
 stats (accuracy by situation and by seat, with your leaks named), a Home
 dashboard with the spot to fix next and the hands to revisit, Practice Filters
 to drill any situation or seat, your full hand history
 with every explanation, and a daily goal.</p></details>
 
-<details id="price"><summary>How much does Pro cost?</summary>
-<p>In the US, $<!-- fact:monthly -->7.99<!-- /fact --> a month, or $<!-- fact:lifetime -->59.99<!-- /fact --> once for Lifetime.
+<details class="faq" id="price"><summary class="faq__q">How much does Pro cost?</summary>
+<p class="faq__a">In the US, $<!-- fact:monthly -->7.99<!-- /fact --> a month, or $<!-- fact:lifetime -->59.99<!-- /fact --> once for Lifetime.
 The App Store shows the price for your country before you buy. Purchases are made in
 the app; there is nothing to buy on this site.</p></details>
 
-<details id="which-plan"><summary>Monthly or Lifetime — which should I pick?</summary>
-<p>Monthly lets you stop any month. Lifetime is a one-time purchase with nothing to
+<details class="faq" id="which-plan"><summary class="faq__q">Monthly or Lifetime — which should I pick?</summary>
+<p class="faq__a">Monthly lets you stop any month. Lifetime is a one-time purchase with nothing to
 renew, and it costs less than a year of monthly, so it pays for itself if you keep
 studying. Both unlock everything in Pro. There is no trial period because the free plan has no
 time limit: use it for as long as you like before you decide.</p></details>
 
-<details id="double-charged"><summary>I bought Lifetime but I'm still being charged for a subscription.</summary>
-<p>Apple treats them as two separate purchases, so buying Lifetime does not
+<details class="faq" id="double-charged"><summary class="faq__q">I bought Lifetime but I'm still being charged for a subscription.</summary>
+<p class="faq__a">Apple treats them as two separate purchases, so buying Lifetime does not
 cancel a monthly or annual subscription. Cancel it in <strong>Settings → [your name] →
 Subscriptions</strong> on your iPhone.</p></details>
 
-<details id="restore"><summary>How do I restore my purchase on a new phone?</summary>
-<p>Sign in with the same Apple Account, open Preflop, and tap
+<details class="faq" id="restore"><summary class="faq__q">How do I restore my purchase on a new phone?</summary>
+<p class="faq__a">Sign in with the same Apple Account, open Preflop, and tap
 <strong>Restore Purchases</strong> on the paywall or in <strong>Settings →
 Help</strong>.</p></details>
 
-<details id="spots"><summary>Which spots does it cover?</summary>
-<p>Raise first in from every seat, facing an open from every seat against every
+<details class="faq" id="spots"><summary class="faq__q">Which spots does it cover?</summary>
+<p class="faq__a">Raise first in from every seat, facing an open from every seat against every
 opener, and facing a 3-bet after you opened — at 6-max and 8-max tables, 100bb
 deep.</p></details>
 
-<details id="answers"><summary>Where do the answers come from?</summary>
-<p>Every spot is drawn from a fixed preflop range chart for that seat, situation
+<details class="faq" id="answers"><summary class="faq__q">Where do the answers come from?</summary>
+<p class="faq__a">Every spot is drawn from a fixed preflop range chart for that seat, situation
 and table size. After you answer you see the full frequency mix for your hand
 and can open the chart it came from.</p></details>
 
-<details id="close-enough"><summary>Why does it sometimes say “Close enough”?</summary>
-<p>Because a hand the chart raises 54% of the time and folds 46% does not have
+<details class="faq" id="close-enough"><summary class="faq__q">Why does it sometimes say “Close enough”?</summary>
+<p class="faq__a">Because a hand the chart raises 54% of the time and folds 46% does not have
 one right answer. An action within ten points of the most frequent one is graded
 Close, and so is any action the chart takes at least 15% of the time. A Close
 answer counts toward your streak, XP and accuracy, and the explanation tells you
 which action the chart takes most often.</p></details>
 
-<details id="practice-filters"><summary>Can I choose what to practise?</summary>
-<p>Everyone can set their stack depth and table size in <strong>Practice
+<details class="faq" id="practice-filters"><summary class="faq__q">Can I choose what to practise?</summary>
+<p class="faq__a">Everyone can set their stack depth and table size in <strong>Practice
 Filters</strong>, the button at the top of Home. Choosing the situation and
 seat is Pro. On the free plan situations unlock as you level up, from your
 onboarding answers.</p></details>
 
-<details id="solver"><summary>I already use a solver. Is this for me?</summary>
-<p>As a supplement, not a replacement. A solver is for deep study at a desk.
+<details class="faq" id="solver"><summary class="faq__q">I already use a solver. Is this for me?</summary>
+<p class="faq__a">As a supplement, not a replacement. A solver is for deep study at a desk.
 Preflop is for the few minutes between sessions, keeping your preflop sharp.
 It computes no equity or EV of its own.</p></details>
 
-<details id="requirements"><summary>What do I need to run it?</summary>
-<p>An iPhone running iOS 17 or later. Preflop is made for iPhone; there is no
+<details class="faq" id="requirements"><summary class="faq__q">What do I need to run it?</summary>
+<p class="faq__a">An iPhone running iOS 17 or later. Preflop is made for iPhone; there is no
 iPad or Android version.</p></details>
 
-<details id="widget-and-reminders"><summary>Is there a widget, or reminders?</summary>
-<p>Both, and both optional. The Home Screen widget comes in three sizes and
+<details class="faq" id="widget-and-reminders"><summary class="faq__q">Is there a widget, or reminders?</summary>
+<p class="faq__a">Both, and both optional. The Home Screen widget comes in three sizes and
 shows your streak; the larger two also deal you a hand that opens straight into
 practice. Practice reminders are off until you allow them, and you can change
 them in <strong>Settings → Notifications</strong>. They are scheduled on your
 iPhone, not sent from a server.</p></details>
 
-<details id="reset"><summary>How do I reset my progress?</summary>
-<p><strong>Settings → Help → Reset Progress</strong> deletes your hand history,
+<details class="faq" id="reset"><summary class="faq__q">How do I reset my progress?</summary>
+<p class="faq__a"><strong>Settings → Help → Reset Progress</strong> deletes your hand history,
 XP, level, streak and badges. Your plan and purchases are kept. It cannot be
 undone.</p></details>
 
-<details id="data"><summary>Do I need an account? What data do you collect?</summary>
-<p>No account. Your practice stays on your device — no analytics, no ads, no
+<details class="faq" id="data"><summary class="faq__q">Do I need an account? What data do you collect?</summary>
+<p class="faq__a">No account. Your practice stays on your device — no analytics, no ads, no
 tracking. The only thing we receive is feedback you choose to send, with an
 email address only if you add one. See the <a href="/privacy/">Privacy Policy</a>.</p></details>
 
-<details id="gambling"><summary>Is this gambling?</summary>
-<p>No. Preflop is a training app. There is no real money, no wagering, and
+<details class="faq" id="gambling"><summary class="faq__q">Is this gambling?</summary>
+<p class="faq__a">No. Preflop is a training app. There is no real money, no wagering, and
 nothing to win.</p></details>
 
-<details id="help"><summary>How do I get help?</summary>
-<p>Email <!--email_off--><a href="mailto:support@preflopapp.com">support@preflopapp.com</a><!--/email_off-->, or
+<details class="faq" id="help"><summary class="faq__q">How do I get help?</summary>
+<p class="faq__a">Email <!--email_off--><a href="mailto:support@preflopapp.com">support@preflopapp.com</a><!--/email_off-->, or
 see the <a href="/support/">Support</a> page.</p></details>
+</div>
 </main>
 <!-- shared:footer -->
-<footer class="site-footer">
-  <nav aria-label="Footer">
-    <a href="/">Preflop</a>
-    <a href="/faq/">FAQ</a>
-    <a href="/support/">Support</a>
-    <a href="/press/">Press</a>
-    <a href="/privacy/">Privacy</a>
-    <a href="/terms/">Terms</a>
-  </nav>
-  <p class="contact"><!--email_off--><a href="mailto:support@preflopapp.com">support@preflopapp.com</a><!--/email_off--></p>
-  <p class="fineprint">A training app. No real money, no wagering, nothing to win.</p>
+<footer class="footer">
+<div class="wrap">
+<div class="footer__grid">
+<div class="footer__about">
+<a class="footer__brand" href="/"><img class="nav__mark" src="/assets/mark-v2.svg" alt="" width="24" height="24"><span translate="no">Preflop</span></a>
+<p class="footer__line">Every preflop decision, explained.</p>
+</div>
+<nav aria-label="Product"><h2 class="t-label footer__head">Product</h2><ul class="footer__group">
+<li><a href="/#features">Features</a></li>
+<li><a href="/#pricing">Pricing</a></li>
+<li><a href="/faq/">FAQ</a></li>
+</ul></nav>
+<nav aria-label="Help"><h2 class="t-label footer__head">Help</h2><ul class="footer__group">
+<li><a href="/support/">Support</a></li>
+<li><a href="/press/">Press</a></li>
+</ul></nav>
+<nav aria-label="Legal"><h2 class="t-label footer__head">Legal</h2><ul class="footer__group">
+<li><a href="/privacy/">Privacy</a></li>
+<li><a href="/terms/">Terms</a></li>
+</ul></nav>
+</div>
+<div class="footer__base">
+<p><!--email_off--><a href="mailto:support@preflopapp.com">support@preflopapp.com</a><!--/email_off--></p>
+<p>A training app. No real money, no wagering, nothing to win.</p>
+<button class="btn btn--secondary btn--sm" type="button" data-theme-toggle hidden>Light mode</button>
+</div>
+</div>
 </footer>
 <!-- /shared:footer -->
 </body>

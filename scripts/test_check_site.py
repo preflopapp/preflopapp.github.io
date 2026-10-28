@@ -285,6 +285,68 @@ class NextTests(unittest.TestCase):
                     files={"a.png": ""})
         self.errors("(no width/height)", body='<h1>x</h1><img src="/a.png" alt="">', files={"a.png": ""})
 
+class HomeCutoverTests(unittest.TestCase):
+    """After Phase 5 the homepage is built on /next/: no shared blocks, own CSP."""
+    HOME_HEAD = ('<link rel="canonical" href="https://preflopapp.com/"><meta property="og:title" content="T">'
+                 '<meta property="og:description" content="d"><meta property="og:url" content="https://preflopapp.com/">')
+
+    def site(self, files=None, robots=""):
+        home = next_page(head=self.HOME_HEAD, robots=robots)
+        base = {"index.html": home, "faq/index.html": page(canonical="https://preflopapp.com/faq/"),
+                "next/a.css": "body{margin:0}", "next/a.js": "1", "next/js/config.js": CONFIG,
+                "_headers": "/\n  ! Content-Security-Policy\n  X-Frame-Options: DENY\n"}
+        return CheckSiteTests.site(self, {**base, **(files or {})})
+
+    def test_home_on_the_next_system_passes_and_secondary_pages_match_each_other(self):
+        self.assertEqual(cs.check_site(self.site()), [])
+
+    def test_home_must_be_indexable(self):
+        self.assertTrue(any("homepage must not be noindex" in e for e in cs.check_site(self.site(robots="noindex"))))
+
+    def test_home_needs_its_canonical(self):
+        root = self.site({"index.html": next_page(robots="")})
+        self.assertTrue(any("missing canonical" in e for e in cs.check_site(root)))
+
+    def test_headers_must_detach_the_csp_for_the_root(self):
+        root = self.site({"_headers": "/*\n  Content-Security-Policy: script-src 'none'\n"})
+        self.assertTrue(any("_headers: / must detach" in e for e in cs.check_site(root)))
+
+    def test_other_pages_still_compare_to_each_other(self):
+        root = self.site({"support/index.html": page(canonical="https://preflopapp.com/support/",
+                                                     header="<!-- shared:header -->\n<p>other</p>\n<!-- /shared:header -->")})
+        self.assertTrue(any("shared:header block differs from faq/index.html" in e for e in cs.check_site(root)))
+
+    def test_home_must_not_advertise_a_trial(self):
+        root = self.site({"index.html": next_page(head=self.HOME_HEAD, robots="",
+                                                  body=f'<h1>x</h1><a data-cta href="{TF}">Start your free trial</a>')})
+        self.assertTrue(any("free trial" in e for e in cs.check_site(root)))
+
+
+class PageCspHeaderTests(unittest.TestCase):
+    """A text page that runs scripts under its own CSP needs the header detached."""
+    def faq(self):
+        return page(canonical="https://preflopapp.com/faq/").replace(
+            "<head>", f'<head><meta http-equiv="Content-Security-Policy" content="{CSP}">', 1)
+
+    def site(self, headers):
+        files = {"index.html": page(), "faq/index.html": self.faq()}
+        if headers is not None: files["_headers"] = headers
+        return CheckSiteTests.site(self, files)
+
+    def test_page_with_its_own_csp_needs_both_routes_detached(self):
+        errs = cs.check_site(self.site("/*\n  Content-Security-Policy: script-src 'none'\n"))
+        self.assertTrue(any("/faq must detach" in e for e in errs), errs)
+        self.assertTrue(any("/faq/* must detach" in e for e in errs), errs)
+
+    def test_detached_routes_pass(self):
+        h = "/faq\n  ! Content-Security-Policy\n\n/faq/*\n  ! Content-Security-Policy\n"
+        self.assertEqual(cs.check_site(self.site(h)), [])
+
+    def test_a_page_with_no_csp_needs_nothing(self):
+        files = {"index.html": page(), "faq/index.html": page(canonical="https://preflopapp.com/faq/"),
+                 "_headers": "/*\n  Content-Security-Policy: script-src 'none'\n"}
+        self.assertEqual(cs.check_site(CheckSiteTests.site(self, files)), [])
+
 
 if __name__ == "__main__":
     unittest.main()

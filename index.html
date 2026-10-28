@@ -2,16 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Preflop — every preflop decision, explained</title>
+<title>Preflop — know your play before the flop</title>
 <meta name="description" content="Preflop — practise preflop poker decisions on iPhone, hand by hand, with the reasoning behind every answer. No accounts, no tracking; your practice stays on your device.">
 <link rel="canonical" href="https://preflopapp.com/">
-<meta property="og:title" content="Preflop — every preflop decision, explained">
+<meta property="og:title" content="Preflop — know your play before the flop">
 <meta property="og:description" content="Preflop — practise preflop poker decisions on iPhone, hand by hand, with the reasoning behind every answer. No accounts, no tracking; your practice stays on your device.">
 <meta property="og:url" content="https://preflopapp.com/">
-<!-- shared:head -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0e0f14" media="(prefers-color-scheme: dark)">
 <meta property="og:site_name" content="Preflop">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://preflopapp.com/assets/og-v2.png">
@@ -20,178 +16,299 @@
 <meta property="og:image:alt" content="Preflop, the iPhone app for practising preflop poker decisions">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0f14" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/assets/mark-v2.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" href="/assets/fonts/Outfit-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style.css">
-<!-- /shared:head -->
+<link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/next/css/tokens.css">
+<link rel="stylesheet" href="/next/css/components.css">
+<link rel="stylesheet" href="/next/css/demo.css">
+<link rel="stylesheet" href="/next/css/sections.css">
+<script defer src="/next/js/config.js"></script>
+<script defer src="/assets/vendor/gsap/gsap.min.js"></script>
+<script defer src="/assets/vendor/gsap/ScrollTrigger.min.js"></script>
+<script defer src="/next/js/site.js"></script>
+<script defer src="/next/js/demo.js"></script>
+<script defer src="/next/js/home.js"></script>
 </head>
 <body>
-<!-- shared:header -->
 <a class="skip-link" href="#content">Skip to content</a>
-<header class="site-header">
-  <a class="brand" href="/" aria-label="Preflop home">
-    <svg class="mark" viewBox="0 0 96 96" aria-hidden="true">
-      <circle cx="14" cy="14" r="14"/>
-      <circle cx="48" cy="14" r="14"/>
-      <circle cx="82" cy="14" r="14"/>
-      <circle cx="14" cy="48" r="14"/>
-      <circle cx="48" cy="48" r="14"/>
-      <circle cx="14" cy="82" r="14"/>
-    </svg>
-    <span class="wordmark" translate="no">Preflop</span>
-  </a>
-  <nav class="site-nav" aria-label="Main">
-    <a href="/#features">Features</a>
-    <a href="/#pricing">Pricing</a>
-    <a href="/faq/">FAQ</a>
-    <a href="/support/">Support</a>
-  </nav>
-</header>
-<!-- /shared:header -->
-<main id="content">
-
-<section class="hero">
-  <div>
-    <h1>Preflop is where the money is decided.</h1>
-    <p class="lede">Preflop deals you real spots, one hand at a time, and asks the
-      only question that matters: what do you do here? Then it tells you why.</p>
-    <p class="hero-actions">
-      <a class="btn" href="/landing/">Try three hands in your browser</a>
-      <span class="hero-note">Coming soon to the App Store, for iPhone.</span>
-    </p>
-  </div>
-  <picture>
-    <source srcset="/assets/screens/explain.webp" type="image/webp">
-    <img class="shot" src="/assets/screens/explain.png" width="600" height="1304" fetchpriority="high"
-      alt="Preflop showing a hand just answered: the correct action, the reasoning, and the frequency mix.">
-  </picture>
-</section>
-
-<div class="features" id="features">
-  <section class="feature-row">
-    <div>
-      <h2>Every hand, explained</h2>
-      <p>Answer, and you get the correct action with the reasoning behind it — not
-        just a verdict. See the exact frequency mix for your hand, and open the
-        full range chart the spot came from to see where it sits among the hands
-        around it.</p>
-    </div>
-    <div class="feature-media"><picture>
-      <source srcset="/assets/screens/play.webp" type="image/webp">
-      <img class="shot" src="/assets/screens/play.png" width="600" height="1304" loading="lazy"
-        alt="A K♥5♥ hand dealt facing a raise, with Fold, Call and 4-Bet buttons.">
-    </picture></div>
-  </section>
-
-  <section class="feature-row">
-    <div>
-      <h2>The spots you actually play</h2>
-      <ul class="spot-list">
-        <li>Raise first in, from every seat</li>
-        <li>Facing an open, from every seat against every opener</li>
-        <li>Facing a 3-bet after you opened</li>
-        <li>6-max and 8-max, 100bb deep</li>
-      </ul>
-      <h2>Find the leak</h2>
-      <p>Preflop tracks your accuracy seat by seat and situation by situation,
-        then points you at the one costing you the most and lets you drill it on
-        its own until it stops being a leak.</p>
-    </div>
-    <div class="feature-media"><picture>
-      <source srcset="/assets/screens/leaks.webp" type="image/webp">
-      <img class="shot" src="/assets/screens/leaks.png" width="600" height="1304" loading="lazy"
-        alt="The Statistics screen, ranked by EV lost, showing where the hands go by position and situation, with a callout on the patterns you keep repeating.">
-    </picture></div>
-  </section>
-
-  <section class="feature-row">
-    <div>
-      <h2>Review every hand</h2>
-      <p>Your whole history stays searchable — the cards, the seat, what you did,
-        whether it was right, and the explanation. Filter to the ones you got
-        wrong and put them back on the table.</p>
-    </div>
-    <div class="feature-media"><picture>
-      <source srcset="/assets/screens/history.webp" type="image/webp">
-      <img class="shot" src="/assets/screens/history.png" width="600" height="1304" loading="lazy"
-        alt="The hand history list, each hand graded Correct, Wrong or Close.">
-    </picture></div>
-  </section>
+<div class="progress" data-progress aria-hidden="true"></div>
+<header class="nav" data-nav>
+<div class="wrap nav__bar">
+<a class="nav__brand" href="/"><img class="nav__mark" src="/assets/mark-v2.svg" alt="" width="24" height="24"><span translate="no">Preflop</span></a>
+<div class="nav__panel" id="nav-menu">
+<nav class="nav__links" aria-label="Main">
+<a href="#features">Features</a>
+<a href="#pricing">Pricing</a>
+<a href="#faq">FAQ</a>
+</nav>
 </div>
-
-<section class="band habit">
-  <h2>Built to keep you coming back</h2>
-  <p>A few minutes a day is how preflop sticks, so Preflop makes showing up easy.</p>
-  <ul class="habit-list">
-    <li><strong>A streak for showing up</strong>, free forever. Pro adds a daily goal you set yourself.</li>
-    <li><strong>XP, levels and badges</strong> as you play. New spot categories unlock as you level up.</li>
-    <li><strong>A Home Screen widget</strong> in three sizes: your streak at a glance, and on the larger two, a hand to answer that opens straight into practice.</li>
-    <li><strong>Practice reminders</strong>, only if you turn them on. They are scheduled on your iPhone; nothing is sent from a server.</li>
-    <li><strong>A bankroll tracker</strong>, free for everyone. Log a session live or add one after the fact, and see your running total, your trend and session insights from your Profile.</li>
-  </ul>
+<a class="btn btn--primary btn--sm" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu"></button>
+</div>
+<div class="nav__scrim"></div>
+</header>
+<main id="content">
+<section class="hero" aria-labelledby="hero-title">
+<div class="wrap hero__grid">
+<div class="hero__copy">
+<h1 class="t-display hero__title" id="hero-title">Know your play before the <span class="hero__accent">flop.</span></h1>
+<p class="hero__line">Play three real hands, then see what the chart does and why.</p>
+<div class="hero__actions">
+<div class="hero__cta">
+<a class="btn btn--primary btn--lg" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<p class="hero__note">TestFlight beta for iPhone.</p>
+</div>
+<figure class="qr" data-cta-qr>
+<img class="qr__img" src="/assets/qr/testflight.svg" alt="QR code that opens the Preflop beta on TestFlight" width="104" height="104" loading="lazy">
+<figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption>
+</figure>
+</div>
+</div>
+<div class="hero__demo" data-reveal>
+<div class="hero__glow" aria-hidden="true"></div>
+<div class="float float--cards" data-parallax="36" aria-hidden="true"><div class="float__in"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div>
+<div class="float float--right" data-parallax="-28" aria-hidden="true"><div class="float__in"><span class="pill"><i class="pill__dot"></i>Correct</span></div></div>
+<div class="phone" id="demo" role="group" aria-label="Playable demo: three real hands">
+<div class="phone__screen">
+<div class="phone__head">
+<span class="phone__tag t-label">Try it</span>
+<span class="phone__title" id="demo-title">Raise first in</span>
+<span class="phone__count" id="demo-count">1 / 3</span>
+</div>
+<div class="phone__table"><div class="stage" id="demo-stage"><div class="rail"></div><div class="felt"></div><div class="bet-line"></div><div class="centre-mark t-label">Preflop</div><div class="pot"><div class="pot__label t-label">Pot</div><div class="pot__amount">1.5bb</div><div class="pot__bars"><i></i><i></i><i></i></div><div class="pot__meta">100bb effective · 6-max</div></div><div class="seat" data-seat="btn" data-i="0"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BTN</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="seat" data-seat="sb" data-i="1"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">SB</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>0.5bb</span></span></div></div><div class="seat" data-seat="bb" data-i="2"><div class="bet-slot bet-slot--above"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>1bb</span></span></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BB</div><div class="pod__detail">100bb</div></div></div></div><div class="seat seat--hero" data-seat="utg" data-i="3"><div class="bet-slot"></div><div class="hero-cards"><span class="pcard" role="img" aria-label="King of spades">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span><span class="pcard" role="img" aria-label="Five of spades">5<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div><div class="hero-badge">UTG</div></div><div class="seat" data-seat="hj" data-i="4"><div class="bet-slot bet-slot--above"></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">HJ</div><div class="pod__detail">100bb</div></div></div></div><div class="seat" data-seat="co" data-i="5"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">CO</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="dealer" data-i="0">D</div></div></div>
+<p class="phone__line" id="demo-line">You’re first to act. What’s your move?</p>
+<div class="phone__controls">
+<div class="decisions" id="demo-decisions" aria-label="Choose your action">
+<button class="dbtn dbtn--fold" type="button" data-d="fold" disabled><span class="dbtn__bar"></span><span class="dbtn__label">Fold</span></button>
+<button class="dbtn dbtn--raise" type="button" data-d="call" disabled><span class="dbtn__bar"></span><span class="dbtn__label">Raise</span></button>
+</div>
+<div id="demo-feedback"></div>
+<noscript><p class="phone__noscript">Turn on JavaScript to play this demo.</p></noscript>
+</div>
+</div>
+</div>
+<div class="phone-foot">
+<div class="dots" id="demo-dots" aria-hidden="true"><i class="now"></i><i></i><i></i></div>
+<p class="phone-foot__status" id="demo-status">Hand 1 of 3 · 100bb · 6-max</p>
+</div>
+<p class="sr-only" id="demo-announce" role="status" aria-live="polite"></p>
+</div>
+</div>
 </section>
-
-<section class="band pricing" id="pricing">
-  <h2>Free, and what Pro adds</h2>
-  <p>Play <!-- fact:dailyFreeHands -->20<!-- /fact --> hands a day, free forever, and every
-    hand comes with the chart's answer and why. Pro is for studying your own game:
-    unlimited hands, your stats and leaks, drills aimed at them, and every hand you've played.</p>
-
-  <div class="plans">
-    <div class="plan">
-      <h3>Free</h3>
-      <p class="plan-price">$0 <span>no account, no card</span></p>
-      <ul>
-        <li><!-- fact:dailyFreeHands -->20<!-- /fact --> hands every day</li>
-        <li>The answer, the chart's mix and the reason, after every hand</li>
-        <li>Streak, XP, levels and badges</li>
-      </ul>
-    </div>
-    <div class="plan plan-pro">
-      <h3>Preflop Pro</h3>
-      <p class="plan-price">$<!-- fact:lifetime -->59.99<!-- /fact --> <span>once, yours for good</span></p>
-      <p class="plan-alt">or $<!-- fact:monthly -->7.99<!-- /fact --> a month, cancel any time</p>
-      <p class="plan-lead">Everything in Free, plus:</p>
-      <ul>
-        <li>Unlimited hands, no daily cap</li>
-        <li>Your stats: accuracy by situation and by seat, and your leaks named</li>
-        <li>Your Home dashboard: accuracy and its trend, the spot to fix next, the hands to revisit</li>
-        <li>Practice Filters: drill any spot</li>
-        <li>Your full hand history, filterable, with every explanation</li>
-        <li>A daily goal</li>
-      </ul>
-      <p class="plan-note">The free plan has no time limit, so there is no trial: try it for as long
-        as you like before you buy.</p>
-    </div>
-  </div>
-  <p class="plan-note">US prices. The App Store shows the price for your country before you
-    buy, and every purchase happens in the app — there is nothing to buy on this site.
-    Questions about plans or restoring a purchase? See the <a href="/faq/">FAQ</a>.</p>
+<section class="proof" aria-label="Preflop in numbers">
+<div class="wrap">
+<ul class="proof__list" data-reveal-group>
+<li class="card proof__item" data-reveal><span class="card__figure"><span data-count="30000">30,000</span>+</span><span class="card__figure-label">practice spots</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure"><span data-count="20"><!-- fact:dailyFreeHands -->20<!-- /fact --></span></span><span class="card__figure-label">free hands a day</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure">No ads</span><span class="card__figure-label">in the app</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure">No tracking</span><span class="card__figure-label">no accounts, no analytics</span></li>
+</ul>
+</div>
 </section>
-
-<section class="band">
-  <h2>No account, no tracking</h2>
-  <p>There is no sign-up, and your practice never leaves your device. No
-    analytics, no ads. The only thing the app sends is feedback you choose to send.</p>
-  <p class="disclaimer">This is a training app. There is no real money, no
-    wagering, and nothing to win.</p>
+<section class="marquee" aria-label="Some of the spots in the app">
+<div class="marquee__row"><ul class="marquee__track"><li class="spot"><b>UTG</b> opening</li><li class="spot"><b>HJ</b> opening</li><li class="spot"><b>CO</b> opening</li><li class="spot"><b>BTN</b> opening</li><li class="spot"><b>SB</b> opening</li><li class="spot"><b>LJ</b> vs UTG open</li><li class="spot"><b>BTN</b> vs CO open</li><li class="spot"><b>BB</b> vs BTN open</li><li class="spot"><b>SB</b> vs CO open</li><li class="spot"><b>CO</b> vs HJ open</li></ul><ul class="marquee__track" aria-hidden="true"><li class="spot"><b>UTG</b> opening</li><li class="spot"><b>HJ</b> opening</li><li class="spot"><b>CO</b> opening</li><li class="spot"><b>BTN</b> opening</li><li class="spot"><b>SB</b> opening</li><li class="spot"><b>LJ</b> vs UTG open</li><li class="spot"><b>BTN</b> vs CO open</li><li class="spot"><b>BB</b> vs BTN open</li><li class="spot"><b>SB</b> vs CO open</li><li class="spot"><b>CO</b> vs HJ open</li></ul></div>
+<div class="marquee__row marquee__row--rev"><ul class="marquee__track"><li class="spot"><b>BTN</b> vs BB 3-bet</li><li class="spot"><b>UTG</b> vs BB 3-bet</li><li class="spot"><b>HJ</b> vs BB 3-bet</li><li class="spot"><b>CO</b> vs SB 3-bet</li><li class="spot"><b>UTG+1</b> vs UTG open</li><li class="spot"><b>BB</b> vs UTG open</li><li class="spot"><b>BTN</b> vs HJ open</li><li class="spot"><b>SB</b> vs BTN open</li><li class="spot"><b>CO</b> vs BB 3-bet</li><li class="spot"><b>UTG+1</b> vs BB 3-bet</li></ul><ul class="marquee__track" aria-hidden="true"><li class="spot"><b>BTN</b> vs BB 3-bet</li><li class="spot"><b>UTG</b> vs BB 3-bet</li><li class="spot"><b>HJ</b> vs BB 3-bet</li><li class="spot"><b>CO</b> vs SB 3-bet</li><li class="spot"><b>UTG+1</b> vs UTG open</li><li class="spot"><b>BB</b> vs UTG open</li><li class="spot"><b>BTN</b> vs HJ open</li><li class="spot"><b>SB</b> vs BTN open</li><li class="spot"><b>CO</b> vs BB 3-bet</li><li class="spot"><b>UTG+1</b> vs BB 3-bet</li></ul></div>
 </section>
-
+<section class="statement" aria-label="What Preflop is for">
+<div class="wrap"><p class="statement__text" data-scrub>Every hand starts before the flop. Make the first decision the easy one.</p></div>
+</section>
+<section class="section band story" id="features" aria-labelledby="story-title">
+<div class="wrap">
+<div class="section-header section-header--center" data-reveal>
+<p class="t-label section-header__eyebrow">How it works</p>
+<h2 class="t-headline" id="story-title">Play it. Understand it. Fix it.</h2>
+</div>
+<div class="story__grid" data-story>
+<ol class="story__chapters">
+<li class="story__chapter" data-chapter>
+<div class="story__copy" data-reveal>
+<p class="t-label story__num">01</p>
+<h3 class="story__title">A real spot, one hand at a time.</h3>
+<p class="story__body">Raise first in, facing an open, facing a 3-bet. Fold, call or raise at 100bb, from every seat.</p>
+</div>
+<figure class="shot story__inline"><img src="/assets/screens/play.webp" alt="The practice screen: facing a 3-bet with K5 of hearts, with Fold, Call and 4-Bet buttons." width="600" height="1304" loading="lazy" decoding="async"></figure>
+</li>
+<li class="story__chapter" data-chapter>
+<div class="story__copy" data-reveal>
+<p class="t-label story__num">02</p>
+<h3 class="story__title">Every answer comes with the reason.</h3>
+<p class="story__body">See how often the chart takes each action with your hand, why it plays that way, and open the range chart it came from.</p>
+</div>
+<figure class="shot story__inline"><img src="/assets/screens/explain.webp" alt="The explanation after an answer: a verdict, the reasoning, and Board and Chart buttons." width="600" height="1304" loading="lazy" decoding="async"></figure>
+</li>
+<li class="story__chapter" data-chapter>
+<div class="story__copy" data-reveal>
+<p class="t-label story__num">03</p>
+<h3 class="story__title">Know where your leaks are. <span class="tag">Pro</span></h3>
+<p class="story__body">Accuracy by situation and by seat, with your leaks named, so you know what to drill next.</p>
+</div>
+<figure class="shot story__inline"><img src="/assets/screens/leaks.webp" alt="The Statistics screen, ranking the situations you play worst." width="600" height="1304" loading="lazy" decoding="async"></figure>
+</li>
+<li class="story__chapter" data-chapter>
+<div class="story__copy" data-reveal>
+<p class="t-label story__num">04</p>
+<h3 class="story__title">Go back to any hand. <span class="tag">Pro</span></h3>
+<p class="story__body">Your full history, filterable, with every explanation. Put the ones you missed back on the table.</p>
+</div>
+<figure class="shot story__inline"><img src="/assets/screens/history.webp" alt="The Hand History screen: each hand with your play and whether it was right." width="600" height="1304" loading="lazy" decoding="async"></figure>
+</li>
+</ol>
+<div class="story__stage" aria-hidden="true">
+<div class="shot"><div class="story__screens"><img class="story__img" src="/assets/screens/play.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/explain.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/leaks.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/history.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"></div></div>
+<ol class="story__dots"><li></li><li></li><li></li><li></li></ol>
+</div>
+</div>
+</div>
+</section>
+<section class="section" aria-labelledby="bento-title">
+<div class="wrap">
+<div class="section-header section-header--center" data-reveal>
+<p class="t-label section-header__eyebrow">Built for habit</p>
+<h2 class="t-headline" id="bento-title">Made for the minutes between sessions.</h2>
+</div>
+<div class="bento" data-reveal-group>
+<article class="card bento__card bento__card--5" data-anim="mix" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">The mix, not just a verdict.</h3><p>See how often the chart takes each action with your hand. Often it is a split.</p></div>
+<div class="bento__visual"><div class="mix" role="img" aria-label="Three hands and how often the chart takes each action: K5 of spades under the gun folds 61 percent and raises 39; AQ offsuit in the hijack against an open calls 49 and 3-bets 51; AJ offsuit on the button against a 3-bet calls 72 and 4-bets 28"><div class="mix__group"><p class="mix__hand">K5s · UTG opening</p><div class="mix__row"><span class="mix__name">Fold</span><span class="mix__track"><span class="mix__bar mix__bar--fold mix__bar--v61"></span></span><span class="mix__pct">61%</span></div><div class="mix__row"><span class="mix__name">Raise</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v39"></span></span><span class="mix__pct">39%</span></div></div><div class="mix__group"><p class="mix__hand">AQo · HJ vs UTG open</p><div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v49"></span></span><span class="mix__pct">49%</span></div><div class="mix__row"><span class="mix__name">3-bet</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v51"></span></span><span class="mix__pct">51%</span></div></div><div class="mix__group"><p class="mix__hand">AJo · BTN vs BB 3-bet</p><div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v72"></span></span><span class="mix__pct">72%</span></div><div class="mix__row"><span class="mix__name">4-bet</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v28"></span></span><span class="mix__pct">28%</span></div></div></div></div>
+</article>
+<article class="card bento__card bento__card--7" data-anim="chart" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">Open the chart it came from.</h3><p>See where your hand sits among the hands around it.</p></div>
+<div class="bento__visual"><figure class="chart"><div class="chart__grid" role="img" aria-label="A 13 by 13 range chart: raise in green, call in blue, fold left blank"><i class="r4"></i><i class="r4"></i><i class="c4"></i><i class="r4"></i><i class="c4"></i><i class="r4"></i><i class="r3"></i><i class="r2"></i><i></i><i class="c4"></i><i class="r4"></i><i></i><i></i><i class="r4"></i><i class="r4"></i><i class="c4"></i><i class="r4"></i><i class="r4"></i><i class="r1"></i><i></i><i></i><i></i><i class="r1"></i><i></i><i></i><i></i><i class="r4 sel"></i><i class="r1"></i><i class="c4"></i><i class="c3"></i><i class="c2"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i class="c4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i class="r2"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c3"></i><i class="r1"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c2"></i><i class="r4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c1"></i><i class="c2"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<ul class="chart__legend" aria-hidden="true"><li><i class="lg-raise"></i>Raise</li><li><i class="lg-call"></i>Call</li><li><i class="lg-fold"></i>Fold</li></ul>
+<figcaption class="chart__cap">HJ facing a UTG open · 100bb · 6-max. The ringed hand is AQo.</figcaption></figure></div>
+</article>
+<article class="card bento__card bento__card--4" data-anim="pop" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">Every seat, every opener.</h3><p>Raise first in, facing an open, facing a 3-bet. 6-max and 8-max, 100bb deep.</p></div>
+<div class="bento__visual"><ul class="chips"><li class="pos" data-pop>UTG</li><li class="pos" data-pop>UTG+1</li><li class="pos" data-pop>LJ</li><li class="pos" data-pop>HJ</li><li class="pos" data-pop>CO</li><li class="pos" data-pop>BTN</li><li class="pos" data-pop>SB</li><li class="pos" data-pop>BB</li></ul></div>
+</article>
+<article class="card bento__card bento__card--4" data-anim="pop" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">A streak for showing up.</h3><p>Free forever. XP, levels and badges as you play, and new spot types as you level up.</p></div>
+<div class="bento__visual"><ul class="streak" aria-label="An example streak: five of seven days played"><li class="on" data-pop></li><li class="on" data-pop></li><li class="on" data-pop></li><li class="on" data-pop></li><li class="on" data-pop></li><li data-pop></li><li data-pop></li></ul></div>
+</article>
+<article class="card bento__card bento__card--4" data-anim="rise" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">No account. No tracking.</h3><p>Your practice stays on your device. No analytics, no ads. The only thing the app sends is feedback you choose to send.</p></div>
+<div class="bento__visual"><div class="bento__lock" data-rise><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div></div>
+</article>
+<article class="card bento__card bento__card--6 bento__card--wide" data-anim="rise" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">On your Home Screen.</h3><p>A widget in three sizes shows your streak, and the larger two deal you a hand that opens straight into practice. Reminders only if you turn them on.</p></div>
+<div class="bento__visual"><div class="widgets" role="img" aria-label="Three Home Screen widgets showing a streak, and on the larger two, a hand to answer">
+<div class="widget widget--s" data-rise><span class="t-label widget__label">Streak</span><span class="widget__num">7</span></div>
+<div class="widget widget--m" data-rise><div class="widget__row"><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div></div>
+<div class="widget widget--l" data-rise><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div>
+</div></div>
+</article>
+<article class="card bento__card bento__card--6 bento__card--wide" data-anim="trend" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">A bankroll tracker, free for everyone.</h3><p>Log a session live or add one after the fact, and see your running total and trend.</p></div>
+<div class="bento__visual"><svg class="trend" viewBox="0 0 320 120" role="img" aria-label="An example bankroll line rising over time"><rect class="trend__base" x="0" y="116" width="320" height="1"/><polyline class="trend__line" points="2,98 30,90 58,94 86,72 114,78 142,54 170,60 198,36 226,46 254,24 282,30 318,10"/></svg></div>
+</article>
+</div>
+</div>
+</section>
+<section class="section band" id="pricing" aria-labelledby="pricing-title">
+<div class="wrap">
+<div class="section-header section-header--center" data-reveal>
+<p class="t-label section-header__eyebrow">Pricing</p>
+<h2 class="t-headline" id="pricing-title">Free every day. Pro when you want more.</h2>
+<p class="section-header__line">Play <!-- fact:dailyFreeHands -->20<!-- /fact --> hands a day, free for good. Pro takes the cap off and shows you what to work on.</p>
+</div>
+<div class="plans" data-reveal-group>
+<article class="plan" data-reveal>
+<div><p class="t-label plan__tier">Free</p><p class="plan__price">$0</p><p class="plan__alt">No account, no card.</p></div>
+<ul class="plan__list">
+<li><b><!-- fact:dailyFreeHands -->20<!-- /fact --> hands</b> every day</li>
+<li>The answer, the chart&rsquo;s mix and the reason, after every hand</li>
+<li>Streak, XP, levels and badges</li>
+<li>A bankroll tracker</li>
+</ul>
+<a class="btn btn--secondary" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+</article>
+<article class="plan plan--pro" data-reveal>
+<div><p class="t-label plan__tier">Preflop Pro</p><p class="plan__price">$<!-- fact:lifetime -->59.99<!-- /fact --><span class="plan__per"> once</span></p><p class="plan__alt">Yours for good, or <b>$<!-- fact:monthly -->7.99<!-- /fact --> a month</b>, cancel any time.</p></div>
+<p class="plan__lead">Everything in Free, plus:</p>
+<ul class="plan__list">
+<li><b>Unlimited hands</b>, no daily cap</li>
+<li><b>Your stats</b> by situation and by seat, with your leaks named</li>
+<li><b>Practice Filters</b> to drill any spot</li>
+<li><b>Your Home dashboard</b>: accuracy and its trend, the spot to fix next</li>
+<li><b>Your full hand history</b>, filterable, with every explanation</li>
+<li><b>A daily goal</b> you set yourself</li>
+</ul>
+<span class="badge-soon">Available at launch</span>
+</article>
+</div>
+<p class="plans__fine">US prices. The App Store shows the price for your country before you buy, and every purchase happens in the app. The free plan has no time limit: use it as long as you like before you decide.</p>
+</div>
+</section>
+<section class="section" id="faq" aria-labelledby="faq-title">
+<div class="wrap faqs">
+<div class="faqs__aside" data-reveal>
+<p class="t-label section-header__eyebrow">FAQ</p>
+<h2 class="t-headline" id="faq-title">Before you download.</h2>
+<p>More answers on the <a href="/faq/">full FAQ</a>.</p>
+</div>
+<div class="faqs__list" data-reveal>
+<details class="faq" open><summary class="faq__q">Is this gambling?</summary><p class="faq__a">No. There is no real money, no wagering and nothing to win. It is a training app, the way a chess puzzle app is.</p></details>
+<details class="faq"><summary class="faq__q">Where do the answers come from?</summary><p class="faq__a">Every spot is drawn from a fixed preflop range chart for that seat, situation and table size. After you answer you see the full frequency mix for your hand and can open the chart it came from.</p></details>
+<details class="faq"><summary class="faq__q">Why does it sometimes say &ldquo;Close&rdquo;?</summary><p class="faq__a">Because a hand the chart raises 54% of the time and folds 46% does not have one right answer. An action within ten points of the most frequent one counts as Close, and the explanation names the action the chart takes most often.</p></details>
+<details class="faq"><summary class="faq__q">What exactly is free?</summary><p class="faq__a"><!-- fact:dailyFreeHands -->20<!-- /fact --> hands every day, with the answer, the chart&rsquo;s mix and the reason after every hand. Your streak, XP, levels and badges are free too. Pro adds unlimited hands, your stats, your dashboard, Practice Filters, your full hand history and a daily goal.</p></details>
+<details class="faq"><summary class="faq__q">Do I need an account?</summary><p class="faq__a">No. Your practice stays on your device, with no analytics, no ads and no tracking. The only thing we receive is feedback you choose to send.</p></details>
+<details class="faq"><summary class="faq__q">I already use a solver. Is this for me?</summary><p class="faq__a">As a supplement, not a replacement. A solver is for deep study at a desk. Preflop is for the few minutes between sessions, keeping your preflop sharp. It computes no equity or EV of its own.</p></details>
+<details class="faq"><summary class="faq__q">What do I need to run it?</summary><p class="faq__a">An iPhone running iOS 17 or later. There is no iPad or Android version.</p></details>
+</div>
+</div>
+</section>
+<section class="section section--flush" aria-labelledby="closing-title">
+<div class="wrap">
+<div class="closing" data-reveal>
+<div class="closing__copy">
+<h2 class="t-headline" id="closing-title">Start with a hand.</h2>
+<p class="closing__line">Join the beta on TestFlight. No account needed.</p>
+<div class="closing__actions">
+<a class="btn btn--primary btn--lg" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<figure class="qr" data-cta-qr>
+<img class="qr__img" src="/assets/qr/testflight.svg" alt="QR code that opens the Preflop beta on TestFlight" width="104" height="104" loading="lazy">
+<figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption>
+</figure>
+</div>
+</div>
+<div class="closing__phone" data-parallax="-24" aria-hidden="true"><figure class="shot"><img src="/assets/screens/play.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"></figure></div>
+</div>
+</div>
+</section>
 </main>
-<!-- shared:footer -->
-<footer class="site-footer">
-  <nav aria-label="Footer">
-    <a href="/">Preflop</a>
-    <a href="/faq/">FAQ</a>
-    <a href="/support/">Support</a>
-    <a href="/press/">Press</a>
-    <a href="/privacy/">Privacy</a>
-    <a href="/terms/">Terms</a>
-  </nav>
-  <p class="contact"><!--email_off--><a href="mailto:support@preflopapp.com">support@preflopapp.com</a><!--/email_off--></p>
-  <p class="fineprint">A training app. No real money, no wagering, nothing to win.</p>
+<footer class="footer">
+<div class="wrap">
+<div class="footer__grid">
+<div class="footer__about">
+<a class="footer__brand" href="/"><img class="nav__mark" src="/assets/mark-v2.svg" alt="" width="24" height="24"><span translate="no">Preflop</span></a>
+<p class="footer__line">Every preflop decision, explained.</p>
+</div>
+<nav aria-label="Product"><h2 class="t-label footer__head">Product</h2><ul class="footer__group">
+<li><a href="#features">Features</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul></nav>
+<nav aria-label="Help"><h2 class="t-label footer__head">Help</h2><ul class="footer__group">
+<li><a href="/support/">Support</a></li>
+<li><a href="/press/">Press</a></li>
+</ul></nav>
+<nav aria-label="Legal"><h2 class="t-label footer__head">Legal</h2><ul class="footer__group">
+<li><a href="/privacy/">Privacy</a></li>
+<li><a href="/terms/">Terms</a></li>
+</ul></nav>
+</div>
+<div class="footer__base">
+<p><!--email_off--><a href="mailto:support@preflopapp.com">support@preflopapp.com</a><!--/email_off--></p>
+<p>A training app. No real money, no wagering, nothing to win.</p>
+<button class="btn btn--secondary btn--sm" type="button" data-theme-toggle hidden>Light mode</button>
+</div>
+</div>
 </footer>
-<!-- /shared:footer -->
 </body>
 </html>

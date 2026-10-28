@@ -2,7 +2,7 @@
 """Static checks for the site. Run before every deploy.
 
 Fails on: an internal link or asset that does not exist, a shared block
-(head/header/footer) that differs from index.html's copy, a page missing its
+(head/header/footer) that differs from the reference copy (the homepage, or the first page that has them), a page missing its
 <title>/description/canonical, a canonical page whose og:title/og:description/
 og:url are missing or whose og:url is not its canonical, a page without exactly
 one <h1>, an <img> without alt/width/height, the old product name, or a price
@@ -29,6 +29,10 @@ SHARED = ("head", "header", "footer")
 # All metadata, link, asset, and banned-name checks still apply.
 INDEPENDENT_LAYOUTS = {"landing/index.html", "s/index.html"}
 NEXT_PREFIX = "next/"  # the /next/ preview: independent layout, see check_next
+# Since the Phase 5 cutover the homepage is built on the /next/ system: no
+# shared blocks, its own CSP. It gets check_next's rules, but is public (no
+# noindex, canonical, in the sitemap). Told apart by having no shared head.
+HOME = "index.html"
 # Gzipped bytes, summed over the files a /next/ page loads. The spec's budget is
 # 150 KB of JS (GSAP core + ScrollTrigger are ~46 KB of it); CSS has no spec
 # number, 30 KB is generous for a token sheet and a component sheet.
@@ -241,9 +245,12 @@ def check_next(root, next_pages):
         errors.append("ERROR sitemap.xml: lists a /next/ page")
     headers = root / "_headers"
     if headers.is_file():
-        block = re.search(r"(?m)^/next/\*\s*\n((?:[ \t]+.*\n?)+)", headers.read_text())
-        if not block or not re.search(r"^\s*! Content-Security-Policy\s*$", block.group(1), re.M):
-            errors.append("ERROR _headers: /next/* must detach the site-wide Content-Security-Policy")
+        for route, rule in (("/", "/"), ("/next/*", r"/next/\*")):
+            if route == "/" and not any(rel == HOME for _, rel, _ in next_pages): continue
+            if route != "/" and not any(rel.startswith(NEXT_PREFIX) for _, rel, _ in next_pages): continue
+            block = re.search(rf"(?m)^{rule}[ \t]*\n((?:[ \t]+.*\n?)+)", headers.read_text())
+            if not block or not re.search(r"^\s*! Content-Security-Policy\s*$", block.group(1), re.M):
+                errors.append(f"ERROR _headers: {route} must detach the site-wide Content-Security-Policy")
     config = root / "next/js/config.js"
     url = re.search(r"testflightUrl:\s*[\"']([^\"']+)", config.read_text()) if config.is_file() else None
     js_total = css_total = 0
@@ -254,7 +261,9 @@ def check_next(root, next_pages):
         # The app's trial is annual-only and the preview does not sell it.
         if TRIAL.search(page.read_text()):
             errors.append(f"ERROR {rel}: /next/ must not advertise a free trial")
-        if "noindex" not in p.robots: errors.append(f"ERROR {rel}: /next/ page needs <meta name=robots content=noindex>")
+        if rel == HOME:
+            if "noindex" in p.robots: errors.append(f"ERROR {rel}: the homepage must not be noindex")
+        elif "noindex" not in p.robots: errors.append(f"ERROR {rel}: /next/ page needs <meta name=robots content=noindex>")
         scripts = re.findall(r"script-src ([^;]*)", p.csp)
         if not scripts: errors.append(f"ERROR {rel}: missing page CSP with script-src")
         elif scripts[0].split() != ["'self'"]: errors.append(f"ERROR {rel}: script-src must be exactly 'self', found {scripts[0].strip()}")
@@ -281,12 +290,51 @@ def check_next(root, next_pages):
     if css_total > CSS_BUDGET: errors.append(f"ERROR /next/ CSS is {css_total} bytes gzipped, budget {CSS_BUDGET}")
     return errors
 
+def _detached_routes(headers_text):
+    """Routes in _headers that carry `! Content-Security-Policy`."""
+    out = set()
+    for m in re.finditer(r"(?m)^(/\S*)[ \t]*\n((?:[ \t]+.*\n?)+)", headers_text):
+        if re.search(r"^\s*! Content-Security-Policy\s*$", m.group(2), re.M): out.add(m.group(1))
+    return out
+
+def check_page_csp_headers(root, pages):
+    """A page that brings its own CSP needs the site-wide one detached for its route.
+
+    The header says script-src 'none'; a page that runs scripts under its own
+    meta CSP is blocked silently unless `_headers` removes the header there.
+    Covers every directory page (/faq/ needs `/faq` and `/faq/*`); the
+    homepage and /next/ have their own checks, and 404.html is served from any
+    path so it cannot be detached.
+    """
+    headers = root / "_headers"
+    if not headers.is_file(): return []
+    detached = _detached_routes(headers.read_text())
+    errors = []
+    for page in pages:
+        rel = page.relative_to(root).as_posix()
+        if rel in (HOME, "404.html") or rel.startswith(NEXT_PREFIX) or not rel.endswith("/index.html"): continue
+        parser = _Refs(); parser.feed(page.read_text())
+        script = re.search(r"script-src ([^;]*)", parser.csp)
+        if not script or script.group(1).strip() == "'none'": continue
+        d = "/" + rel[:-len("/index.html")]
+        for route in (d, d + "/*"):
+            if route not in detached:
+                errors.append(f"ERROR _headers: {route} must detach the site-wide Content-Security-Policy ({rel} sets its own)")
+    return errors
+
 def check_site(root):
     root = pathlib.Path(root); errors = []
     pages = html_pages(root)
     next_pages = []
-    index = root / "index.html"
+    # The shared blocks every page must repeat come from the homepage, or, once
+    # it is built on /next/ and has none, from the first page that has them.
+    index = root / HOME
+    if index.is_file() and extract_block(index.read_text(), "head") is None:
+        index = next((p for p in pages if p != index and p.relative_to(root).as_posix() not in INDEPENDENT_LAYOUTS
+                      and not p.relative_to(root).as_posix().startswith(NEXT_PREFIX)
+                      and extract_block(p.read_text(), "head") is not None), index)
     canon = {n: extract_block(index.read_text(), n) for n in SHARED} if index.is_file() else {}
+    canon_name = index.relative_to(root).as_posix()
     for page in pages:
         rel = page.relative_to(root).as_posix(); text = page.read_text()
         for bad in BANNED:
@@ -294,9 +342,10 @@ def check_site(root):
         parser = _Refs(); parser.feed(text)
         if not parser.title: errors.append(f"ERROR {rel}: missing <title>")
         if "description" not in parser.meta: errors.append(f"ERROR {rel}: missing meta description")
-        is_next = rel.startswith(NEXT_PREFIX)
+        preview = rel.startswith(NEXT_PREFIX)
+        is_next = preview or (rel == HOME and extract_block(text, "head") is None)
         if is_next: next_pages.append((page, rel, parser))
-        if rel != "404.html" and not is_next and "canonical" not in parser.meta: errors.append(f"ERROR {rel}: missing canonical link")
+        if rel != "404.html" and not preview and "canonical" not in parser.meta: errors.append(f"ERROR {rel}: missing canonical link")
         # Link previews (iMessage, Slack, social) read these, not <title>.
         if parser.canonical:
             for prop in ("og:title", "og:description", "og:url"):
@@ -309,7 +358,7 @@ def check_site(root):
             block = extract_block(text, n)
             if block is None: errors.append(f"ERROR {rel}: missing shared:{n} block")
             elif canon.get(n) is not None and block != canon[n]:
-                errors.append(f"ERROR {rel}: shared:{n} block differs from index.html")
+                errors.append(f"ERROR {rel}: shared:{n} block differs from {canon_name}")
         for ref in parser.assets:
             if _external(ref): errors.append(f"ERROR {rel}: external asset {ref}")
         for ref in parser.refs:
@@ -318,6 +367,7 @@ def check_site(root):
                 absolute = ref if ref.startswith("/") else "/" + (page.parent.relative_to(root) / ref).as_posix()
                 if not _resolves(root, absolute):
                     errors.append(f"ERROR {rel}: broken link {ref}")
+    errors += check_page_csp_headers(root, pages)
     errors += check_facts(root, pages)
     errors += check_css_assets(root, pages)
     errors += check_next(root, next_pages)

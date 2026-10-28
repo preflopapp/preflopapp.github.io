@@ -3,7 +3,13 @@ paths:
   - "next/**"
 ---
 
-# The /next/ preview
+# The /next/ system and the homepage
+
+Since the Phase 5 cutover the homepage is `index.html` at the root, built on
+the `next/` CSS/JS; `next/` keeps the assets and the style guide. `/landing/`
+and `/next/` redirect to `/` (`_redirects`). The checker treats a root
+`index.html` with no `shared:head` as a /next/-system page that must be
+indexable, and takes the shared blocks from the first other page (Phase 5).
 
 - **Nav width rules are container queries, not viewport media queries.** The
   bar collapses by its own width so the style guide can show the narrow form in
@@ -57,3 +63,13 @@ paths:
 - **Sections are `--section-y` apart.** Use `.section` (or `.band` for the one
   panel-coloured break) rather than ad-hoc padding, and `.section--flush` when a
   section follows another with the same background, or the gaps stack to 16rem.
+- **The text pages (FAQ, support, press, privacy, terms, 404) are the shared
+  head/header/footer plus `next/css/pages.css`.** They run `site.js` under a
+  page CSP, so each needs `/x` and `/x/*` detached in `_headers`; the checker
+  fails a page with its own CSP and no detach (Phase 6). 404.html is served
+  from any path, so it keeps the site-wide header and runs without JS.
+- **A page-CSP check that skips on `'none'` must read `script-src` alone.** The
+  first version tested the whole string, `default-src 'none'` matched, and every
+  real page was skipped; only a test against a page with that exact CSP showed it.
+- **The theme toggle is per page load.** It sets `data-theme` and stores nothing,
+  so a visitor who picks light on `/` gets their system scheme on `/faq/`.

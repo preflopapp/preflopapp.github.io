@@ -59,8 +59,10 @@ python3 -m unittest discover -s scripts -p 'test_*.py' -v
 python3 scripts/check-site.py .
 ```
 
-`/check` runs both with filtered output. Both run before every deploy. The landing page (`/landing/`) is built from
-the app repo's `web/landing/src/`; see `scripts/README.md`.
+`/check` runs both with filtered output. Both run before every deploy. The homepage (`/`) is the redesigned
+page built on the `next/` assets (Phase 5 cutover); `/landing/` and `/next/` redirect to it. The old landing page
+file (`landing/index.html`, built from the app repo's `web/landing/src/`) is kept only as a way back; see
+`scripts/README.md`.
 
 ## Learning loop
 
