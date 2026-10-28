@@ -53,9 +53,6 @@
     if (d === "call") return type === "rfi" ? "raise" : "call";
     return "raise";
   }
-  function decName(d) {
-    return d === "fold" ? "fold" : d === "call" ? "call" : d === "three_bet" ? "3-bet" : "4-bet";
-  }
 
   /* ---- Grading (AnswerResult.grade, ActionMix.topAction / tiedActions) ---- */
   function pct(spot, d) { return spot.freq[d] || 0; }
@@ -66,27 +63,45 @@
   }
   function topAction(spot) { return ranked(spot)[0]; }
   /* Ten points: a hand the chart raises 54% and folds 46% has no one right
-     answer, and the app doesn't pretend it does. */
+     answer, and the app doesn't pretend it does. A line the chart plays at
+     least a quarter of the time is also credited. The app calls this grade
+     Mixed on screen; "close" is only its stored name, kept here for the CSS. */
   function withinClose(points) { return points <= 10 + 1e-9; }
+  var PLAYED_LINE = 25;
   function grade(spot, answer) {
-    var top = topAction(spot);
+    var top = topAction(spot), short = Math.max(0, pct(spot, top) - pct(spot, answer));
+    if (tiedActions(spot) && withinClose(short)) return "close";
     if (answer === top) return "correct";
-    return withinClose(Math.max(0, pct(spot, top) - pct(spot, answer))) ? "close" : "wrong";
+    if (withinClose(short)) return "close";
+    return pct(spot, answer) >= PLAYED_LINE ? "close" : "wrong";
   }
+  function playedLines(spot) { return ranked(spot).filter(function (d) { return pct(spot, d) >= PLAYED_LINE; }).length; }
   function tiedActions(spot) {
     var order = ranked(spot);
     if (order.length < 2) return null;
     return withinClose(pct(spot, order[0]) - pct(spot, order[1])) ? [order[0], order[1]] : null;
   }
+  /* The action as the app words it on this spot: on an opening, "call" is the raise. */
+  function nm(spot, d) { return labelFor(d, spot.spotType).toLowerCase(); }
   function closeCallNote(spot, picked) {
     var tie = tiedActions(spot);
     if (!tie) return null;
     var top = tie[0], runner = tie[1];
     if (picked !== top && picked !== runner) {
-      return "The chart is split: " + decName(top) + " " + pct(spot, top) + "%, " + decName(runner) + " " + pct(spot, runner) + "%.";
+      return "The chart is split here: " + nm(spot, top) + " " + pct(spot, top) + "% of the time, " + nm(spot, runner) + " " + pct(spot, runner) + "%.";
     }
     var other = picked === top ? runner : top;
-    return "A coin flip: " + decName(picked) + " " + pct(spot, picked) + "%, " + decName(other) + " " + pct(spot, other) + "%. Either is defensible.";
+    return "The chart splits this one: " + nm(spot, picked) + " " + pct(spot, picked) + "% of the time, " + nm(spot, other) + " " + pct(spot, other) + "%. Either is defensible.";
+  }
+  /* A line the chart plays, but not its main one. */
+  function playedLineNote(spot, picked) {
+    var top = topAction(spot);
+    if (picked === top || pct(spot, picked) < PLAYED_LINE) return null;
+    return "The chart plays this line too: " + nm(spot, picked) + " " + pct(spot, picked) + "% of the time. The main line is " + nm(spot, top) + ", at " + pct(spot, top) + "%.";
+  }
+  function missNote(spot, picked) {
+    var top = topAction(spot);
+    return "You chose " + nm(spot, picked) + ". The chart plays " + nm(spot, top) + " here, " + pct(spot, top) + "% of the time.";
   }
 
   /* ---- Drawn pieces ------------------------------------------------------- */
@@ -273,9 +288,13 @@
     var spot = SPOTS[state.i], result = grade(spot, d), top = topAction(spot);
     state.answered = true;
     state.answers.push(result);
-    var headline = result === "correct" ? "Correct" : result === "close" ? "Close" : "Not quite";
+    var lines = playedLines(spot);
+    var headline = result === "correct" ? "Correct"
+      : result === "close" ? "Mixed" + (lines === 2 ? " — the chart plays both" : lines === 3 ? " — the chart plays all three" : "")
+      : "Wrong";
     var message = result === "correct" ? labelFor(top, spot.spotType) + " is the chart’s top play."
-      : closeCallNote(spot, d) || "The chart prefers " + labelFor(top, spot.spotType).toLowerCase() + " here.";
+      : result === "close" ? playedLineNote(spot, d) || closeCallNote(spot, d)
+      : missNote(spot, d);
     decisions.querySelectorAll("button").forEach(function (btn) {
       var action = btn.dataset.d, share = pct(spot, action);
       btn.disabled = true;
@@ -316,17 +335,17 @@
 
   function renderScore() {
     var kept = state.answers.filter(function (r) { return r !== "wrong"; }).length;
-    var closing = kept === 3 ? { t: "Three for three.", c: "Preflop has 30,000+ more spots like these, each with the full mix and the reason." }
+    var closing = kept === 3 ? { t: "Three for three.", c: "Preflop has 25,000+ more spots like these, each with the full mix and the reason." }
       : kept === 2 ? { t: "Two out of three.", c: "Preflop keeps track of the spots you miss, so you can drill them." }
       : { t: "These spots are hard.", c: "Preflop explains every answer and keeps track of the spots you miss." };
     decisions.hidden = true;
     phone.classList.add("is-scored");
     line.textContent = "Demo complete";
     fb.innerHTML = '<div class="score"><div class="score__head"><strong class="score__figure">' + kept + "<span> / 3</span></strong>" +
-      '<span class="score__label t-label">Correct or close</span></div>' +
+      '<span class="score__label t-label">Correct or mixed</span></div>' +
       '<h3 class="score__title">' + closing.t + '</h3><p class="score__copy">' + closing.c + "</p>" +
       '<div class="score__actions">' + ctaHTML() + '<button class="btn btn--secondary btn--sm" id="demo-again" type="button">Play again <span aria-hidden="true">↻</span></button></div></div>';
-    say("Demo complete. " + kept + " of 3 correct or close.");
+    say("Demo complete. " + kept + " of 3 correct or mixed.");
     $("demo-again").addEventListener("click", function () { state.i = 0; state.answers = []; renderHand(true); });
     var first = fb.querySelector("a, button");
     if (first) first.focus({ preventScroll: true });
