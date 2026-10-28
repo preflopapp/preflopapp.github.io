@@ -27,7 +27,15 @@
   ! Content-Security-Policy
   X-Frame-Options: DENY
 
-# The /next/ preview of the redesigned site (not linked, not in the sitemap).
+# The homepage (the redesigned site, cut over from /next/ in Phase 5). Like
+# /landing and /s it enforces its own CSP in its <head>, script-src 'self' for
+# the vendored GSAP and next/js; the site-wide header would add script-src
+# 'none'. Only the exact path: every other page keeps the site-wide policy.
+/
+  ! Content-Security-Policy
+  X-Frame-Options: DENY
+
+# What is left under /next/: the style guide (not linked, not in the sitemap).
 # Like /landing and /s, each page enforces its own CSP in its <head>, here
 # script-src 'self' for the vendored GSAP and next/js; no inline scripts. The
 # header would otherwise add script-src 'none'. X-Robots-Tag keeps it out of

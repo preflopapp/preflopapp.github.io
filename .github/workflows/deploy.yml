@@ -107,4 +107,21 @@ jobs:
             fi
             sleep 10
           done
+          # The cutover: /landing/ and /next/ redirect to the homepage, and the
+          # homepage is not under the site-wide script-src 'none' header, which
+          # would silently stop its scripts.
+          for attempt in 1 2 3 4 5 6; do
+            landing=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' "$BASE/landing/")
+            next=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' "$BASE/next/")
+            headers=$(curl -fsSI --max-time 20 "$BASE/" | tr -d '\r')
+            if [ "$landing" = 301 ] && [ "$next" = 301 ] \
+               && ! echo "$headers" | grep -i '^content-security-policy:' | grep -q "script-src 'none'"; then
+              echo "ok   /landing/ and /next/ redirect, / CSP detached (attempt $attempt)"
+              break
+            fi
+            if [ "$attempt" -eq 6 ]; then
+              echo "::error::cutover: /landing/ gave '$landing', /next/ gave '$next', or / still has script-src 'none'"; status=1
+            fi
+            sleep 10
+          done
           exit $status

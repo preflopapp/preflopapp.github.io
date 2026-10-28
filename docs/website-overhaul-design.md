@@ -99,7 +99,7 @@ panel fill. The app icon is final.
 | 2 | Hero + demo + proof bar + QR | this PR |
 | 3 | Scroll story (desktop pin, mobile stack) | built in the Phase 2 PR at Stan's request (sticky phone, real app screenshots) |
 | 4 | Bento + pricing + FAQ + closing | built in the Phase 2 PR at Stan's request (plus marquee, scrubbed statement, progress line) |
-| 5 | Cutover | |
+| 5 | Cutover | built (own PR): `/` is the new page, `/landing/` and `/next/` redirect to it; secondary pages still on the old layout |
 | 6 | Secondary pages | |
 
 Phase 2 is done when: the demo plays and replays; the LCP element is the

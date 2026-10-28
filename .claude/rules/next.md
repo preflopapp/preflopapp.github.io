@@ -3,7 +3,13 @@ paths:
   - "next/**"
 ---
 
-# The /next/ preview
+# The /next/ system and the homepage
+
+Since the Phase 5 cutover the homepage is `index.html` at the root, built on
+the `next/` CSS/JS; `next/` keeps the assets and the style guide. `/landing/`
+and `/next/` redirect to `/` (`_redirects`). The checker treats a root
+`index.html` with no `shared:head` as a /next/-system page that must be
+indexable, and takes the shared blocks from the first other page (Phase 5).
 
 - **Nav width rules are container queries, not viewport media queries.** The
   bar collapses by its own width so the style guide can show the narrow form in

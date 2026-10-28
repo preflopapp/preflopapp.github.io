@@ -14,7 +14,7 @@ Cells carry no text: the chart is a picture (the card names it), and the
 colours are CSS (next/css/sections.css), so they follow both schemes. The hand
 the demo asks about (AQo) is ringed with .sel.
 
-    python3 scripts/gen-range-chart.py    # paste into next/index.html
+    python3 scripts/gen-range-chart.py    # paste into index.html
 """
 import json, pathlib, re, sys
 

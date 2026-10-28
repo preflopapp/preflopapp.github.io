@@ -15,8 +15,9 @@ paths:
   browsers hold favicons longer, so an overwritten file stays stale
   (`og-v2.png` 1539cc3, `mark-v2.svg` 31436d3). Update every reference in the
   same commit; the checker finds the broken ones.
-- **The site CSP is `script-src 'none'`.** Only `/landing` and `/s` replace it,
-  each with a hash-pinned CSP in its own `<head>` (see `_headers`). An inline
+- **The site CSP is `script-src 'none'`.** Only `/` (the homepage, `script-src 'self'`),
+  `/next/*`, `/landing` and `/s` replace it, each with its own CSP in its
+  `<head>` (see `_headers`; `/` is the exact path, so no other page is affected). An inline
   script anywhere else is silently blocked. Test in a browser, not just the
   checker.
 - **Wrap every `mailto:` anchor in `email_off` markers.** The zone's Email
