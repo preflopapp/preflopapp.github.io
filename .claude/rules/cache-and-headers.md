@@ -13,8 +13,11 @@ paths:
 
 - **Rename an asset when it changes.** `/assets/*` is cached for 7 days and
   browsers hold favicons longer, so an overwritten file stays stale
-  (`og-v2.png` 1539cc3, `mark-v2.svg` 31436d3). Update every reference in the
-  same commit; the checker finds the broken ones.
+  (`og-v2.png` 1539cc3, `og-v3.png` Phase 8, `mark-v2.svg` 31436d3). Update every reference in the
+  same commit; the checker finds the broken ones. The card's text is baked into
+  the PNG, so no check sees it go stale: it said "50 hands free, then 20 a day"
+  after the app became 20 a day. Re-render it (`scripts/og-card.html`) whenever
+  `facts.json`'s free-tier numbers change.
 - **The site CSP is `script-src 'none'`.** Only `/` (the homepage, `script-src 'self'`),
   the text pages (`/faq`, `/support`, `/press`, `/privacy`, `/terms`), `/next/*`,
   `/landing` and `/s` replace it, each with its own CSP in its

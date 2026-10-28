@@ -37,9 +37,9 @@ Pushes to main run the existing Cloudflare Pages deployment and smoke checks.
   and results; the pricing comparison presents Free as daily practice and Pro
   as unlimited, targeted study with detailed accuracy and full history.
 
-## Social card (`assets/og-v2.png`)
+## Social card (`assets/og-v3.png`)
 
-Every page's link preview uses `/assets/og-v2.png` (1200×630). Its source is
+Every page's link preview uses `/assets/og-v3.png` (1200×630). Its source is
 `scripts/og-card.html`, which uses the site's Outfit fonts, the app's dark
 tokens and `assets/screens/explain.png`. After editing it, or after a
 screenshot or copy change it depends on, re-render and commit the PNG:
