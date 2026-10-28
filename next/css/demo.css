@@ -1,0 +1,355 @@
+/* The playable demo for /next/: the practice screen from the app, in a phone
+   frame. Ported from /landing/, rebuilt on the /next/ tokens and components.
+
+   Differences from the landing demo, all on purpose:
+   - No inline style="" anywhere. The page CSP is style-src 'self', so seat
+     positions are data-i rules below and JS sets only CSSOM values.
+   - No gradients (the felt is flat) and no dashed rings on the chips.
+   - Only transform and opacity animate. The mix bar is a scaleX, not a width.
+   - Correct is green; a miss stays neutral, never red.
+   - Cards are the shared .pcard; buttons the shared .btn.
+
+   Every size is `calc(Npx * var(--s))`, N being the app's point value, so the
+   whole diagram shrinks together on a phone. --s steps down below; it has to
+   stay unitless. */
+
+/* Table skin: the app's TableSkinPalette. Same three-way switch as
+   tokens.css: dark by default, light with the system or the manual toggle. */
+.phone {
+  --s: 1;
+  --rail: #1c1d26;
+  --felt: #15161e;
+  --table-edge: rgba(255, 255, 255, 0.11);
+  --centre-mark: rgba(255, 255, 255, 0.09);
+  --chip-blind: #b4b6c4;
+  --chip-live: #787b8a;
+  --chip-rim: rgba(14, 15, 20, 0.55);
+  --pot-bar: #787b8a;
+  --bet-fill: var(--well);
+  --act-ink: #0e0f14;
+  --act-ink-raise: #0e0f14;
+  --card-back: #c0392b;
+  --dealer-fill: #f7f6f4;
+  --dealer-ink: #14161c;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .phone {
+    --rail: #bfb8ad;
+    --felt: #d2ccc2;
+    --table-edge: rgba(0, 0, 0, 0.16);
+    --centre-mark: rgba(0, 0, 0, 0.09);
+    --chip-blind: #8b9198;
+    --chip-live: #5a6067;
+    --chip-rim: rgba(255, 255, 255, 0.7);
+    --pot-bar: #767d84;
+    --bet-fill: var(--panel);
+    --act-ink: #ffffff;
+    --act-ink-raise: #150f02;
+  }
+}
+[data-theme="light"] .phone {
+  --rail: #bfb8ad;
+  --felt: #d2ccc2;
+  --table-edge: rgba(0, 0, 0, 0.16);
+  --centre-mark: rgba(0, 0, 0, 0.09);
+  --chip-blind: #8b9198;
+  --chip-live: #5a6067;
+  --chip-rim: rgba(255, 255, 255, 0.7);
+  --pot-bar: #767d84;
+  --bet-fill: var(--panel);
+  --act-ink: #ffffff;
+  --act-ink-raise: #150f02;
+}
+
+/* Scale: 374 * s + the frame must fit the gutter. */
+@media (max-width: 426px) { .phone { --s: 0.9; } }
+@media (max-width: 392px) { .phone { --s: 0.85; } }
+@media (max-width: 360px) { .phone { --s: 0.8; } }
+@media (max-width: 344px) { .phone { --s: 0.75; } }
+@media (max-width: 320px) { .phone { --s: 0.68; } }
+
+/* ---- Frame ----------------------------------------------------------------
+   A bezel in the well colour with a hairline around it, a screen in the page
+   background. Fixed height, so feedback and the score never move the page. */
+
+.phone {
+  position: relative; flex: none;
+  width: calc(374px * var(--s) + 2 * calc(8px * var(--s)));
+  height: calc(612px * var(--s));
+  background: var(--bg);
+  border: calc(8px * var(--s)) solid var(--well);
+  border-radius: calc(40px * var(--s));
+  box-shadow: 0 0 0 var(--stroke) var(--border);
+  overflow: hidden;
+  color: var(--text);
+}
+.phone__screen {
+  display: flex; flex-direction: column; height: 100%;
+  padding: calc(14px * var(--s)) calc(18px * var(--s)) calc(16px * var(--s));
+}
+.phone__head {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-1);
+  height: calc(34px * var(--s)); flex: none;
+}
+.phone__tag { font-size: calc(10px * var(--s)); color: var(--accent); }
+.phone__title { font-size: calc(14.5px * var(--s)); font-weight: 500; text-align: center; }
+.phone__count {
+  justify-self: end; font-size: calc(12px * var(--s)); font-weight: 700;
+  letter-spacing: -0.04em; color: var(--text-2);
+}
+.phone__table {
+  display: flex; justify-content: center; flex: none;
+  margin-inline: calc(-18px * var(--s));
+  padding-block: calc(6px * var(--s));
+}
+.phone__line {
+  display: flex; align-items: center; flex: none; margin: 0;
+  min-height: calc(38px * var(--s)); padding-top: calc(8px * var(--s));
+  font-size: calc(12px * var(--s)); color: var(--text-2);
+}
+.phone__controls { position: relative; flex: none; }
+.phone__noscript { margin: 0; padding-top: var(--space-1); font-size: var(--fs-meta); color: var(--text-2); }
+
+/* Below 560px the felt is shorter so the first decision stays on the screen;
+   seats are percentages, so their positions hold. */
+@media (max-width: 560px) {
+  .phone { height: calc(490px * var(--s)); }
+  .phone__table { padding-block: calc(2px * var(--s)); }
+  .phone__line { min-height: calc(30px * var(--s)); padding-top: calc(4px * var(--s)); }
+}
+
+/* ---- Table ----------------------------------------------------------------- */
+
+.stage {
+  position: relative; flex: none;
+  width: calc(374px * var(--s)); height: calc(435px * var(--s));
+}
+.rail, .felt {
+  position: absolute; border-radius: var(--r-pill);
+}
+.rail { inset: 0; background: var(--rail); border: var(--stroke) solid var(--table-edge); }
+.felt { inset: calc(17px * var(--s)); background: var(--felt); border: var(--stroke) solid var(--table-edge); }
+.bet-line {
+  position: absolute; inset: calc(31px * var(--s)); border-radius: var(--r-pill);
+  border: var(--stroke) solid var(--border); pointer-events: none;
+}
+.centre-mark {
+  position: absolute; left: 0; right: 0; top: 62%; transform: translateY(-50%);
+  text-align: center; padding-left: calc(4.62px * var(--s));
+  font-size: calc(11px * var(--s)); letter-spacing: 0.42em; color: var(--centre-mark);
+  pointer-events: none; user-select: none;
+}
+
+@media (max-width: 560px) {
+  .stage { height: calc(320px * var(--s)); }
+  .centre-mark { display: none; }
+}
+
+.pot {
+  position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  pointer-events: none; white-space: nowrap;
+}
+.pot__label { font-size: calc(11px * var(--s)); color: var(--text-2); }
+.pot__amount {
+  margin-top: calc(6px * var(--s)); font-size: calc(22px * var(--s)); font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.pot__bars { display: flex; gap: calc(4px * var(--s)); margin-top: calc(8px * var(--s)); }
+.pot__bars i {
+  width: calc(13px * var(--s)); height: calc(4px * var(--s));
+  border-radius: var(--r-pill); background: var(--pot-bar);
+}
+.pot__meta { margin-top: calc(8px * var(--s)); font-size: calc(11px * var(--s)); color: var(--text-3); }
+
+/* Seats. Six anchors from TableLayoutMetrics.seatAnchors(.sixMax), clockwise
+   from the top; the hero is always the fourth. */
+.seat {
+  position: absolute; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center;
+  transition: opacity var(--dur-settle) var(--ease-out);
+}
+.seat[data-i="0"] { left: 50%; top: 16%; }
+.seat[data-i="1"] { left: 86.48%; top: 34%; }
+.seat[data-i="2"] { left: 87.16%; top: 63%; }
+.seat[data-i="3"] { left: 50%; top: 79%; }
+.seat[data-i="4"] { left: 12.84%; top: 63%; }
+.seat[data-i="5"] { left: 13.52%; top: 34%; }
+.seat.folded { opacity: 0.28; }
+
+.pod-wrap { position: relative; }
+.pod {
+  position: relative; z-index: 1; text-align: center; line-height: 1.2;
+  padding: calc(6px * var(--s)) calc(8px * var(--s));
+  border-radius: calc(var(--r-button) * var(--s));
+  background: var(--panel); border: var(--stroke) solid var(--border);
+}
+.pod__name { font-size: calc(12px * var(--s)); font-weight: 600; letter-spacing: -0.02em; }
+.pod__detail { margin-top: calc(1px * var(--s)); font-size: calc(10px * var(--s)); color: var(--text-2); }
+.seat.acting .pod { border: 2px solid var(--accent); }
+.seat.acting .pod__name { color: var(--accent); }
+
+/* Villain cards: two backs fanned above the pod, taking no layout space. */
+.fan {
+  position: absolute; left: 50%; bottom: calc(26px * var(--s));
+  transform: translateX(-50%); display: flex; z-index: 0;
+}
+.fan__back {
+  position: relative;
+  width: calc(26px * var(--s)); height: calc(36px * var(--s));
+  border-radius: calc(var(--r-card) * var(--s) * 0.46 + 2px);
+  background: var(--card-back); border: var(--stroke) solid rgba(0, 0, 0, 0.2);
+}
+.fan__back:first-child { transform: rotate(-10deg); }
+.fan__back:last-child { transform: rotate(9deg); margin-left: calc(-11px * var(--s)); }
+.fan__back::after {
+  content: ""; position: absolute; inset: calc(2.3px * var(--s));
+  border-radius: calc(2px * var(--s)); border: var(--stroke) solid rgba(255, 255, 255, 0.32);
+}
+
+/* Bet pill: chip and amount, on the side of the pod facing the pot. */
+.bet-slot { display: flex; justify-content: center; min-height: calc(27px * var(--s)); min-width: calc(65px * var(--s)); }
+.bet-slot--above { margin-bottom: calc(28px * var(--s)); }
+.bet-slot--below { margin-top: calc(7px * var(--s)); }
+.seat--hero .bet-slot { margin-bottom: calc(7px * var(--s)); }
+.bet {
+  display: flex; align-items: center; gap: calc(7px * var(--s));
+  padding: calc(3px * var(--s)) calc(10px * var(--s)) calc(3px * var(--s)) calc(4px * var(--s));
+  border-radius: var(--r-pill); background: var(--bet-fill); border: var(--stroke) solid var(--border);
+  font-size: calc(11px * var(--s)); font-weight: 700; letter-spacing: -0.04em; color: var(--text);
+}
+.bet--acting { border-color: var(--accent); }
+
+.chip { width: calc(19px * var(--s)); height: calc(19px * var(--s)); flex: none; }
+.chip__body { fill: var(--chip-live); }
+.chip--blind .chip__body { fill: var(--chip-blind); }
+.chip--acting .chip__body { fill: var(--accent); }
+.chip__ring { fill: none; stroke: var(--chip-rim); stroke-width: 1.5; }
+
+/* Hero: cards on the anchor, badge beneath. The cards are the shared .pcard,
+   sized off the app's 56 x 80 card. */
+.hero-cards { display: flex; gap: calc(9px * var(--s)); margin-bottom: calc(8px * var(--s)); }
+.phone .pcard {
+  width: calc(56px * var(--s)); height: calc(80px * var(--s));
+  gap: calc(5px * var(--s)); font-size: calc(25px * var(--s)); letter-spacing: -0.02em;
+}
+.phone .pcard__suit { width: calc(23px * var(--s)); height: calc(23px * var(--s)); }
+.hero-badge {
+  padding: calc(5px * var(--s)) calc(15px * var(--s));
+  border-radius: var(--r-pill); background: var(--accent-fill); color: var(--accent-fill-ink);
+  font-size: calc(12px * var(--s)); font-weight: 600; letter-spacing: 0.06em;
+}
+
+.dealer {
+  position: absolute; transform: translate(-50%, -50%);
+  display: grid; place-items: center;
+  width: calc(26px * var(--s)); height: calc(26px * var(--s));
+  border-radius: 50%; background: var(--dealer-fill); color: var(--dealer-ink);
+  font-size: calc(12px * var(--s)); font-weight: 600;
+}
+.dealer[data-i="0"] { left: 62.30%; top: 14.62%; }
+.dealer[data-i="1"] { left: 74.18%; top: 32.62%; }
+.dealer[data-i="2"] { left: 74.86%; top: 61.62%; }
+.dealer[data-i="3"] { left: 62.30%; top: 77.62%; }
+.dealer[data-i="4"] { left: 25.14%; top: 61.62%; }
+.dealer[data-i="5"] { left: 25.82%; top: 32.62%; }
+.dealer[data-hero][data-i="3"] { left: 25.40%; top: 84.06%; }
+
+/* While dealing, the hero's cards are face down. */
+.stage.is-dealing .hero-cards .pcard { background: var(--card-back); color: transparent; }
+.stage.is-dealing .hero-cards .pcard__suit { visibility: hidden; }
+
+/* ---- Decision bar ----------------------------------------------------------
+   Before an answer: flat slabs in the action colours (green raise, blue call,
+   red fold), the label in ink that reads on them (dark on all three in dark;
+   in light, white on blue and red but dark on green, the one that clears 4.5:1). After: a well track with the
+   label in --text and the mix as a bar along the foot, scaled to its share. */
+
+.decisions { display: flex; gap: calc(8px * var(--s)); padding-top: calc(8px * var(--s)); }
+.dbtn {
+  --act: var(--act-call);
+  position: relative; flex: 1; overflow: hidden; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: calc(5px * var(--s));
+  height: calc(48px * var(--s)); padding: 0;
+  background: var(--act); color: var(--act-ink);
+  border: 0; border-radius: calc(var(--r-button) * var(--s));
+  font: 600 calc(16px * var(--s))/1 var(--font); letter-spacing: -0.02em;
+  transition: transform var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
+}
+.dbtn--fold { --act: var(--act-fold); }
+.dbtn--call { --act: var(--act-call); }
+.dbtn--raise { --act: var(--act-raise); color: var(--act-ink-raise); }
+.dbtn:not(:disabled):active { transform: scale(var(--press-scale)); }
+.dbtn:disabled { cursor: default; }
+.dbtn:disabled:not(.is-revealed) { opacity: 0.45; }
+.dbtn__label, .dbtn__pc { position: relative; }
+.dbtn__pc { font-size: calc(13px * var(--s)); font-weight: 700; letter-spacing: -0.04em; color: var(--text-2); }
+.dbtn__bar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: calc(5px * var(--s));
+  background: var(--act); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-slide) var(--ease-slide);
+}
+.dbtn.is-revealed { background: var(--well); color: var(--text); opacity: 1; }
+.dbtn.is-revealed .dbtn__bar { transform: scaleX(var(--f, 0)); }
+.dbtn.is-picked { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--text); }
+
+@media (max-width: 560px) {
+  .dbtn { min-height: var(--hit); font-size: calc(15px * var(--s)); }
+}
+
+/* ---- Feedback and score ------------------------------------------------------
+   The verdict floats over the foot of the table, panel-coloured with a rule in
+   the verdict colour. The score replaces the whole table. */
+
+.phone__result {
+  position: absolute; left: 0; right: 0; bottom: 100%; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-1);
+  min-height: calc(78px * var(--s)); padding: calc(12px * var(--s));
+  background: var(--panel); color: var(--text);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
+  animation: phone-in var(--dur-entrance) var(--ease-out) both;
+}
+.phone__result.is-correct { --result: var(--good); }
+.phone__result.is-miss { --result: var(--text-3); }
+.phone__result-copy { min-width: 0; padding-left: calc(9px * var(--s)); border-left: 3px solid var(--result); }
+.phone__result-copy strong { display: block; font-size: calc(16px * var(--s)); font-weight: 600; letter-spacing: -0.02em; }
+.phone__result-copy p { margin: 3px 0 0; max-width: 24ch; font-size: calc(11px * var(--s)); line-height: 1.4; color: var(--text-2); }
+.phone__result .btn { flex: none; }
+@keyframes phone-in {
+  from { opacity: 0; transform: translateY(var(--entrance-rise)); }
+  to { opacity: 1; transform: none; }
+}
+
+.phone.is-scored .phone__table, .phone.is-scored .phone__line { visibility: hidden; }
+.phone.is-scored .phone__controls { position: absolute; inset: calc(48px * var(--s)) calc(24px * var(--s)) calc(24px * var(--s)); overflow: auto; }
+.phone.is-scored #demo-feedback { height: 100%; }
+
+.score {
+  display: flex; flex-direction: column; justify-content: center; min-height: 100%;
+  animation: phone-in var(--dur-entrance) var(--ease-out) both;
+}
+.score__head { display: flex; align-items: center; gap: calc(14px * var(--s)); margin-bottom: calc(12px * var(--s)); }
+.score__figure { font-size: calc(42px * var(--s)); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+.score__figure span { font-size: calc(21px * var(--s)); color: var(--text-3); }
+.score__label { font-size: calc(12px * var(--s)); color: var(--accent); }
+.score__title { margin: 0; font-size: calc(21px * var(--s)); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.score__copy { margin: calc(9px * var(--s)) 0 0; font-size: calc(13.5px * var(--s)); line-height: 1.5; color: var(--text-2); }
+.score__actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-1); margin-top: calc(18px * var(--s)); }
+
+/* ---- Under the frame: one dot per hand and a line of status ----------------- */
+
+.phone-foot { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); margin-top: var(--space-2); }
+.dots { display: flex; gap: 0.5rem; }
+.dots i {
+  width: 1.75rem; height: 4px; border-radius: var(--r-pill); background: var(--border);
+  transition: opacity var(--dur-settle) var(--ease-out);
+}
+.dots i.now { background: var(--accent); }
+.dots i.correct { background: var(--good); }
+.dots i.close { background: var(--text-2); }
+.dots i.miss { background: var(--text-3); }
+.phone-foot__status { margin: 0; font-size: var(--fs-meta); color: var(--text-2); text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .phone__result, .score { animation: none; }
+}

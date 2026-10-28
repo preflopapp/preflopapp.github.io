@@ -40,11 +40,12 @@ jobs:
       # apple-app-site-association, which iOS must fetch for preflopapp.com/s/*
       # to open the app. A blanket --exclude='.*' dropped it, so it 404'd.
       # scripts/ is excluded because the checker is a build tool, not content,
-      # and CLAUDE.md because it is notes for the repo, not a page.
+      # docs/ (the design spec, phase screenshots) and CLAUDE.md because they are
+      # notes for the repo, not pages.
       - name: Assemble deploy directory
         run: |
           mkdir -p _site
-          rsync -a --include='.well-known/' --exclude='.*' --exclude='_site/' --exclude='scripts/' --exclude='CLAUDE.md' ./ _site/
+          rsync -a --include='.well-known/' --exclude='.*' --exclude='_site/' --exclude='scripts/' --exclude='docs/' --exclude='CLAUDE.md' ./ _site/
           test -f _site/.well-known/apple-app-site-association
           find _site -type f | sort
 

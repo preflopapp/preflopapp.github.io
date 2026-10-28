@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Preflop — next</title>
+<title>Preflop — know your play before the flop</title>
 <meta name="description" content="Preview of the next Preflop site. Not public.">
 <meta name="robots" content="noindex, nofollow">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
@@ -11,13 +11,16 @@
 <meta name="theme-color" content="#0e0f14" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/assets/mark-v2.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/next/css/tokens.css">
 <link rel="stylesheet" href="/next/css/components.css">
+<link rel="stylesheet" href="/next/css/demo.css">
 <script defer src="/next/js/config.js"></script>
 <script defer src="/assets/vendor/gsap/gsap.min.js"></script>
 <script defer src="/assets/vendor/gsap/ScrollTrigger.min.js"></script>
 <script defer src="/next/js/site.js"></script>
+<script defer src="/next/js/demo.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to content</a>
@@ -37,13 +40,57 @@
 <div class="nav__scrim"></div>
 </header>
 <main id="content">
-<section>
-<div class="hero-stub">
-<div class="wrap">
-<h1 class="t-display hero-stub__title">Preflop is where the money is decided.</h1>
-<p class="hero-stub__line">Real spots, one hand at a time. Then the reasoning.</p>
-<p class="hero-stub__actions"><a class="btn btn--primary" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a></p>
+<section class="hero" aria-labelledby="hero-title">
+<div class="wrap hero__grid">
+<div class="hero__copy">
+<h1 class="t-display hero__title" id="hero-title">Know your play before the <span class="hero__accent">flop.</span></h1>
+<p class="hero__line">Play three real hands, then see what the chart does and why.</p>
+<div class="hero__actions">
+<a class="btn btn--primary btn--lg" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<figure class="qr" data-cta-qr>
+<img class="qr__img" src="/assets/qr/testflight.svg" alt="QR code that opens the Preflop beta on TestFlight" width="112" height="112" loading="lazy">
+<figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption>
+</figure>
 </div>
+<p class="hero__note">TestFlight beta for iPhone.</p>
+</div>
+<div class="hero__demo" data-reveal>
+<div class="hero__glow" aria-hidden="true"></div>
+<div class="phone" id="demo" role="group" aria-label="Playable demo: three real hands">
+<div class="phone__screen">
+<div class="phone__head">
+<span class="phone__tag t-label">Try it</span>
+<span class="phone__title" id="demo-title">Raise first in</span>
+<span class="phone__count" id="demo-count">1 / 3</span>
+</div>
+<div class="phone__table"><div class="stage" id="demo-stage"><div class="rail"></div><div class="felt"></div><div class="bet-line"></div><div class="centre-mark t-label">Preflop</div><div class="pot"><div class="pot__label t-label">Pot</div><div class="pot__amount">1.5bb</div><div class="pot__bars"><i></i><i></i><i></i></div><div class="pot__meta">100bb effective · 6-max</div></div><div class="seat" data-seat="btn" data-i="0"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BTN</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="seat" data-seat="sb" data-i="1"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">SB</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>0.5bb</span></span></div></div><div class="seat" data-seat="bb" data-i="2"><div class="bet-slot bet-slot--above"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>1bb</span></span></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BB</div><div class="pod__detail">100bb</div></div></div></div><div class="seat seat--hero" data-seat="utg" data-i="3"><div class="bet-slot"></div><div class="hero-cards"><span class="pcard" role="img" aria-label="King of spades">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span><span class="pcard" role="img" aria-label="Five of spades">5<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div><div class="hero-badge">UTG</div></div><div class="seat" data-seat="hj" data-i="4"><div class="bet-slot bet-slot--above"></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">HJ</div><div class="pod__detail">100bb</div></div></div></div><div class="seat" data-seat="co" data-i="5"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">CO</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="dealer" data-i="0">D</div></div></div>
+<p class="phone__line" id="demo-line">You’re first to act. What’s your move?</p>
+<div class="phone__controls">
+<div class="decisions" id="demo-decisions" aria-label="Choose your action">
+<button class="dbtn dbtn--fold" type="button" data-d="fold" disabled><span class="dbtn__bar"></span><span class="dbtn__label">Fold</span></button>
+<button class="dbtn dbtn--raise" type="button" data-d="call" disabled><span class="dbtn__bar"></span><span class="dbtn__label">Raise</span></button>
+</div>
+<div id="demo-feedback"></div>
+<noscript><p class="phone__noscript">Turn on JavaScript to play this demo.</p></noscript>
+</div>
+</div>
+</div>
+<div class="phone-foot">
+<div class="dots" id="demo-dots" aria-hidden="true"><i class="now"></i><i></i><i></i></div>
+<p class="phone-foot__status" id="demo-status">Hand 1 of 3 · 100bb · 6-max</p>
+</div>
+<p class="sr-only" id="demo-announce" role="status" aria-live="polite"></p>
+</div>
+</div>
+</section>
+<section class="proof" aria-label="Preflop in numbers">
+<div class="wrap">
+<ul class="proof__list" data-reveal-group>
+<li class="card proof__item" data-reveal><span class="card__figure"><span data-count="30000">30,000</span>+</span><span class="card__figure-label">practice spots</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure"><span data-count="20"><!-- fact:dailyFreeHands -->20<!-- /fact --></span></span><span class="card__figure-label">free hands a day</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure">No ads</span><span class="card__figure-label">in the app</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure">No tracking</span><span class="card__figure-label">no accounts, no analytics</span></li>
+</ul>
 </div>
 </section>
 <section class="stub" id="features">

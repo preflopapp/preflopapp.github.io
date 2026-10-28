@@ -19,3 +19,29 @@ paths:
   full-page screenshot or the panels shine through as blanks.
 - **Ids are unique and `aria-controls` must name one:** the checker fails both
   (the style guide shows several navs, each needs its own menu id).
+- **No `style=` in anything JS writes either.** The page CSP is `style-src
+  'self'`, which blocks a `style` attribute inside an `innerHTML` string just
+  like one in the HTML, and silently (Phase 2). Position with a `data-*` rule in
+  CSS; set dynamic values through the CSSOM (`el.style.setProperty`, which is
+  allowed). `check-site.py` only sees the HTML, so look at the demo in a browser.
+- **The hero's first hand is in the HTML twice:** `demo.js` redraws it, the HTML
+  holds a copy for no-JS. After changing `renderTable()` or spot one, run
+  `scripts/capture-demo-static.js` and paste the result into
+  `#demo-stage` (Phase 2).
+- **The LCP element must stay the `<h1>`.** Keep the headline and the hero
+  button plain HTML with no `data-reveal`, keep SemiBold preloaded (the display
+  weight), and never make the demo a background-image or a big `<img>`. Check
+  with a `largest-contentful-paint` observer, not by eye (Phase 2).
+- **One transform/opacity-only rule covers bars too:** the mix bar is
+  `scaleX(var(--f))`, not a width. And `light-dark()` is not used for the table
+  skin on purpose: an unsupported browser would drop the whole token, so the
+  skin is the same three-way switch as `tokens.css` (Phase 2).
+- **Action-button ink is per scheme and per colour.** In light, white on the
+  green raise slab is 3.9:1; dark ink clears it, so `--act-ink-raise` differs
+  from `--act-ink` (Phase 2).
+- **Headless Chromium defaults to the light scheme.** Set `colorScheme` on the
+  context or every "dark" screenshot is light.
+- **Known, not fixed (Phase 1 shell):** below the nav's container breakpoint
+  the no-JS links row collapses into the menu when JS sets `data-enhanced`,
+  which moves the page about 32px once (mobile CLS about 0.07). Fixing it means
+  changing the nav's no-JS fallback; ask Stan first.
