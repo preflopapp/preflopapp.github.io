@@ -40,15 +40,50 @@
 
   /* ---- Story: one sticky phone, chapters scroll past it ------------------------ */
   var mm = gsap.matchMedia();
+  function indexPieces(root) {
+    all(".piece", root).forEach(function (p) { p.style.setProperty("--i", p.getAttribute("data-i") || 0); });
+  }
+  /* Stacked (a phone, a tablet): each chapter's pieces rise in as it scrolls in. */
+  all(".story").forEach(function (story) {
+    story.setAttribute("data-fx", "");
+    all(".story__chapter", story).forEach(function (c) {
+      var set = c.querySelector(".pieces");
+      if (!set) return;
+      indexPieces(set);
+      ST.create({ trigger: c, start: "top 70%", once: true, onEnter: function () { all(".piece", set).forEach(function (p) { p.classList.add("is-in"); }); } });
+    });
+  });
+
+  /* ---- Badges: each starts unearned and its tiers fill in ---------------------- */
+  all(".badges").forEach(function (sec) {
+    sec.setAttribute("data-fx", "");
+    var n = 0;
+    all(".badge", sec).forEach(function (b) {
+      ST.create({ trigger: b, start: "top 92%", once: true, onEnter: function () { setTimeout(function () { b.classList.add("is-in"); }, (n++ % 6) * 90); } });
+    });
+  });
   mm.add("(min-width: 64rem)", function () {
     var inner = doc.querySelector("[data-story]"), story = inner && inner.closest(".story");
     if (!story) return;
     var chapters = all("[data-chapter]", story), screens = all(".story__img", story), dots = all(".story__dots li", story);
+    var stage = story.querySelector("[data-stage]"), sets = [];
     story.setAttribute("data-pin", "");
+    /* Each chapter's pieces get a set on the stage, which rises in when its
+       chapter is the one being read. */
+    chapters.forEach(function (c) {
+      var src = c.querySelector(".pieces"), set = doc.createElement("div");
+      set.className = "pieceset";
+      set.setAttribute("aria-hidden", "true");
+      if (src) Array.prototype.forEach.call(src.children, function (p) { set.appendChild(p.cloneNode(true)); });
+      indexPieces(set);
+      if (stage) stage.appendChild(set);
+      sets.push(set);
+    });
     function show(n) {
       chapters.forEach(function (c, i) { c.classList.toggle("is-active", i === n); });
       screens.forEach(function (s, i) { s.classList.toggle("is-active", i === n); });
       dots.forEach(function (d, i) { d.classList.toggle("is-active", i === n); });
+      sets.forEach(function (s, i) { all(".piece", s).forEach(function (p) { p.classList.toggle("is-in", i === n); }); });
     }
     show(0);
     chapters.forEach(function (c, i) {
@@ -58,6 +93,7 @@
     return function () {
       story.removeAttribute("data-pin");
       chapters.concat(screens, dots).forEach(function (el) { el.classList.remove("is-active"); });
+      sets.forEach(function (s) { s.remove(); });
     };
   });
 

@@ -33,6 +33,8 @@
 <script defer src="/assets/vendor/gsap/ScrollTrigger.min.js"></script>
 <script defer src="/next/js/site.js"></script>
 <script defer src="/next/js/demo.js"></script>
+<script defer src="/next/js/app-data.js"></script>
+<script defer src="/next/js/explorer.js"></script>
 <script defer src="/next/js/home.js"></script>
 </head>
 <body>
@@ -104,7 +106,7 @@
 <section class="proof" aria-label="Preflop in numbers">
 <div class="wrap">
 <ul class="proof__list" data-reveal-group>
-<li class="card proof__item" data-reveal><span class="card__figure"><span data-count="25000">25,000</span>+</span><span class="card__figure-label">practice spots</span></li>
+<li class="card proof__item" data-reveal><span class="card__figure"><span data-count="25000"><!-- fact:practiceSpotsShown -->25,000<!-- /fact --></span>+</span><span class="card__figure-label">practice spots</span></li>
 <li class="card proof__item" data-reveal><span class="card__figure"><span data-count="20"><!-- fact:dailyFreeHands -->20<!-- /fact --></span></span><span class="card__figure-label">free hands a day</span></li>
 <li class="card proof__item" data-reveal><span class="card__figure">No ads</span><span class="card__figure-label">in the app</span></li>
 <li class="card proof__item" data-reveal><span class="card__figure">No tracking</span><span class="card__figure-label">no accounts, no analytics</span></li>
@@ -130,40 +132,113 @@
 <div class="story__copy" data-reveal>
 <p class="t-label story__num">01</p>
 <h3 class="story__title">A real spot, one hand at a time.</h3>
-<p class="story__body">Opening, facing an open, facing a 3-bet, blind vs blind and all-ins. At 100, 30 and 20bb, from every seat.</p>
+<p class="story__body">Opening, facing an open, facing a 3-bet, blind vs blind and all-ins. From every seat, at 100, 30 and 20bb.</p>
 </div>
-<figure class="shot story__inline"><img src="/assets/screens/play.webp" alt="The practice screen: facing a 3-bet with K5 of hearts, with Fold, Call and 4-Bet buttons." width="600" height="1304" loading="lazy" decoding="async"></figure>
+<div class="story__inline"><div class="shot-wrap"><figure class="shot"><img src="/assets/screens/app-practice.webp" alt="The practice screen: the button holds A of hearts and 5 of hearts facing a cutoff open, with Fold, Call and 3-Bet buttons." width="600" height="1304" loading="lazy" decoding="async"></figure><div class="pieces" aria-hidden="true"><div class="piece piece--tl piece--chip" data-i="0"><div class="piece__in"><span class="t-label piece__label">Facing an open</span><strong class="piece__big">BTN vs CO</strong><span class="piece__sub">100bb · 6-max · 3bb open</span></div></div><div class="piece piece--br piece--acts" data-i="1"><div class="piece__in"><span class="pbtn pbtn--fold">Fold</span><span class="pbtn pbtn--call">Call</span><span class="pbtn pbtn--raise">3-Bet</span></div></div></div></div></div>
 </li>
 <li class="story__chapter" data-chapter>
 <div class="story__copy" data-reveal>
 <p class="t-label story__num">02</p>
 <h3 class="story__title">Every answer comes with the reason.</h3>
-<p class="story__body">See how often the chart takes each action with your hand, why it plays that way, and open the range chart it came from.</p>
+<p class="story__body">See how often the chart takes each action with your hand, and why it plays that way.</p>
 </div>
-<figure class="shot story__inline"><img src="/assets/screens/explain.webp" alt="The explanation after an answer: a verdict, the reasoning, and Board and Chart buttons." width="600" height="1304" loading="lazy" decoding="async"></figure>
+<div class="story__inline"><div class="shot-wrap"><figure class="shot"><img src="/assets/screens/app-answer.webp" alt="The answer screen: Correct, with the explanation of why a suited ace is a good hand to 3-bet, and a bar under the buttons showing Fold 0%, Call 35%, 3-Bet 65%." width="600" height="1304" loading="lazy" decoding="async"></figure><div class="pieces" aria-hidden="true"><div class="piece piece--tr piece--verdict" data-i="0"><div class="piece__in"><span class="piece__tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><strong class="piece__big">Correct</strong></div></div><div class="piece piece--ml piece--quote" data-i="1"><div class="piece__in"><span class="t-label piece__label">The reason</span><span>A suited ace is a good hand to 3-bet with. Holding an ace makes it less likely CO has AA or AK.</span></div></div><div class="piece piece--bl piece--mix" data-i="2"><div class="piece__in"><span class="t-label piece__label">How often the chart does it</span><div class="mix__row"><span class="mix__name">Fold</span><span class="mix__track"></span><span class="mix__pct">0%</span></div><div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v35"></span></span><span class="mix__pct">35%</span></div><div class="mix__row"><span class="mix__name">3-Bet</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v65"></span></span><span class="mix__pct">65%</span></div></div></div></div></div></div>
 </li>
 <li class="story__chapter" data-chapter>
 <div class="story__copy" data-reveal>
 <p class="t-label story__num">03</p>
-<h3 class="story__title">Know where your leaks are. <span class="tag">Pro</span></h3>
-<p class="story__body">Accuracy by situation and by seat, with your leaks named, so you know what to drill next.</p>
+<h3 class="story__title">See the chart it came from.</h3>
+<p class="story__body">Open the full 13 by 13 range chart for the spot and see where your hand sits among all the others.</p>
 </div>
-<figure class="shot story__inline"><img src="/assets/screens/leaks.webp" alt="The Statistics screen, ranking the situations you play worst." width="600" height="1304" loading="lazy" decoding="async"></figure>
+<div class="story__inline"><div class="shot-wrap"><figure class="shot"><img src="/assets/screens/app-chart.webp" alt="The range chart for the button against a cutoff open, 100bb 6-max, with the hand A5s ringed." width="600" height="1304" loading="lazy" decoding="async"></figure><div class="pieces" aria-hidden="true"><div class="piece piece--tl piece--hand" data-i="0"><div class="piece__in"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard pcard--red">5<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="piece__col"><strong class="piece__big">A5s</strong><span class="piece__sub">65% 3-Bet · 35% Call</span></span></div></div><div class="piece piece--br piece--legend" data-i="1"><div class="piece__in"><span class="lg"><i class="lg-fold"></i>Fold</span><span class="lg"><i class="lg-call"></i>Call</span><span class="lg"><i class="lg-raise"></i>3-Bet</span></div></div></div></div></div>
 </li>
 <li class="story__chapter" data-chapter>
 <div class="story__copy" data-reveal>
 <p class="t-label story__num">04</p>
-<h3 class="story__title">Go back to any hand. <span class="tag">Pro</span></h3>
-<p class="story__body">Your full history, filterable, with every explanation. Put the ones you missed back on the table.</p>
+<h3 class="story__title">Know where your leaks are. <span class="tag">Pro</span></h3>
+<p class="story__body">Your accuracy over your last 200 hands, and the one spot costing you most, named so you can drill it.</p>
 </div>
-<figure class="shot story__inline"><img src="/assets/screens/history.webp" alt="The Hand History screen: each hand with your play and whether it was right." width="600" height="1304" loading="lazy" decoding="async"></figure>
+<div class="story__inline"><div class="shot-wrap"><figure class="shot"><img src="/assets/screens/app-home.webp" alt="The Home screen: accuracy of 74 percent over the last 200 hands with a trend line, and a Fix next card for the cutoff facing a 3-bet, folding too much." width="600" height="1304" loading="lazy" decoding="async"></figure><div class="pieces" aria-hidden="true"><div class="piece piece--tr piece--stat" data-i="0"><div class="piece__in"><span class="t-label piece__label">Your accuracy</span><strong class="piece__fig">74<span>%</span></strong><svg class="piece__spark" viewBox="0 0 120 36" aria-hidden="true"><polyline points="0,26 14,30 28,28 40,26 54,14 68,20 82,10 96,16 110,13 120,15"/></svg><span class="piece__sub">Sample profile</span></div></div><div class="piece piece--bl piece--fix" data-i="1"><div class="piece__in"><span class="t-label piece__label">Fix next</span><strong class="piece__big">CO facing a 3-bet</strong><span class="piece__sub">Folding too much</span><span class="pbtn pbtn--accent">Drill this seat</span></div></div></div></div></div>
+</li>
+<li class="story__chapter" data-chapter>
+<div class="story__copy" data-reveal>
+<p class="t-label story__num">05</p>
+<h3 class="story__title">Go back to any hand. <span class="tag">Pro</span></h3>
+<p class="story__body">Your full history, filterable, with every explanation. Put the ones you got wrong back on the table.</p>
+</div>
+<div class="story__inline"><div class="shot-wrap"><figure class="shot"><img src="/assets/screens/app-history.webp" alt="The Hand History screen: 560 hands, each row graded Correct, Mixed or Wrong." width="600" height="1304" loading="lazy" decoding="async"></figure><div class="pieces" aria-hidden="true"><div class="piece piece--tl piece--verdicts" data-i="0"><div class="piece__in"><span class="pverd"><i class="pverd__dot pverd__dot--good"></i>Correct</span><span class="pverd"><i class="pverd__dot pverd__dot--mid"></i>Mixed</span><span class="pverd"><i class="pverd__dot pverd__dot--bad"></i>Wrong</span></div></div><div class="piece piece--br piece--chip" data-i="1"><div class="piece__in"><span class="t-label piece__label">Hand History</span><strong class="piece__big">560 hands</strong><span class="piece__sub">Sample profile</span></div></div></div></div></div>
+</li>
+<li class="story__chapter" data-chapter>
+<div class="story__copy" data-reveal>
+<p class="t-label story__num">06</p>
+<h3 class="story__title">Short stacks too.</h3>
+<p class="story__body">Facing an all-in and blind vs blind at 20 and 30bb, the tournament depths, next to the 100bb cash game.</p>
+</div>
+<div class="story__inline"><div class="shot-wrap"><figure class="shot"><img src="/assets/screens/app-jam-answer.webp" alt="A 20bb spot: the cutoff holds K of spades and T of spades facing a big-blind re-jam, with the chart calling 67 percent of the time and folding 33 percent." width="600" height="1304" loading="lazy" decoding="async"></figure><div class="pieces" aria-hidden="true"><div class="piece piece--tr piece--stacks" data-i="0"><div class="piece__in"><span class="pstack">100bb</span><span class="pstack">30bb</span><span class="pstack pstack--on">20bb</span></div></div><div class="piece piece--bl piece--mix" data-i="1"><div class="piece__in"><span class="t-label piece__label">KTs facing a re-jam</span><div class="mix__row"><span class="mix__name">Fold</span><span class="mix__track"><span class="mix__bar mix__bar--fold mix__bar--v33"></span></span><span class="mix__pct">33%</span></div><div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v67"></span></span><span class="mix__pct">67%</span></div></div></div></div></div></div>
 </li>
 </ol>
 <div class="story__stage" aria-hidden="true">
-<div class="shot"><div class="story__screens"><img class="story__img" src="/assets/screens/play.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/explain.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/leaks.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/history.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"></div></div>
-<ol class="story__dots"><li></li><li></li><li></li><li></li></ol>
+<div class="shot-wrap" data-stage><div class="shot"><div class="story__screens"><img class="story__img" src="/assets/screens/app-practice.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/app-answer.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/app-chart.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/app-home.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/app-history.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"><img class="story__img" src="/assets/screens/app-jam-answer.webp" alt="" width="600" height="1304" loading="lazy" decoding="async"></div></div></div>
+<ol class="story__dots"><li></li><li></li><li></li><li></li><li></li><li></li></ol>
 </div>
 </div>
+</div>
+</section>
+<section class="section explorer" id="chart" aria-labelledby="explorer-title">
+<div class="wrap explorer__grid">
+<div class="explorer__copy" data-reveal>
+<p class="t-label section-header__eyebrow">The charts</p>
+<h2 class="t-headline" id="explorer-title">Every hand, every answer.</h2>
+<p class="explorer__lede">These are the app&rsquo;s own range charts. Each square is a hand; the bar inside it is how often the chart takes each action. Pick a hand to see the mix.</p>
+</div>
+<div class="explorer__tabs" role="tablist" aria-label="Choose a chart" data-tabs hidden></div>
+<div class="explorer__chart" data-reveal>
+<div class="explorer__live" data-chart hidden></div>
+<figure class="explorer__static"><div class="shot"><img src="/assets/screens/app-chart.webp" alt="The app's range chart for the button against a cutoff open: green, blue and red squares, one per hand, with A5s ringed." width="600" height="1304" loading="lazy" decoding="async"></div></figure>
+</div>
+<div class="explorer__inspector card" data-inspector aria-live="polite" hidden></div>
+</div>
+</section>
+<section class="section band badges" id="progress" aria-labelledby="badges-title">
+<div class="wrap">
+<div class="section-header section-header--center" data-reveal>
+<p class="t-label section-header__eyebrow">Free for everyone</p>
+<h2 class="t-headline" id="badges-title">60 badges to earn.</h2>
+<p class="section-header__line">Answer correctly from each seat and in each situation. Bronze at 25 correct answers, Silver at 100, Gold at 500, and Diamond at 1,000 for situations. Mixed answers count.</p>
+</div>
+<ul class="badges__groups" data-badges>
+<!-- gen:badges -->
+<li class="badges__group"><h3 class="t-label badges__label">By seat</h3><ul class="badges__grid badges__grid--seats">
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="UTG: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · UTG: 25 correct answers from UTG."></i><i class="badge__disc badge__disc--silver" title="Silver · UTG: 100 correct answers from UTG."></i><i class="badge__disc badge__disc--gold" title="Gold · UTG: 500 correct answers from UTG."></i></span><span class="badge__name">UTG</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="UTG+1: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · UTG+1: 25 correct answers from UTG+1."></i><i class="badge__disc badge__disc--silver" title="Silver · UTG+1: 100 correct answers from UTG+1."></i><i class="badge__disc badge__disc--gold" title="Gold · UTG+1: 500 correct answers from UTG+1."></i></span><span class="badge__name">UTG+1</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="LJ: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · LJ: 25 correct answers from LJ."></i><i class="badge__disc badge__disc--silver" title="Silver · LJ: 100 correct answers from LJ."></i><i class="badge__disc badge__disc--gold" title="Gold · LJ: 500 correct answers from LJ."></i></span><span class="badge__name">LJ</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="HJ: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · HJ: 25 correct answers from HJ."></i><i class="badge__disc badge__disc--silver" title="Silver · HJ: 100 correct answers from HJ."></i><i class="badge__disc badge__disc--gold" title="Gold · HJ: 500 correct answers from HJ."></i></span><span class="badge__name">HJ</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="CO: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · CO: 25 correct answers from CO."></i><i class="badge__disc badge__disc--silver" title="Silver · CO: 100 correct answers from CO."></i><i class="badge__disc badge__disc--gold" title="Gold · CO: 500 correct answers from CO."></i></span><span class="badge__name">CO</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="BTN: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · BTN: 25 correct answers from BTN."></i><i class="badge__disc badge__disc--silver" title="Silver · BTN: 100 correct answers from BTN."></i><i class="badge__disc badge__disc--gold" title="Gold · BTN: 500 correct answers from BTN."></i></span><span class="badge__name">BTN</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="SB: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · SB: 25 correct answers from SB."></i><i class="badge__disc badge__disc--silver" title="Silver · SB: 100 correct answers from SB."></i><i class="badge__disc badge__disc--gold" title="Gold · SB: 500 correct answers from SB."></i></span><span class="badge__name">SB</span></li>
+<li class="badge" data-family="Positions"><span class="badge__discs" role="img" aria-label="BB: Bronze 25 · Silver 100 · Gold 500 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · BB: 25 correct answers from BB."></i><i class="badge__disc badge__disc--silver" title="Silver · BB: 100 correct answers from BB."></i><i class="badge__disc badge__disc--gold" title="Gold · BB: 500 correct answers from BB."></i></span><span class="badge__name">BB</span></li>
+</ul></li>
+<li class="badges__group"><h3 class="t-label badges__label">By situation and hand type</h3><ul class="badges__grid badges__grid--situations">
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Opening: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Opening: 25 correct answers in Opening."></i><i class="badge__disc badge__disc--silver" title="Silver · Opening: 100 correct answers in Opening."></i><i class="badge__disc badge__disc--gold" title="Gold · Opening: 500 correct answers in Opening."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Opening: 1000 correct answers in Opening."></i></span><span class="badge__name">Opening</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Facing an open: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Facing an open: 25 correct answers in Facing an open."></i><i class="badge__disc badge__disc--silver" title="Silver · Facing an open: 100 correct answers in Facing an open."></i><i class="badge__disc badge__disc--gold" title="Gold · Facing an open: 500 correct answers in Facing an open."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Facing an open: 1000 correct answers in Facing an open."></i></span><span class="badge__name">Facing an open</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Facing a 3-bet: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Facing a 3-bet: 25 correct answers in Facing a 3-bet."></i><i class="badge__disc badge__disc--silver" title="Silver · Facing a 3-bet: 100 correct answers in Facing a 3-bet."></i><i class="badge__disc badge__disc--gold" title="Gold · Facing a 3-bet: 500 correct answers in Facing a 3-bet."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Facing a 3-bet: 1000 correct answers in Facing a 3-bet."></i></span><span class="badge__name">Facing a 3-bet</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Facing an all-in: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Facing an all-in: 25 correct answers in Facing an all-in."></i><i class="badge__disc badge__disc--silver" title="Silver · Facing an all-in: 100 correct answers in Facing an all-in."></i><i class="badge__disc badge__disc--gold" title="Gold · Facing an all-in: 500 correct answers in Facing an all-in."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Facing an all-in: 1000 correct answers in Facing an all-in."></i></span><span class="badge__name">Facing an all-in</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Blind vs blind: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Blind vs blind: 25 correct answers in Blind vs blind."></i><i class="badge__disc badge__disc--silver" title="Silver · Blind vs blind: 100 correct answers in Blind vs blind."></i><i class="badge__disc badge__disc--gold" title="Gold · Blind vs blind: 500 correct answers in Blind vs blind."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Blind vs blind: 1000 correct answers in Blind vs blind."></i></span><span class="badge__name">Blind vs blind</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Blind Defense: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Blind Defense: 25 correct answers in Blind Defense."></i><i class="badge__disc badge__disc--silver" title="Silver · Blind Defense: 100 correct answers in Blind Defense."></i><i class="badge__disc badge__disc--gold" title="Gold · Blind Defense: 500 correct answers in Blind Defense."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Blind Defense: 1000 correct answers in Blind Defense."></i></span><span class="badge__name">Blind Defense</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Suited Ax: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Suited Ax: 25 correct answers in Suited Ax."></i><i class="badge__disc badge__disc--silver" title="Silver · Suited Ax: 100 correct answers in Suited Ax."></i><i class="badge__disc badge__disc--gold" title="Gold · Suited Ax: 500 correct answers in Suited Ax."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Suited Ax: 1000 correct answers in Suited Ax."></i></span><span class="badge__name">Suited Ax</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Broadway Hands: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Broadway Hands: 25 correct answers in Broadway Hands."></i><i class="badge__disc badge__disc--silver" title="Silver · Broadway Hands: 100 correct answers in Broadway Hands."></i><i class="badge__disc badge__disc--gold" title="Gold · Broadway Hands: 500 correct answers in Broadway Hands."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Broadway Hands: 1000 correct answers in Broadway Hands."></i></span><span class="badge__name">Broadway Hands</span></li>
+<li class="badge" data-family="Categories"><span class="badge__discs" role="img" aria-label="Pocket Pairs: Bronze 25 · Silver 100 · Gold 500 · Diamond 1000 correct answers"><i class="badge__disc badge__disc--bronze" title="Bronze · Pocket Pairs: 25 correct answers in Pocket Pairs."></i><i class="badge__disc badge__disc--silver" title="Silver · Pocket Pairs: 100 correct answers in Pocket Pairs."></i><i class="badge__disc badge__disc--gold" title="Gold · Pocket Pairs: 500 correct answers in Pocket Pairs."></i><i class="badge__disc badge__disc--diamond" title="Diamond · Pocket Pairs: 1000 correct answers in Pocket Pairs."></i></span><span class="badge__name">Pocket Pairs</span></li>
+</ul></li>
+<!-- /gen:badges -->
+</ul>
+<ul class="unlocks" data-reveal aria-label="When each situation unlocks">
+<li class="unlock"><span class="unlock__lv">Level 1</span>Opening</li>
+<li class="unlock"><span class="unlock__lv">Level 3</span>Facing an open</li>
+<li class="unlock"><span class="unlock__lv">Level 3</span>Blind vs blind</li>
+<li class="unlock"><span class="unlock__lv">Level 5</span>Facing a 3-bet</li>
+<li class="unlock"><span class="unlock__lv">Level 6</span>Facing an all-in</li>
+</ul>
+<p class="badges__foot" data-reveal>Every correct hand is 15 XP. Level 1 to 2 takes 100 XP, and each level costs about 15% more than the last.</p>
 </div>
 </section>
 <section class="section" aria-labelledby="bento-title">
@@ -173,23 +248,21 @@
 <h2 class="t-headline" id="bento-title">Made for the minutes between sessions.</h2>
 </div>
 <div class="bento" data-reveal-group>
-<article class="card bento__card bento__card--5" data-anim="mix" data-reveal>
+<article class="card bento__card bento__card--7" data-anim="mix" data-reveal>
 <div class="bento__text"><h3 class="t-section bento__title">The mix, not just a verdict.</h3><p>See how often the chart takes each action with your hand. Often it is a split.</p></div>
 <div class="bento__visual"><div class="mix" role="img" aria-label="Three hands and how often the chart takes each action: K5 of spades under the gun folds 61 percent and raises 39; AQ offsuit in the hijack against an open calls 49 and 3-bets 51; AJ offsuit on the button against a 3-bet calls 72 and 4-bets 28"><div class="mix__group"><p class="mix__hand">K5s · UTG opening</p><div class="mix__row"><span class="mix__name">Fold</span><span class="mix__track"><span class="mix__bar mix__bar--fold mix__bar--v61"></span></span><span class="mix__pct">61%</span></div><div class="mix__row"><span class="mix__name">Raise</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v39"></span></span><span class="mix__pct">39%</span></div></div><div class="mix__group"><p class="mix__hand">AQo · HJ vs UTG open</p><div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v49"></span></span><span class="mix__pct">49%</span></div><div class="mix__row"><span class="mix__name">3-bet</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v51"></span></span><span class="mix__pct">51%</span></div></div><div class="mix__group"><p class="mix__hand">AJo · BTN vs BB 3-bet</p><div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v72"></span></span><span class="mix__pct">72%</span></div><div class="mix__row"><span class="mix__name">4-bet</span><span class="mix__track"><span class="mix__bar mix__bar--raise mix__bar--v28"></span></span><span class="mix__pct">28%</span></div></div></div></div>
 </article>
-<article class="card bento__card bento__card--7" data-anim="chart" data-reveal>
-<div class="bento__text"><h3 class="t-section bento__title">Open the chart it came from.</h3><p>See where your hand sits among the hands around it.</p></div>
-<div class="bento__visual"><figure class="chart"><div class="chart__grid" role="img" aria-label="A 13 by 13 range chart: raise in green, call in blue, fold left blank"><i class="r4"></i><i class="r4"></i><i class="c4"></i><i class="r4"></i><i class="c4"></i><i class="r4"></i><i class="r3"></i><i class="r2"></i><i></i><i class="c4"></i><i class="r4"></i><i></i><i></i><i class="r4"></i><i class="r4"></i><i class="c4"></i><i class="r4"></i><i class="r4"></i><i class="r1"></i><i></i><i></i><i></i><i class="r1"></i><i></i><i></i><i></i><i class="r4 sel"></i><i class="r1"></i><i class="c4"></i><i class="c3"></i><i class="c2"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i class="c4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i class="r2"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c3"></i><i class="r1"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c2"></i><i class="r4"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c1"></i><i class="c2"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-<ul class="chart__legend" aria-hidden="true"><li><i class="lg-raise"></i>Raise</li><li><i class="lg-call"></i>Call</li><li><i class="lg-fold"></i>Fold</li></ul>
-<figcaption class="chart__cap">HJ facing a UTG open · 100bb · 6-max. The ringed hand is AQo.</figcaption></figure></div>
-</article>
-<article class="card bento__card bento__card--4" data-anim="pop" data-reveal>
-<div class="bento__text"><h3 class="t-section bento__title">Every seat, every opener.</h3><p>Opening, facing an open, facing a 3-bet, blind vs blind, all-ins. 6-max and 8-max, at 100, 30 and 20bb.</p></div>
-<div class="bento__visual"><ul class="chips"><li class="pos" data-pop>UTG</li><li class="pos" data-pop>UTG+1</li><li class="pos" data-pop>LJ</li><li class="pos" data-pop>HJ</li><li class="pos" data-pop>CO</li><li class="pos" data-pop>BTN</li><li class="pos" data-pop>SB</li><li class="pos" data-pop>BB</li></ul></div>
+<article class="card bento__card bento__card--5" data-anim="pop" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">Every seat, every depth.</h3><p>Opening, facing an open, facing a 3-bet, blind vs blind, all-ins. 6-max and 8-max, at 100, 30 and 20bb.</p></div>
+<div class="bento__visual"><ul class="chips"><li class="pos" data-pop>UTG</li><li class="pos" data-pop>UTG+1</li><li class="pos" data-pop>LJ</li><li class="pos" data-pop>HJ</li><li class="pos" data-pop>CO</li><li class="pos" data-pop>BTN</li><li class="pos" data-pop>SB</li><li class="pos" data-pop>BB</li></ul><ul class="chips chips--depth" aria-label="Stack depths"><li class="pos pos--depth" data-pop>100bb</li><li class="pos pos--depth" data-pop>30bb</li><li class="pos pos--depth" data-pop>20bb</li></ul></div>
 </article>
 <article class="card bento__card bento__card--4" data-anim="pop" data-reveal>
 <div class="bento__text"><h3 class="t-section bento__title">A streak for showing up.</h3><p>Free forever. XP, levels and badges as you play, and new spot types as you level up.</p></div>
 <div class="bento__visual"><ul class="streak" aria-label="An example streak: five of seven days played"><li class="on" data-pop></li><li class="on" data-pop></li><li class="on" data-pop></li><li class="on" data-pop></li><li class="on" data-pop></li><li data-pop></li><li data-pop></li></ul></div>
+</article>
+<article class="card bento__card bento__card--4" data-anim="rise" data-reveal>
+<div class="bento__text"><h3 class="t-section bento__title">Tap any term.</h3><p>Poker words are underlined in the explanation. Tap one for a plain definition, without leaving the hand.</p></div>
+<div class="bento__visual"><figure class="gloss" data-rise><span class="t-label gloss__term">Button</span><p class="gloss__def">The dealer seat. It acts last after the flop, so it opens the most hands.</p></figure></div>
 </article>
 <article class="card bento__card bento__card--4" data-anim="rise" data-reveal>
 <div class="bento__text"><h3 class="t-section bento__title">No account. No tracking.</h3><p>Your practice stays on your device. No analytics, no ads. The only thing the app sends is feedback you choose to send.</p></div>
@@ -201,11 +274,11 @@
 <div class="widget widget--s" data-rise><span class="t-label widget__label">Streak</span><span class="widget__num">7</span></div>
 <div class="widget widget--m" data-rise><div class="widget__row"><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div></div>
 <div class="widget widget--l" data-rise><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div>
-</div></div>
+</div><p class="bento__note">Drawn from the widget&rsquo;s layout, not a screenshot.</p></div>
 </article>
 <article class="card bento__card bento__card--6 bento__card--wide" data-anim="trend" data-reveal>
-<div class="bento__text"><h3 class="t-section bento__title">A bankroll tracker, free for everyone.</h3><p>Log a session live or add one after the fact, and see your running total and trend.</p></div>
-<div class="bento__visual"><svg class="trend" viewBox="0 0 320 120" role="img" aria-label="An example bankroll line rising over time"><rect class="trend__base" x="0" y="116" width="320" height="1"/><polyline class="trend__line" points="2,98 30,90 58,94 86,72 114,78 142,54 170,60 198,36 226,46 254,24 282,30 318,10"/></svg></div>
+<div class="bento__text"><h3 class="t-section bento__title">A bankroll tracker, free for everyone.</h3><p>Log a session live or add one after the fact, cash or tournament, with buy-ins and rebuys. See where you win and how many buy-ins you have.</p></div>
+<div class="bento__visual"><svg class="trend" viewBox="0 0 320 120" role="img" aria-label="An example bankroll line rising over time"><rect class="trend__base" x="0" y="116" width="320" height="1"/><polyline class="trend__line" points="2,98 30,90 58,94 86,72 114,78 142,54 170,60 198,36 226,46 254,24 282,30 318,10"/></svg><p class="bento__note">An example line, not real results.</p></div>
 </article>
 </div>
 </div>

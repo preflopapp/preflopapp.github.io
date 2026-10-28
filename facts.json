@@ -12,5 +12,13 @@
   "dailyFreeHands": 20,
   "freeHistoryHands": 5,
   "annualPerMonth": "3.33",
-  "lifetimeInMonthsOfAnnual": 18
+  "lifetimeInMonthsOfAnnual": 18,
+  "practiceSpots": 25479,
+  "practiceSpotsShown": 25000,
+  "stackDepths": [
+    100,
+    30,
+    20
+  ],
+  "_spots": "practiceSpots is how many practice spots the app bundles (counted from its content files; 6,431 at 100bb, 19,048 at 20/30bb). The site rounds DOWN to practiceSpotsShown and writes it as '25,000+'; check-site.py fails any 'N,NNN+' on the site that is not that figure. The app's check_site_facts.py ignores these keys."
 }

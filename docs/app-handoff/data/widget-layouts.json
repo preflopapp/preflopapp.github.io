@@ -1,0 +1,74 @@
+{
+ "source": "PreflopWidgets/PreflopWidgetContent.swift, Models/WidgetSharedState.swift. No widget screenshot exists in any repo (see screens/README.md). Display name 'Preflop'; description 'Your streak, and a hand worth answering right now.'; families small, medium, large. Widget font is the SYSTEM font (SF), not Hanken (extension bundles no fonts). Colours from PreflopWidgets/WidgetTheme.swift.",
+ "small": {
+  "always": "streak only",
+  "elements": [
+   "flame.fill icon (accent amber, 20pt)",
+   "streak number (30pt heavy rounded)",
+   "'day streak' (12.5pt semibold, secondary)"
+  ],
+  "tap": "opens practice"
+ },
+ "medium_with_spot": {
+  "top_strip": [
+   "flame icon",
+   "'N day(s)' (13pt bold rounded)",
+   "right-aligned hands line"
+  ],
+  "divider": true,
+  "spot_row": [
+   "two overlapping cards, first tilted -6deg (34x46)",
+   "seat pill (amber capsule, e.g. 'BTN')",
+   "situation line e.g. 'Facing an open' / 'Opening' / 'Blind vs blind'",
+   "two decision buttons: passive (Fold, or Check for BB vs limp) and the most aggressive live action, colour-coded like the table HUD (fold red, call blue, raise green) \u2014 colour says 'type of action', never 'the answer'"
+  ],
+  "tap": "opens that exact hand"
+ },
+ "medium_fallback_no_spot": {
+  "left": [
+   "flame + 'N day(s)'",
+   "hands line"
+  ],
+  "right": "'Practice' button (amber capsule with play icon)"
+ },
+ "large_with_spot": [
+  "seat pill + flame + streak number (top row)",
+  "hands line",
+  "cards 44x60",
+  "hand title (15pt bold, e.g. 'A5s from the button' style handTitle) and context line",
+  "action path (the sequence of actions before hero)",
+  "decision row (full style)"
+ ],
+ "large_fallback": "same as medium fallback",
+ "hands_line_text": {
+  "metered_free": "'<n> hands left today' (CountLabel.hands; blank if unknown)",
+  "pro": "'Unlimited hands today'"
+ },
+ "refresh": "App writes a week of spots ahead; widget lays out 48h of entries so the hand rotates with the app closed. 'Today' is the local day.",
+ "widget_colours": {
+  "background": {
+   "dark": "#0E0F14",
+   "light": "#F4F4F7"
+  },
+  "panel": {
+   "dark": "#191A22",
+   "light": "#FFFFFF"
+  },
+  "fold": {
+   "dark": "#D9564C",
+   "light": "#B8382F"
+  },
+  "raise": {
+   "dark": "#3FB877",
+   "light": "#2A8F5A"
+  },
+  "call": {
+   "dark": "#4F93E0",
+   "light": "#2F72BE"
+  },
+  "cardFace": "#FFFFFF",
+  "cardInkBlack": "#15161D",
+  "cardInkRed": "#C8443C",
+  "note": "Widget fold/raise/call differ slightly from in-app action colours."
+ }
+}

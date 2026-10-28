@@ -348,5 +348,35 @@ class PageCspHeaderTests(unittest.TestCase):
         self.assertEqual(cs.check_site(CheckSiteTests.site(self, files)), [])
 
 
+class SpotCountTests(unittest.TestCase):
+    """The spot count is a claim like a price: it can only be the figure in facts.json."""
+    F = FACTS.replace('"freeHistoryHands": 5}', '"freeHistoryHands": 5, "practiceSpots": 25479, "practiceSpotsShown": 25000}')
+
+    def site(self, body, facts=None, extra=None):
+        files = {"facts.json": facts or self.F, "index.html": page(body=body)}
+        files.update(extra or {})
+        return CheckSiteTests.site(self, files)
+
+    def test_the_shown_figure_passes(self):
+        self.assertEqual(cs.check_site(self.site("<h1>T</h1><p>25,000+ spots</p>")), [])
+
+    def test_another_figure_fails(self):
+        errs = cs.check_site(self.site("<h1>T</h1><p>30,000+ spots</p>"))
+        self.assertTrue(any("'30,000+' but facts.json practiceSpotsShown is 25,000" in e for e in errs), errs)
+
+    def test_marker_must_match(self):
+        errs = cs.check_site(self.site("<h1>T</h1><!-- fact:practiceSpotsShown -->26,000<!-- /fact -->"))
+        self.assertTrue(any("fact practiceSpotsShown says 26,000" in e for e in errs), errs)
+
+    def test_cannot_claim_more_than_the_app_has(self):
+        bad = self.F.replace('"practiceSpotsShown": 25000', '"practiceSpotsShown": 30000')
+        errs = cs.check_site(self.site("<h1>T</h1>", facts=bad))
+        self.assertTrue(any("more than practiceSpots" in e for e in errs), errs)
+
+    def test_a_script_claim_is_checked_too(self):
+        errs = cs.check_site(self.site("<h1>T</h1>", extra={"next/js/demo.js": 'x = "Preflop has 30,000+ more spots";'}))
+        self.assertTrue(any("next/js/demo.js" in e and "30,000+" in e for e in errs), errs)
+
+
 if __name__ == "__main__":
     unittest.main()

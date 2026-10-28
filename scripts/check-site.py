@@ -114,6 +114,7 @@ def _resolves(root, ref):
 # day" / "20 free hands every day" and the like.
 PRICE = re.compile(r"\$(\d+\.\d\d)")
 DAILY = re.compile(r"\b(\d+) (?:more |new |free )?hands? (?:a day|every day|each day)", re.I)
+SPOTS = re.compile(r"\b(\d{1,3},\d{3})\+")
 FACT = re.compile(r"<!-- fact:(\w+) -->(.*?)<!-- /fact -->", re.S)
 # A trial offer: "free trial", "7-day free", with the site's non-breaking hyphen.
 TRIAL = re.compile(r"free trial|\d(?:&#8209;|[-\u2011 ])day free", re.I)
@@ -136,6 +137,12 @@ def check_facts(root, pages):
     values = {**facts["prices"], "annualPerMonth": facts["annualPerMonth"],
               "dailyFreeHands": str(facts["dailyFreeHands"]),
               "freeHistoryHands": str(facts["freeHistoryHands"])}
+    # The spot count: shown rounded down, as "25,000+", never above what the app bundles.
+    shown = facts.get("practiceSpotsShown")
+    if shown is not None:
+        values["practiceSpotsShown"] = f"{shown:,}"
+        if shown > facts.get("practiceSpots", shown):
+            errors.append(f"ERROR facts.json: practiceSpotsShown {shown} is more than practiceSpots {facts['practiceSpots']}")
     # The plan prices, and annual as a monthly figure ("about $3.33 a month").
     prices = set(facts["prices"].values()) | {facts["annualPerMonth"]}
     # The app's only trial is on annual, and the paywall serves the lineup in
@@ -157,9 +164,26 @@ def check_facts(root, pages):
                 errors.append(f"ERROR {rel}: price ${amount} is not a plan price in facts.json")
         if not trial_offered and TRIAL.search(text):
             errors.append(f"ERROR {rel}: advertises a free trial but paywall.json has no annual plan")
+        if shown is not None:
+            for big in SPOTS.findall(text):
+                if big != values["practiceSpotsShown"]:
+                    errors.append(f"ERROR {rel}: '{big}+' but facts.json practiceSpotsShown is {values['practiceSpotsShown']}")
         for count in DAILY.findall(text):
             if count != values["dailyFreeHands"]:
                 errors.append(f"ERROR {rel}: '{count} hands a day' but facts.json says {values['dailyFreeHands']}")
+    return errors
+
+def check_js_claims(root):
+    """A spot count written in a /next/ script (the demo's closing line) is a claim too."""
+    facts_path = root / "facts.json"
+    if not facts_path.is_file(): return []
+    shown = json.loads(facts_path.read_text()).get("practiceSpotsShown")
+    if shown is None: return []
+    errors = []
+    for js in sorted((root / "next/js").glob("*.js")) if (root / "next/js").is_dir() else []:
+        for big in SPOTS.findall(js.read_text()):
+            if big != f"{shown:,}":
+                errors.append(f"ERROR {js.relative_to(root).as_posix()}: '{big}+' but facts.json practiceSpotsShown is {shown:,}")
     return errors
 
 def _external(ref):
@@ -369,6 +393,7 @@ def check_site(root):
                     errors.append(f"ERROR {rel}: broken link {ref}")
     errors += check_page_csp_headers(root, pages)
     errors += check_facts(root, pages)
+    errors += check_js_claims(root)
     errors += check_css_assets(root, pages)
     errors += check_next(root, next_pages)
     sitemap = root / "sitemap.xml"

@@ -1,0 +1,450 @@
+{
+ "note": "Real spots from ContentPipeline/Normalized. Mix is shown rounded to whole percent as in the app. 'buttons' null = spot type default (see Models/Spot.swift defaultDecisions).",
+ "spots": [
+  {
+   "id": "gen-rfi-6max-btn-A5s",
+   "why_chosen": "Opening, pure raise",
+   "tableSize": "6max",
+   "stackDepthBB": 100,
+   "heroPosition": "btn",
+   "situation": "rfi",
+   "heroHand": [
+    "Ah",
+    "5h"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "hj",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "co",
+     "action": "fold",
+     "sizingBB": null
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": [
+    "Fold",
+    "Raise"
+   ],
+   "correctAction": "Raise",
+   "mixPercent": {
+    "Raise": 100
+   },
+   "chartId": "rfi-6max-btn",
+   "explanation": {
+    "concept": "Opening range \u2014 BTN",
+    "correctSummary": "An ace with two cards of one suit is a standard open from BTN: it wins big pots when it pairs the ace or makes a flush, and holding the ace makes it less likely someone behind has a strong ace. As the dealer you act last after the flop, which makes every hand worth more.",
+    "mistakeSummaries": {
+     "Fold": "The ace makes big hands behind you less likely, and the suit can make the best possible flush. That's an open."
+    }
+   },
+   "tags": [
+    "rfi",
+    "suited_ace"
+   ]
+  },
+  {
+   "id": "gen-rfi-6max-utg-ATo",
+   "why_chosen": "Opening, mixed hand",
+   "tableSize": "6max",
+   "stackDepthBB": 100,
+   "heroPosition": "utg",
+   "situation": "rfi",
+   "heroHand": [
+    "Ad",
+    "Tc"
+   ],
+   "actionSequence": [],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": [
+    "Fold",
+    "Raise"
+   ],
+   "correctAction": "Fold",
+   "mixPercent": {
+    "Fold": 52,
+    "Raise": 48
+   },
+   "chartId": "rfi-6max-utg",
+   "explanation": {
+    "concept": "A mixed hand \u2014 UTG opening",
+    "correctSummary": "This hand is at the edge of what UTG opens: strong enough to raise sometimes, not strong enough to raise every time.",
+    "mistakeSummaries": {}
+   },
+   "tags": [
+    "rfi",
+    "broadway"
+   ]
+  },
+  {
+   "id": "gen-rfi-8max-lj-KQo",
+   "why_chosen": "Opening at 8-max",
+   "tableSize": "8max",
+   "stackDepthBB": 100,
+   "heroPosition": "lj",
+   "situation": "rfi",
+   "heroHand": [
+    "Ks",
+    "Qh"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "utg1",
+     "action": "fold",
+     "sizingBB": null
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": [
+    "Fold",
+    "Raise"
+   ],
+   "correctAction": "Raise",
+   "mixPercent": {
+    "Raise": 100
+   },
+   "chartId": "rfi-8max-lj",
+   "explanation": {
+    "concept": "Opening range \u2014 LJ",
+    "correctSummary": "Two high cards (ten or better) often flop a strong pair, which is enough to open from LJ. Few players have acted, and many act behind you, so only the stronger hands make the cut from LJ.",
+    "mistakeSummaries": {
+     "Fold": "Two high cards are ahead of most hands the players behind you hold. From LJ that's worth an open."
+    }
+   },
+   "tags": [
+    "rfi",
+    "broadway"
+   ]
+  },
+  {
+   "id": "gen-vsopen-6max-bb-vs-btn-J8s",
+   "why_chosen": "Facing an open, big blind",
+   "tableSize": "6max",
+   "stackDepthBB": 100,
+   "heroPosition": "bb",
+   "situation": "facing_open",
+   "heroHand": [
+    "Js",
+    "8s"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "hj",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "co",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "btn",
+     "action": "raise",
+     "sizingBB": 3.0
+    },
+    {
+     "position": "sb",
+     "action": "fold",
+     "sizingBB": null
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": null,
+   "correctAction": "3-Bet",
+   "mixPercent": {
+    "Fold": 1,
+    "Call": 39,
+    "3-Bet": 60
+   },
+   "chartId": "vsopen-6max-bb-vs-btn",
+   "explanation": {
+    "concept": "A mixed hand \u2014 BB vs BTN",
+    "correctSummary": "The chart mostly 3-bets this hand (re-raises the open) and sometimes calls it. This hand is good enough to call BTN's open and good enough to bluff-raise with. The two lines win in different ways: a call by hitting the flop, a 3-bet (a re-raise) by making BTN fold. The chart uses both.",
+    "mistakeSummaries": {
+     "Fold": "This hand is worth playing most of the time against BTN's open. The only question is whether to call or 3-bet (re-raise).",
+     "Call": "Close, but the chart prefers 3-betting with this hand; calling is a less common line here."
+    }
+   },
+   "tags": [
+    "facing_open",
+    "suited",
+    "facing_btn_open",
+    "blind_defense"
+   ]
+  },
+  {
+   "id": "gen-vsopen-6max-hj-vs-utg-77",
+   "why_chosen": "Facing an open, three-way mix",
+   "tableSize": "6max",
+   "stackDepthBB": 100,
+   "heroPosition": "hj",
+   "situation": "facing_open",
+   "heroHand": [
+    "7h",
+    "7d"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "raise",
+     "sizingBB": 3.0
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": null,
+   "correctAction": "Fold",
+   "mixPercent": {
+    "Fold": 40,
+    "Call": 38,
+    "3-Bet": 22
+   },
+   "chartId": "vsopen-6max-hj-vs-utg",
+   "explanation": {
+    "concept": "A mixed hand \u2014 HJ vs UTG",
+    "correctSummary": "This pair is right on the edge of what HJ can play against UTG's open. A set (three of a kind) comes about one flop in eight, and that just about pays for the call, so the chart calls some of the time and folds the rest.",
+    "mistakeSummaries": {
+     "3-Bet": "This hand is barely worth a call. A 3-bet (a re-raise over their open) builds a big pot with a hand that's only borderline."
+    }
+   },
+   "tags": [
+    "facing_open",
+    "pair",
+    "facing_utg_open"
+   ]
+  },
+  {
+   "id": "gen-vs3bet-6max-co-vs-btn-AJo",
+   "why_chosen": "Facing a 3-bet",
+   "tableSize": "6max",
+   "stackDepthBB": 100,
+   "heroPosition": "co",
+   "situation": "facing_three_bet",
+   "heroHand": [
+    "Ac",
+    "Js"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "hj",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "co",
+     "action": "raise",
+     "sizingBB": 3.0
+    },
+    {
+     "position": "btn",
+     "action": "raise",
+     "sizingBB": 10.0
+    },
+    {
+     "position": "sb",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "bb",
+     "action": "fold",
+     "sizingBB": null
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": null,
+   "correctAction": "Fold",
+   "mixPercent": {
+    "Fold": 100
+   },
+   "chartId": "vs3bet-6max-co-vs-btn",
+   "explanation": {
+    "concept": "Facing a 3-bet \u2014 CO vs BTN",
+    "correctSummary": "Folding is correct here \u2014 this hand was fine to open with, but it's in bad shape against a 3-bet (a re-raise over your open). The hands BTN re-raises with often beat it, and the weaker ones fold if you re-raise again.",
+    "mistakeSummaries": {
+     "Call": "3-bets (re-raises over an open) hold the best high cards, so you're often beaten. When you both pair, their second card is usually better.",
+     "4-Bet": "Worse hands fold to a 4-bet (a re-raise over the 3-bet) and better ones stay in. Don't raise a hand that beats nothing that stays in."
+    }
+   },
+   "tags": [
+    "facing_three_bet",
+    "broadway",
+    "facing_btn_3bet"
+   ]
+  },
+  {
+   "id": "gen-vsallin-6max-20bb-co-vs-bb-rejam-KTs",
+   "why_chosen": "Facing an all-in at 20bb",
+   "tableSize": "6max",
+   "stackDepthBB": 20,
+   "heroPosition": "co",
+   "situation": "facing_all_in",
+   "heroHand": [
+    "Ks",
+    "Ts"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "hj",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "co",
+     "action": "raise",
+     "sizingBB": 2.0
+    },
+    {
+     "position": "btn",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "sb",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "bb",
+     "action": "all_in",
+     "sizingBB": 20.0
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": [
+    "Fold",
+    "Call"
+   ],
+   "correctAction": "Call",
+   "mixPercent": {
+    "Fold": 33,
+    "Call": 67
+   },
+   "chartId": "vsallin-6max-20bb-co-vs-bb-rejam",
+   "explanation": {
+    "concept": "Calling a re-jam \u2014 CO vs BB",
+    "correctSummary": "Against BB's re-jam over your open, the chart mostly plays this broadway hand as a call, and as a fold some of the time. A call is the line to lean on, but folding is part of the strategy too, not a mistake.",
+    "mistakeSummaries": {
+     "Fold": "Close, but the chart prefers a call with this broadway hand; folding is a less common line here."
+    }
+   },
+   "tags": [
+    "facing_all_in",
+    "broadway",
+    "vs_rejam"
+   ]
+  },
+  {
+   "id": "gen-bvb-6max-20bb-sb-76o",
+   "why_chosen": "Blind vs blind at 20bb",
+   "tableSize": "6max",
+   "stackDepthBB": 20,
+   "heroPosition": "sb",
+   "situation": "blind_vs_blind",
+   "heroHand": [
+    "7d",
+    "6c"
+   ],
+   "actionSequence": [
+    {
+     "position": "utg",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "hj",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "co",
+     "action": "fold",
+     "sizingBB": null
+    },
+    {
+     "position": "btn",
+     "action": "fold",
+     "sizingBB": null
+    }
+   ],
+   "blindsBB": {
+    "sb": 0.5,
+    "bb": 1
+   },
+   "buttons": [
+    "Fold",
+    "Limp",
+    "Raise",
+    "All-in"
+   ],
+   "correctAction": "Limp",
+   "mixPercent": {
+    "Limp": 52,
+    "Raise": 48
+   },
+   "chartId": "bvb-6max-20bb-sb",
+   "explanation": {
+    "concept": "Blind vs blind, first in \u2014 SB",
+    "correctSummary": "This offsuit hand sits on the line between limping and raising for SB here. Both lines are close in value at this stack depth, so the chart plays each some of the time.",
+    "mistakeSummaries": {
+     "Fold": "Completing costs half a big blind, and this offsuit hand does well enough against the big blind alone to see a flop.",
+     "All-in": "A jam folds every hand this offsuit hand beats. A smaller raise keeps them in to pay you."
+    }
+   },
+   "tags": [
+    "blind_vs_blind",
+    "offsuit",
+    "sb_first_in"
+   ]
+  }
+ ]
+}

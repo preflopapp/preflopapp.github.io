@@ -1,0 +1,3052 @@
+{
+"note": "13x13, rows and columns A..2; pairs on the diagonal, suited above it, offsuit below (RangeChartView.handClass). A cell is a horizontal bar split left to right in this order: fold, check, call, limp, raise, three_bet, four_bet, all_in, widths = frequency. mix null = hand not in the chart (drawn as 'well' with tertiary text). Colour per action: see actionColours. In RFI charts the stored key 'call' means Raise.",
+"actionColours": {
+"actionFold": {
+"dark": "#E0574F",
+"light": "#E5514A"
+},
+"actionCall": {
+"dark": "#4F93E0",
+"light": "#3A89E4"
+},
+"actionRaise": {
+"dark": "#3FBF7A",
+"light": "#28B064"
+},
+"actionAllIn": {
+"dark": "#A97BE8",
+"light": "#9A6EDE"
+}
+},
+"actionToColour": {
+"fold": "actionFold",
+"check": "actionCall",
+"call": "actionCall (actionRaise in rfi charts)",
+"limp": "actionCall",
+"raise": "actionRaise",
+"three_bet": "actionRaise",
+"four_bet": "actionRaise",
+"all_in": "actionAllIn"
+},
+"cellLabelInk": "black at 80% opacity on a filled cell; textTertiary on an empty one",
+"cellRadiusPt": 2,
+"heroCellRing": "2pt textPrimary, others dimmed to 82%",
+"charts": {
+"rfi-6max-btn": {
+"id": "rfi-6max-btn",
+"tableSize": "6max",
+"stackDepth": 100,
+"heroPosition": "btn",
+"opponentPosition": null,
+"situation": "rfi",
+"openSizingBB": 3.0,
+"grid": [
+[
+{
+"hand": "AA",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "AKs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "AQs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "AJs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "ATs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A5s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A4s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A3s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A2s",
+"mix": {
+"call": 1.0
+}
+}
+],
+[
+{
+"hand": "AKo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KK",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KQs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KJs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KTs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K5s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K4s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K3s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K2s",
+"mix": {
+"call": 1.0
+}
+}
+],
+[
+{
+"hand": "AQo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KQo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QQ",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QJs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QTs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q5s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q4s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q3s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q2s",
+"mix": {
+"fold": 0.842,
+"call": 0.159
+}
+}
+],
+[
+{
+"hand": "AJo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KJo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QJo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "JJ",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "JTs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J5s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J4s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J3s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J2s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "ATo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KTo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QTo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "JTo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "TT",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T5s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T4s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T3s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T2s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A9o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K9o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q9o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J9o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T9o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "99",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "98s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "97s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "96s",
+"mix": {
+"fold": 0.012,
+"call": 0.988
+}
+},
+{
+"hand": "95s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "94s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "93s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "92s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A8o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K8o",
+"mix": {
+"fold": 0.728,
+"call": 0.272
+}
+},
+{
+"hand": "Q8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T8o",
+"mix": {
+"fold": 0.876,
+"call": 0.123
+}
+},
+{
+"hand": "98o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "88",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "87s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "86s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "85s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "84s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "83s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "82s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A7o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "97o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "87o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "77",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "76s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "75s",
+"mix": {
+"fold": 0.085,
+"call": 0.915
+}
+},
+{
+"hand": "74s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "73s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "72s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A6o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "96o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "86o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "76o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "66",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "65s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "64s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "63s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "62s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A5o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "95o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "85o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "75o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "65o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "55",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "54s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "53s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "52s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A4o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "94o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "84o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "74o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "64o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "54o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "44",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "43s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "42s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A3o",
+"mix": {
+"fold": 0.402,
+"call": 0.598
+}
+},
+{
+"hand": "K3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "93o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "83o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "73o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "63o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "53o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "43o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "33",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "32s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "92o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "82o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "72o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "62o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "52o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "42o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "32o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "22",
+"mix": {
+"call": 1.0
+}
+}
+]
+]
+},
+"vsopen-6max-bb-vs-btn": {
+"id": "vsopen-6max-bb-vs-btn",
+"tableSize": "6max",
+"stackDepth": 100,
+"heroPosition": "bb",
+"opponentPosition": "btn",
+"situation": "facing_open",
+"openSizingBB": 3.0,
+"grid": [
+[
+{
+"hand": "AA",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "AKs",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "AQs",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "AJs",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "ATs",
+"mix": {
+"call": 0.728,
+"three_bet": 0.272
+}
+},
+{
+"hand": "A9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A8s",
+"mix": {
+"fold": 0.012,
+"call": 0.988
+}
+},
+{
+"hand": "A7s",
+"mix": {
+"call": 0.605,
+"three_bet": 0.395
+}
+},
+{
+"hand": "A6s",
+"mix": {
+"call": 0.975,
+"three_bet": 0.025
+}
+},
+{
+"hand": "A5s",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "A4s",
+"mix": {
+"call": 0.928,
+"three_bet": 0.072
+}
+},
+{
+"hand": "A3s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A2s",
+"mix": {
+"call": 1.0
+}
+}
+],
+[
+{
+"hand": "AKo",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "KK",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "KQs",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "KJs",
+"mix": {
+"fold": 0.012,
+"call": 0.451,
+"three_bet": 0.537
+}
+},
+{
+"hand": "KTs",
+"mix": {
+"call": 0.136,
+"three_bet": 0.864
+}
+},
+{
+"hand": "K9s",
+"mix": {
+"call": 0.704,
+"three_bet": 0.296
+}
+},
+{
+"hand": "K8s",
+"mix": {
+"call": 0.427,
+"three_bet": 0.573
+}
+},
+{
+"hand": "K7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K6s",
+"mix": {
+"call": 0.926,
+"three_bet": 0.074
+}
+},
+{
+"hand": "K5s",
+"mix": {
+"call": 0.787,
+"three_bet": 0.212
+}
+},
+{
+"hand": "K4s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K3s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K2s",
+"mix": {
+"call": 1.0
+}
+}
+],
+[
+{
+"hand": "AQo",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "KQo",
+"mix": {
+"call": 0.309,
+"three_bet": 0.691
+}
+},
+{
+"hand": "QQ",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "QJs",
+"mix": {
+"fold": 0.012,
+"call": 0.305,
+"three_bet": 0.683
+}
+},
+{
+"hand": "QTs",
+"mix": {
+"call": 0.025,
+"three_bet": 0.975
+}
+},
+{
+"hand": "Q9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q7s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q5s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q4s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q3s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "Q2s",
+"mix": {
+"call": 1.0
+}
+}
+],
+[
+{
+"hand": "AJo",
+"mix": {
+"call": 0.476,
+"three_bet": 0.524
+}
+},
+{
+"hand": "KJo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QJo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "JJ",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "JTs",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "J9s",
+"mix": {
+"call": 0.049,
+"three_bet": 0.951
+}
+},
+{
+"hand": "J8s",
+"mix": {
+"fold": 0.012,
+"call": 0.39,
+"three_bet": 0.598
+}
+},
+{
+"hand": "J7s",
+"mix": {
+"call": 0.284,
+"three_bet": 0.716
+}
+},
+{
+"hand": "J6s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "J5s",
+"mix": {
+"call": 0.95,
+"three_bet": 0.05
+}
+},
+{
+"hand": "J4s",
+"mix": {
+"fold": 0.048,
+"call": 0.952
+}
+},
+{
+"hand": "J3s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J2s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "ATo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KTo",
+"mix": {
+"call": 0.58,
+"three_bet": 0.42
+}
+},
+{
+"hand": "QTo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "JTo",
+"mix": {
+"fold": 0.012,
+"call": 0.695,
+"three_bet": 0.293
+}
+},
+{
+"hand": "TT",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "T9s",
+"mix": {
+"three_bet": 1.0
+}
+},
+{
+"hand": "T8s",
+"mix": {
+"fold": 0.012,
+"call": 0.214,
+"three_bet": 0.774
+}
+},
+{
+"hand": "T7s",
+"mix": {
+"call": 0.716,
+"three_bet": 0.284
+}
+},
+{
+"hand": "T6s",
+"mix": {
+"call": 0.914,
+"three_bet": 0.086
+}
+},
+{
+"hand": "T5s",
+"mix": {
+"fold": 0.976,
+"call": 0.024
+}
+},
+{
+"hand": "T4s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T3s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T2s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A9o",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "K9o",
+"mix": {
+"fold": 0.086,
+"call": 0.914
+}
+},
+{
+"hand": "Q9o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J9o",
+"mix": {
+"fold": 0.8,
+"call": 0.2
+}
+},
+{
+"hand": "T9o",
+"mix": {
+"call": 0.827,
+"three_bet": 0.173
+}
+},
+{
+"hand": "99",
+"mix": {
+"call": 0.63,
+"three_bet": 0.37
+}
+},
+{
+"hand": "98s",
+"mix": {
+"call": 0.317,
+"three_bet": 0.683
+}
+},
+{
+"hand": "97s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "96s",
+"mix": {
+"call": 0.914,
+"three_bet": 0.086
+}
+},
+{
+"hand": "95s",
+"mix": {
+"fold": 0.976,
+"call": 0.024
+}
+},
+{
+"hand": "94s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "93s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "92s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A8o",
+"mix": {
+"fold": 0.012,
+"call": 0.951,
+"three_bet": 0.037
+}
+},
+{
+"hand": "K8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "98o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "88",
+"mix": {
+"fold": 0.012,
+"call": 0.476,
+"three_bet": 0.512
+}
+},
+{
+"hand": "87s",
+"mix": {
+"call": 0.654,
+"three_bet": 0.346
+}
+},
+{
+"hand": "86s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "85s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "84s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "83s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "82s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A7o",
+"mix": {
+"fold": 0.012,
+"call": 0.963,
+"three_bet": 0.024
+}
+},
+{
+"hand": "K7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "97o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "87o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "77",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "76s",
+"mix": {
+"call": 0.012,
+"three_bet": 0.988
+}
+},
+{
+"hand": "75s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "74s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "73s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "72s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "96o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "86o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "76o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "66",
+"mix": {
+"call": 0.556,
+"three_bet": 0.444
+}
+},
+{
+"hand": "65s",
+"mix": {
+"call": 0.5,
+"three_bet": 0.5
+}
+},
+{
+"hand": "64s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "63s",
+"mix": {
+"fold": 0.025,
+"call": 0.975
+}
+},
+{
+"hand": "62s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A5o",
+"mix": {
+"fold": 0.012,
+"call": 0.439,
+"three_bet": 0.549
+}
+},
+{
+"hand": "K5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "95o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "85o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "75o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "65o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "55",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "54s",
+"mix": {
+"call": 0.47,
+"three_bet": 0.53
+}
+},
+{
+"hand": "53s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "52s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "94o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "84o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "74o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "64o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "54o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "44",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "43s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "42s",
+"mix": {
+"fold": 0.976,
+"call": 0.024
+}
+}
+],
+[
+{
+"hand": "A3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T3o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "93o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "83o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "73o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "63o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "53o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "43o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "33",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "32s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "A2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T2o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "92o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "82o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "72o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "62o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "52o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "42o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "32o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "22",
+"mix": {
+"call": 1.0
+}
+}
+]
+]
+},
+"vsallin-6max-20bb-co-vs-bb-rejam": {
+"id": "vsallin-6max-20bb-co-vs-bb-rejam",
+"tableSize": "6max",
+"stackDepth": 20,
+"heroPosition": "co",
+"opponentPosition": "bb",
+"situation": "facing_all_in",
+"openSizingBB": 20.0,
+"grid": [
+[
+{
+"hand": "AA",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "AKs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "AQs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "AJs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "ATs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A9s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A8s",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "A7s",
+"mix": {
+"fold": 0.562,
+"call": 0.438
+}
+},
+{
+"hand": "A6s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "A5s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "A4s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "A3s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "A2s",
+"mix": {
+"fold": 1.0
+}
+}
+],
+[
+{
+"hand": "AKo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KK",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KQs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KJs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KTs",
+"mix": {
+"fold": 0.333,
+"call": 0.667
+}
+},
+{
+"hand": "K9s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K8s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K7s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K6s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K5s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K4s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K3s",
+"mix": null
+},
+{
+"hand": "K2s",
+"mix": null
+}
+],
+[
+{
+"hand": "AQo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KQo",
+"mix": {
+"fold": 0.625,
+"call": 0.375
+}
+},
+{
+"hand": "QQ",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QJs",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "QTs",
+"mix": {
+"fold": 0.375,
+"call": 0.625
+}
+},
+{
+"hand": "Q9s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q8s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q7s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q6s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q5s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q4s",
+"mix": null
+},
+{
+"hand": "Q3s",
+"mix": null
+},
+{
+"hand": "Q2s",
+"mix": null
+}
+],
+[
+{
+"hand": "AJo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KJo",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "QJo",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "JJ",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "JTs",
+"mix": {
+"fold": 0.646,
+"call": 0.354
+}
+},
+{
+"hand": "J9s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J8s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J7s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J6s",
+"mix": null
+},
+{
+"hand": "J5s",
+"mix": null
+},
+{
+"hand": "J4s",
+"mix": null
+},
+{
+"hand": "J3s",
+"mix": null
+},
+{
+"hand": "J2s",
+"mix": null
+}
+],
+[
+{
+"hand": "ATo",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "KTo",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "QTo",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "JTo",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "TT",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "T9s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T8s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T7s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "T6s",
+"mix": null
+},
+{
+"hand": "T5s",
+"mix": null
+},
+{
+"hand": "T4s",
+"mix": null
+},
+{
+"hand": "T3s",
+"mix": null
+},
+{
+"hand": "T2s",
+"mix": null
+}
+],
+[
+{
+"hand": "A9o",
+"mix": {
+"fold": 0.583,
+"call": 0.417
+}
+},
+{
+"hand": "K9o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "Q9o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "J9o",
+"mix": null
+},
+{
+"hand": "T9o",
+"mix": null
+},
+{
+"hand": "99",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "98s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "97s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "96s",
+"mix": null
+},
+{
+"hand": "95s",
+"mix": null
+},
+{
+"hand": "94s",
+"mix": null
+},
+{
+"hand": "93s",
+"mix": null
+},
+{
+"hand": "92s",
+"mix": null
+}
+],
+[
+{
+"hand": "A8o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K8o",
+"mix": null
+},
+{
+"hand": "Q8o",
+"mix": null
+},
+{
+"hand": "J8o",
+"mix": null
+},
+{
+"hand": "T8o",
+"mix": null
+},
+{
+"hand": "98o",
+"mix": null
+},
+{
+"hand": "88",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "87s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "86s",
+"mix": null
+},
+{
+"hand": "85s",
+"mix": null
+},
+{
+"hand": "84s",
+"mix": null
+},
+{
+"hand": "83s",
+"mix": null
+},
+{
+"hand": "82s",
+"mix": null
+}
+],
+[
+{
+"hand": "A7o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K7o",
+"mix": null
+},
+{
+"hand": "Q7o",
+"mix": null
+},
+{
+"hand": "J7o",
+"mix": null
+},
+{
+"hand": "T7o",
+"mix": null
+},
+{
+"hand": "97o",
+"mix": null
+},
+{
+"hand": "87o",
+"mix": null
+},
+{
+"hand": "77",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "76s",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "75s",
+"mix": null
+},
+{
+"hand": "74s",
+"mix": null
+},
+{
+"hand": "73s",
+"mix": null
+},
+{
+"hand": "72s",
+"mix": null
+}
+],
+[
+{
+"hand": "A6o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K6o",
+"mix": null
+},
+{
+"hand": "Q6o",
+"mix": null
+},
+{
+"hand": "J6o",
+"mix": null
+},
+{
+"hand": "T6o",
+"mix": null
+},
+{
+"hand": "96o",
+"mix": null
+},
+{
+"hand": "86o",
+"mix": null
+},
+{
+"hand": "76o",
+"mix": null
+},
+{
+"hand": "66",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "65s",
+"mix": null
+},
+{
+"hand": "64s",
+"mix": null
+},
+{
+"hand": "63s",
+"mix": null
+},
+{
+"hand": "62s",
+"mix": null
+}
+],
+[
+{
+"hand": "A5o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K5o",
+"mix": null
+},
+{
+"hand": "Q5o",
+"mix": null
+},
+{
+"hand": "J5o",
+"mix": null
+},
+{
+"hand": "T5o",
+"mix": null
+},
+{
+"hand": "95o",
+"mix": null
+},
+{
+"hand": "85o",
+"mix": null
+},
+{
+"hand": "75o",
+"mix": null
+},
+{
+"hand": "65o",
+"mix": null
+},
+{
+"hand": "55",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "54s",
+"mix": null
+},
+{
+"hand": "53s",
+"mix": null
+},
+{
+"hand": "52s",
+"mix": null
+}
+],
+[
+{
+"hand": "A4o",
+"mix": {
+"fold": 1.0
+}
+},
+{
+"hand": "K4o",
+"mix": null
+},
+{
+"hand": "Q4o",
+"mix": null
+},
+{
+"hand": "J4o",
+"mix": null
+},
+{
+"hand": "T4o",
+"mix": null
+},
+{
+"hand": "94o",
+"mix": null
+},
+{
+"hand": "84o",
+"mix": null
+},
+{
+"hand": "74o",
+"mix": null
+},
+{
+"hand": "64o",
+"mix": null
+},
+{
+"hand": "54o",
+"mix": null
+},
+{
+"hand": "44",
+"mix": {
+"call": 1.0
+}
+},
+{
+"hand": "43s",
+"mix": null
+},
+{
+"hand": "42s",
+"mix": null
+}
+],
+[
+{
+"hand": "A3o",
+"mix": null
+},
+{
+"hand": "K3o",
+"mix": null
+},
+{
+"hand": "Q3o",
+"mix": null
+},
+{
+"hand": "J3o",
+"mix": null
+},
+{
+"hand": "T3o",
+"mix": null
+},
+{
+"hand": "93o",
+"mix": null
+},
+{
+"hand": "83o",
+"mix": null
+},
+{
+"hand": "73o",
+"mix": null
+},
+{
+"hand": "63o",
+"mix": null
+},
+{
+"hand": "53o",
+"mix": null
+},
+{
+"hand": "43o",
+"mix": null
+},
+{
+"hand": "33",
+"mix": null
+},
+{
+"hand": "32s",
+"mix": null
+}
+],
+[
+{
+"hand": "A2o",
+"mix": null
+},
+{
+"hand": "K2o",
+"mix": null
+},
+{
+"hand": "Q2o",
+"mix": null
+},
+{
+"hand": "J2o",
+"mix": null
+},
+{
+"hand": "T2o",
+"mix": null
+},
+{
+"hand": "92o",
+"mix": null
+},
+{
+"hand": "82o",
+"mix": null
+},
+{
+"hand": "72o",
+"mix": null
+},
+{
+"hand": "62o",
+"mix": null
+},
+{
+"hand": "52o",
+"mix": null
+},
+{
+"hand": "42o",
+"mix": null
+},
+{
+"hand": "32o",
+"mix": null
+},
+{
+"hand": "22",
+"mix": null
+}
+]
+]
+}
+}
+}

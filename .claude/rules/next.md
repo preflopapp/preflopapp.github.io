@@ -73,3 +73,21 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   real page was skipped; only a test against a page with that exact CSP showed it.
 - **The theme toggle is per page load.** It sets `data-theme` and stores nothing,
   so a visitor who picks light on `/` gets their system scheme on `/faq/`.
+- **A hover UI must not move under its own pointer.** The chart explorer froze
+  twice in a test: the picked square scaled up and covered its neighbours, then
+  the inspector's text changed height and the vertically centred chart shifted,
+  so the pointer landed on another square, flip-flopping forever. Mark the pick
+  with an outline (no transform), top-align what the pointer is on, and give the
+  changing text a `min-height`. A Playwright `hover()` that never becomes
+  "stable" is this bug, not a flaky test (Phase 7).
+- **`next/js/app-data.js` and the badge grid are generated.** They come from the
+  app's own data in `docs/app-handoff/data/` via `scripts/gen-app-data.py`; edit
+  the source or the script, not the output. The real screenshots in
+  `assets/screens/app-*.webp` predate the app's Hanken refresh (Outfit type, old
+  radii): they are illustrations of the layout, not pixel truth.
+- **Say when a picture is drawn, not captured.** The widgets and the bankroll
+  line are illustrations (no screenshot exists); each says so in a caption. The
+  app's own wording and rules win over ours: grades are Correct / Mixed / Wrong,
+  a line played 25% of the time is credited, and the spot count is the
+  `practiceSpotsShown` fact ("25,000+"), enforced by `check-site.py` in pages and
+  in `next/js/*.js` (Phase 7, after the site said 30,000+ for the app's 25,479).
