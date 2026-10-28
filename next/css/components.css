@@ -70,7 +70,6 @@ a { color: var(--accent); }
 .btn--secondary:hover { background: var(--well); }
 
 .btn--sm { padding: 0.5rem var(--space-2); }
-.btn--block { width: 100%; }
 
 /* "Coming soon": the fallback for a CTA slot when the TestFlight link is off.
    Not a link, so no hover or press. */
