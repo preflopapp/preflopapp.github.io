@@ -17,7 +17,7 @@ Not shown. No app screenshot anywhere. The characters are the product; the page 
 The sticker-style outlined headline on a living illustrated landscape: a thick teal stroke around chunky white letters, with the characters standing on the horizon holding the CTA between them. At 3.5 s the frame was identical to 0.5 s in my captures (`document.getAnimations()` returned nothing), so I could not detect any motion; if the clouds or characters animate it is not a Web Animations/CSS animation.
 
 ## CTAs
-Two store badges (120x?? and 135x?? SVG badges) directly under the subhead and a "Learn More" for Guardians. No sign-up, no pricing. The only repetition is the same badges nowhere else because there is nowhere else.
+Two store badges (SVGs, 120 px and 135 px natural width) directly under the subhead, and a "Learn More" for Guardians in the footer sign. No sign-up, no pricing, no repetition: there is only one screen.
 
 ## Social proof
 "5.0 ★★★★★ 500k+ ratings" directly under the badges, typeset as big as a headline. One line carries all the proof.
@@ -49,5 +49,4 @@ Next.js (CSS modules class `home-module__JAggta__page`), CookieYes banner, Rubik
 
 ## Defects seen
 - Cookie banner covers the bottom-right of the desktop hero and 45% of the mobile screen until accepted (my first two captures were before I clicked it).
-- On desktop the right-hand character is partly hidden behind the cookie banner and the cropped bush in the 0.5 s frame.
 - The tall mobile hero has the wooden sign cut off by the fold ("Become a Finch..." in m-01).
