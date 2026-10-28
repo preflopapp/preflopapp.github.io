@@ -290,6 +290,38 @@ def check_next(root, next_pages):
     if css_total > CSS_BUDGET: errors.append(f"ERROR /next/ CSS is {css_total} bytes gzipped, budget {CSS_BUDGET}")
     return errors
 
+def _detached_routes(headers_text):
+    """Routes in _headers that carry `! Content-Security-Policy`."""
+    out = set()
+    for m in re.finditer(r"(?m)^(/\S*)[ \t]*\n((?:[ \t]+.*\n?)+)", headers_text):
+        if re.search(r"^\s*! Content-Security-Policy\s*$", m.group(2), re.M): out.add(m.group(1))
+    return out
+
+def check_page_csp_headers(root, pages):
+    """A page that brings its own CSP needs the site-wide one detached for its route.
+
+    The header says script-src 'none'; a page that runs scripts under its own
+    meta CSP is blocked silently unless `_headers` removes the header there.
+    Covers every directory page (/faq/ needs `/faq` and `/faq/*`); the
+    homepage and /next/ have their own checks, and 404.html is served from any
+    path so it cannot be detached.
+    """
+    headers = root / "_headers"
+    if not headers.is_file(): return []
+    detached = _detached_routes(headers.read_text())
+    errors = []
+    for page in pages:
+        rel = page.relative_to(root).as_posix()
+        if rel in (HOME, "404.html") or rel.startswith(NEXT_PREFIX) or not rel.endswith("/index.html"): continue
+        parser = _Refs(); parser.feed(page.read_text())
+        script = re.search(r"script-src ([^;]*)", parser.csp)
+        if not script or script.group(1).strip() == "'none'": continue
+        d = "/" + rel[:-len("/index.html")]
+        for route in (d, d + "/*"):
+            if route not in detached:
+                errors.append(f"ERROR _headers: {route} must detach the site-wide Content-Security-Policy ({rel} sets its own)")
+    return errors
+
 def check_site(root):
     root = pathlib.Path(root); errors = []
     pages = html_pages(root)
@@ -335,6 +367,7 @@ def check_site(root):
                 absolute = ref if ref.startswith("/") else "/" + (page.parent.relative_to(root) / ref).as_posix()
                 if not _resolves(root, absolute):
                     errors.append(f"ERROR {rel}: broken link {ref}")
+    errors += check_page_csp_headers(root, pages)
     errors += check_facts(root, pages)
     errors += check_css_assets(root, pages)
     errors += check_next(root, next_pages)

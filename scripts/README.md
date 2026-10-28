@@ -127,6 +127,15 @@ CSS under 30 KB gzipped; every `img` has pixel `width` and `height`; ids are uni
 Reveal rules: animate `transform` and `opacity` only, never put `data-reveal`
 on the headline or primary CTA, and nothing is hidden until JS runs.
 
+## The text pages (Phase 6)
+
+FAQ, support, press, privacy, terms and 404 share one head, header and footer
+(the checker keeps them identical) and `next/css/pages.css`; `style.css` is
+gone. Their nav and footer are the homepage's, with absolute links. To change
+the shared blocks, edit one page and copy the block to the others. The FAQ's
+`<details>` rows are `.faq` / `.faq__q` / `.faq__a`; `site.js` opens the one a
+`/faq/#id` link names.
+
 ## /next/ QR and demo markup
 
 `assets/qr/testflight.svg` is the hero QR, made offline from the CTA URL in

@@ -1,0 +1,96 @@
+/* The pages that are mostly text: FAQ, support, press, privacy, terms and the
+   404. They share the homepage's nav, footer, tokens and components; this sheet
+   only sets how prose sits between them. Tokens only, no fixed colours. */
+
+.page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: var(--space-6) var(--gutter) var(--section-y);
+}
+
+.page h1 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-display);
+  text-wrap: balance;
+}
+
+.page h2 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--fs-section);
+  font-weight: var(--fw-section);
+  letter-spacing: var(--track-title);
+  line-height: var(--lh-title);
+  text-wrap: balance;
+}
+
+.page h1 + h2 { margin-top: var(--space-4); }
+
+.page p,
+.page li,
+.page dd { text-wrap: pretty; }
+
+.page p { margin: 0 0 var(--space-2); }
+
+.page ul { margin: 0 0 var(--space-2); padding-left: 1.25rem; }
+.page li { margin-bottom: var(--space-1); }
+
+.page a { color: var(--accent); text-underline-offset: 0.18em; }
+.page a:hover { text-decoration-thickness: 2px; }
+.page strong { font-weight: 600; }
+
+/* Effective and updated dates under a legal page's title. */
+.page .effective { margin: 0 0 var(--space-5); color: var(--text-2); font-size: var(--fs-meta); }
+
+.page .disclaimer { margin-top: var(--space-5); color: var(--text-2); font-size: var(--fs-meta); }
+
+/* The FAQ page: the same rows as the homepage's, in one list. A row that is
+   linked to (/faq/#restore) gets an amber edge so the eye finds it. */
+.page .faqs__list { margin-top: var(--space-4); }
+.page .faq:target { box-shadow: inset 3px 0 0 var(--accent); padding-left: var(--space-2); }
+.page .faq__a { color: var(--text); }
+.page .faq__a + .faq__a { margin-top: calc(var(--space-2) * -0.5); }
+
+/* Press: the key facts as one card, the assets as a grid of tiles. */
+.page .facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  margin: 0 0 var(--space-2);
+  padding: var(--space-3);
+  background: var(--panel);
+  border: var(--stroke) solid var(--border);
+  border-radius: var(--r-panel);
+}
+.page .facts dt { color: var(--text-2); }
+.page .facts dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 30rem) {
+  .page .facts { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .page .facts dd { margin-bottom: var(--space-2); }
+  .page .facts dd:last-child { margin-bottom: 0; }
+}
+
+.press-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+}
+.press-grid figure { margin: 0; }
+.press-grid a { display: block; text-decoration: none; }
+.press-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--well);
+  border: var(--stroke) solid var(--border);
+  border-radius: var(--r-panel);
+}
+.press-grid img[src$=".svg"] { padding: 18%; background: var(--panel); }
+.press-grid figcaption { margin-top: var(--space-1); color: var(--text-2); font-size: var(--fs-meta); line-height: 1.4; }
+@media (hover: hover) {
+  .press-grid a img { transition: transform var(--dur-snappy) var(--ease-out); }
+  .press-grid a:hover img { transform: translateY(-3px); }
+}

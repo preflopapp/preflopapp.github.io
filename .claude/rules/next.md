@@ -63,3 +63,13 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
 - **Sections are `--section-y` apart.** Use `.section` (or `.band` for the one
   panel-coloured break) rather than ad-hoc padding, and `.section--flush` when a
   section follows another with the same background, or the gaps stack to 16rem.
+- **The text pages (FAQ, support, press, privacy, terms, 404) are the shared
+  head/header/footer plus `next/css/pages.css`.** They run `site.js` under a
+  page CSP, so each needs `/x` and `/x/*` detached in `_headers`; the checker
+  fails a page with its own CSP and no detach (Phase 6). 404.html is served
+  from any path, so it keeps the site-wide header and runs without JS.
+- **A page-CSP check that skips on `'none'` must read `script-src` alone.** The
+  first version tested the whole string, `default-src 'none'` matched, and every
+  real page was skipped; only a test against a page with that exact CSP showed it.
+- **The theme toggle is per page load.** It sets `data-theme` and stores nothing,
+  so a visitor who picks light on `/` gets their system scheme on `/faq/`.

@@ -110,6 +110,14 @@
     });
   });
 
+  /* ---- A link to one FAQ answer (/faq/#restore) opens that answer --------- */
+  function openTarget() {
+    var el = location.hash.length > 1 && doc.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el && el.tagName === "DETAILS" && !el.open) { el.open = true; el.scrollIntoView(); }
+  }
+  openTarget();
+  addEventListener("hashchange", openTarget);
+
   /* ---- Motion helpers --------------------------------------------------- */
   var gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -322,5 +322,31 @@ class HomeCutoverTests(unittest.TestCase):
         self.assertTrue(any("free trial" in e for e in cs.check_site(root)))
 
 
+class PageCspHeaderTests(unittest.TestCase):
+    """A text page that runs scripts under its own CSP needs the header detached."""
+    def faq(self):
+        return page(canonical="https://preflopapp.com/faq/").replace(
+            "<head>", f'<head><meta http-equiv="Content-Security-Policy" content="{CSP}">', 1)
+
+    def site(self, headers):
+        files = {"index.html": page(), "faq/index.html": self.faq()}
+        if headers is not None: files["_headers"] = headers
+        return CheckSiteTests.site(self, files)
+
+    def test_page_with_its_own_csp_needs_both_routes_detached(self):
+        errs = cs.check_site(self.site("/*\n  Content-Security-Policy: script-src 'none'\n"))
+        self.assertTrue(any("/faq must detach" in e for e in errs), errs)
+        self.assertTrue(any("/faq/* must detach" in e for e in errs), errs)
+
+    def test_detached_routes_pass(self):
+        h = "/faq\n  ! Content-Security-Policy\n\n/faq/*\n  ! Content-Security-Policy\n"
+        self.assertEqual(cs.check_site(self.site(h)), [])
+
+    def test_a_page_with_no_csp_needs_nothing(self):
+        files = {"index.html": page(), "faq/index.html": page(canonical="https://preflopapp.com/faq/"),
+                 "_headers": "/*\n  Content-Security-Policy: script-src 'none'\n"}
+        self.assertEqual(cs.check_site(CheckSiteTests.site(self, files)), [])
+
+
 if __name__ == "__main__":
     unittest.main()
