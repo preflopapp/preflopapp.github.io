@@ -1,0 +1,205 @@
+/* Components for the /next/ site. Built only from tokens.css; no literal
+   colours here. Rules: transform and opacity are the only properties that
+   animate; a quiet edge is a solid hairline; nothing is hidden until JS runs. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--space-5); }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--fw-body) var(--fs-body)/var(--lh-body) var(--font);
+}
+
+img, svg { display: block; max-width: 100%; height: auto; }
+a { color: var(--accent); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.skip-link {
+  position: absolute; left: var(--space-2); top: -4rem;
+  padding: var(--space-1) var(--space-2);
+  background: var(--panel); color: var(--text);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
+}
+.skip-link:focus { top: var(--space-2); }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding-inline: var(--gutter); }
+
+/* A themed surface. The style guide wraps each scheme in one of these. */
+.scope { background: var(--bg); color: var(--text); }
+
+/* ---- Type roles ---------------------------------------------------------- */
+
+.t-display {
+  margin: 0; font-size: var(--fs-display); font-weight: var(--fw-display);
+  letter-spacing: var(--track-display); line-height: var(--lh-display);
+}
+.t-title {
+  margin: 0; font-size: var(--fs-title); font-weight: var(--fw-title);
+  letter-spacing: var(--track-title); line-height: var(--lh-title);
+}
+.t-section { margin: 0; font-size: var(--fs-section); font-weight: var(--fw-section); line-height: 1.3; }
+.t-meta { font-size: var(--fs-meta); color: var(--text-2); }
+.t-label {
+  font-size: var(--fs-label); font-weight: var(--fw-label);
+  letter-spacing: var(--track-label); text-transform: uppercase;
+}
+
+/* ---- Button ---------------------------------------------------------------
+   Primary is the action: bright amber fill, its own ink. Secondary is a
+   hairline on the surface. Press dips to --press-scale on the app's press
+   spring. */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1);
+  min-height: var(--hit); padding: 0.75rem var(--space-3);
+  border: var(--stroke) solid transparent; border-radius: var(--r-button);
+  font: var(--fw-button) var(--fs-body)/1.2 var(--font);
+  text-decoration: none; cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
+}
+.btn:active { transform: scale(var(--press-scale)); opacity: 0.85; }
+
+.btn--primary { background: var(--accent-fill); color: var(--accent-fill-ink); }
+.btn--primary:hover { opacity: 0.92; }
+
+.btn--secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn--secondary:hover { background: var(--well); }
+
+.btn--block { width: 100%; }
+
+/* "Coming soon": the fallback for a CTA slot when the TestFlight link is off.
+   Not a link, so no hover or press. */
+.badge-soon {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--hit); padding: 0.75rem var(--space-3);
+  background: var(--well); color: var(--text-2);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
+  font: var(--fw-button) var(--fs-body)/1.2 var(--font);
+}
+
+/* ---- Section header ------------------------------------------------------- */
+
+.section-header { max-width: var(--measure); }
+.section-header__eyebrow { margin: 0 0 var(--space-1); color: var(--accent); }
+.section-header__title { margin: 0; }
+.section-header__line { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-body); }
+
+/* ---- Card ----------------------------------------------------------------- */
+
+.card {
+  padding: var(--space-3);
+  background: var(--panel); color: var(--text);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.card__title { margin: 0; }
+.card__body { margin: var(--space-1) 0 0; color: var(--text-2); }
+.card__stat {
+  margin: var(--space-2) 0 0; padding: var(--space-2);
+  background: var(--well); border-radius: var(--r-card);
+}
+.card__figure {
+  display: block; font-size: var(--fs-title); font-weight: 700; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.card__figure-label { display: block; margin-top: var(--space-half); color: var(--text-2); font-size: var(--fs-meta); }
+
+/* ---- FAQ item: a plain <details>, so it works without JS ------------------- */
+
+.faq { border-bottom: var(--stroke) solid var(--border); }
+.faq__q {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+  min-height: var(--hit); padding: var(--space-2) 0;
+  font-size: var(--fs-section); font-weight: var(--fw-section); line-height: 1.3;
+  cursor: pointer; list-style: none;
+}
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q::after {
+  content: ""; flex: none; width: 0.5rem; height: 0.5rem;
+  border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+  transform: rotate(45deg);
+  transition: transform var(--dur-snappy) var(--ease-out);
+}
+.faq[open] > .faq__q::after { transform: rotate(-135deg); }
+.faq__a { margin: 0; padding: 0 0 var(--space-2); color: var(--text-2); max-width: var(--measure); }
+.faq[open] > .faq__a { animation: faq-in var(--dur-entrance) var(--ease-out) both; }
+@keyframes faq-in {
+  from { opacity: 0; transform: translateY(calc(var(--entrance-rise) * -0.5)); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---- Reveal ----------------------------------------------------------------
+   Markup only: [data-reveal] on an element, [data-reveal-group] on a parent to
+   stagger its [data-reveal] children. There is no CSS hiding state: site.js
+   sets the start state itself, so with no JS (or Reduce Motion) the content is
+   simply there. Never put it on the headline or the primary CTA. */
+
+/* ---- Style guide page ------------------------------------------------------ */
+
+.sg-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+  padding-block: var(--space-2);
+}
+.sg-bar__brand { font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+.sg-intro { padding-block: var(--space-4) var(--space-3); }
+.sg-intro p { margin: var(--space-2) 0 0; color: var(--text-2); max-width: var(--measure); }
+
+.sg-row { padding-block: var(--space-5); border-top: var(--stroke) solid var(--border); }
+.sg-row__head { margin-bottom: var(--space-3); }
+.sg-row__head p { margin: var(--space-half) 0 0; color: var(--text-2); font-size: var(--fs-meta); max-width: var(--measure); }
+.sg-row__head code, .sg-note code { font-size: 0.9em; color: var(--text); }
+
+.sg-pair { display: grid; gap: var(--space-2); grid-template-columns: 1fr; }
+@media (min-width: 48rem) { .sg-pair { grid-template-columns: 1fr 1fr; } }
+.sg-pair > .scope {
+  padding: var(--space-3);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+  min-width: 0;
+}
+.sg-pair__tag { display: block; margin-bottom: var(--space-3); color: var(--text-3); }
+.sg-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.sg-stack--col { flex-direction: column; align-items: stretch; }
+.sg-note { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-meta); max-width: var(--measure); }
+
+.sg-swatches { display: grid; gap: var(--space-1); grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+.sw { padding: var(--space-1); border: var(--stroke) solid var(--border); border-radius: var(--r-card); background: var(--bg); }
+.sw__chip { height: 2.5rem; border-radius: var(--r-card); border: var(--stroke) solid var(--border); }
+.sw__name { display: block; margin-top: var(--space-1); font-size: var(--fs-meta); color: var(--text); }
+.sw--bg { background: var(--bg); }
+.sw--panel { background: var(--panel); }
+.sw--well { background: var(--well); }
+.sw--accent { background: var(--accent); }
+.sw--accent-fill { background: var(--accent-fill); }
+.sw--celebration { background: var(--celebration); }
+.sw--good { background: var(--good); }
+.sw--bad { background: var(--bad); }
+.sw--raise { background: var(--act-raise); }
+.sw--call { background: var(--act-call); }
+.sw--fold { background: var(--act-fold); }
+.sw--text { background: var(--text); }
+.sw--text-2 { background: var(--text-2); }
+
+.sg-type > * + * { margin-top: var(--space-2); }
+
+.sg-shapes { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sg-shape {
+  display: grid; place-items: center; width: 6rem; height: 4.5rem;
+  background: var(--panel); border: var(--stroke) solid var(--border);
+  font-size: var(--fs-meta); color: var(--text-2);
+}
+.sg-shape--panel { border-radius: var(--r-panel); }
+.sg-shape--button { border-radius: var(--r-button); }
+.sg-shape--card { border-radius: var(--r-card); }
+
+.sg-motion { width: 100%; border-collapse: collapse; font-size: var(--fs-meta); }
+.sg-motion th, .sg-motion td { padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; border-bottom: var(--stroke) solid var(--border); }
+.sg-motion th { color: var(--text-2); font-weight: 600; }
+.sg-motion td:first-child { color: var(--text); font-weight: 600; }
+.sg-table-wrap { overflow-x: auto; }
+
+.sg-foot { padding-block: var(--space-5) var(--space-6); color: var(--text-3); font-size: var(--fs-meta); }
+
+[hidden] { display: none !important; }
