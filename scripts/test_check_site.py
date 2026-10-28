@@ -159,5 +159,102 @@ class FactsTests(unittest.TestCase):
         (tmp / "index.html").write_text(page())
         self.assertIn("ERROR facts.json: missing", cs.check_site(tmp))
 
+TF = "https://testflight.apple.com/join/ayujQfvg"
+CSP = "default-src 'none'; script-src 'self'; style-src 'self'"
+HEADERS = "/next/*\n  ! Content-Security-Policy\n  X-Frame-Options: DENY\n"
+CONFIG = 'window.PreflopConfig = {cta: {mode: "testflight", testflightUrl: "%s"}};' % TF
+
+def next_page(head="", body=None, robots="noindex, nofollow", csp=CSP):
+    """A /next/ page as the checker expects it: its own head, no shared blocks."""
+    body = body if body is not None else f'<h1>Guide</h1><a data-cta href="{TF}">Join</a>'
+    r = f'<meta name="robots" content="{robots}">' if robots else ""
+    c = f'<meta http-equiv="Content-Security-Policy" content="{csp}">' if csp else ""
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Guide</title>'
+            f'<meta name="description" content="d">{r}{c}'
+            f'<link rel="stylesheet" href="/next/a.css"><script defer src="/next/a.js"></script>{head}'
+            f'</head><body><main>{body}</main></body></html>')
+
+class NextTests(unittest.TestCase):
+    def site(self, files=None, **page_args):
+        base = {"index.html": page(), "next/styleguide/index.html": next_page(**page_args),
+                "next/a.css": "body{margin:0}", "next/a.js": "1", "next/js/config.js": CONFIG,
+                "_headers": HEADERS}
+        return CheckSiteTests.site(self, {**base, **(files or {})})
+
+    def errors(self, *needles, **kw):
+        errs = cs.check_site(self.site(**kw))
+        for n in needles:
+            self.assertTrue(any(n in e for e in errs), f"{n!r} not in {errs}")
+        return errs
+
+    def test_valid_next_page_passes_without_canonical_or_shared_blocks(self):
+        self.assertEqual(cs.check_site(self.site()), [])
+
+    def test_needs_noindex(self):
+        self.errors("noindex", robots="")
+        self.errors("noindex", robots="index, follow")
+
+    def test_must_not_be_in_sitemap(self):
+        self.errors("sitemap.xml: lists a /next/ page", files={
+            "sitemap.xml": "<urlset><url><loc>https://preflopapp.com/next/styleguide/</loc></url></urlset>"})
+        # An ordinary page whose name merely starts with "next" is fine.
+        root = self.site({"nextdoor/index.html": page(canonical="https://preflopapp.com/nextdoor/"),
+            "sitemap.xml": "<urlset><url><loc>https://preflopapp.com/nextdoor/</loc></url></urlset>"})
+        self.assertEqual(cs.check_site(root), [])
+
+    def test_headers_must_detach_the_global_csp(self):
+        self.errors("_headers", files={"_headers": "/*\n  Content-Security-Policy: script-src 'none'\n"})
+
+    def test_page_csp_must_allow_only_self_scripts(self):
+        self.errors("missing page CSP", csp="")
+        self.errors("script-src must be exactly 'self'", csp="script-src 'self' 'unsafe-inline'")
+        self.errors("script-src must be exactly 'self'", csp="script-src https://cdn.example.com")
+
+    def test_no_inline_script_style_or_handlers(self):
+        self.errors("inline <script>", head="<script>var a = 1</script>")
+        self.errors("style= attribute", body='<h1>x</h1><p style="color:red">p</p>')
+        self.errors("onclick= attribute", body='<h1>x</h1><button onclick="go()">b</button>')
+
+    def test_scripts_must_not_block_first_paint(self):
+        self.errors("render-blocking", head='<script src="/next/a.js"></script>')
+
+    def test_external_assets_fail_anywhere(self):
+        self.errors("external asset https://cdn.example.com/x.js", head='<script defer src="https://cdn.example.com/x.js"></script>')
+        self.errors("external asset //fonts.example.com/a.css", head='<link rel="stylesheet" href="//fonts.example.com/a.css">')
+        errs = cs.check_site(self.site({"index.html": page(body='<h1>T</h1><img src="https://x.test/a.png" alt="" width="1" height="1">')}))
+        self.assertTrue(any("index.html: external asset https://x.test/a.png" in e for e in errs))
+
+    def test_external_links_and_alternates_are_not_assets(self):
+        self.assertEqual(cs.check_site(self.site(
+            body=f'<h1>x</h1><a href="https://apple.com">a</a><a data-cta href="{TF}">j</a>',
+            head='<link rel="alternate" href="https://example.com/feed">')), [])
+
+    def test_stylesheet_may_not_pull_external_urls(self):
+        self.errors("next/a.css: external asset https://fonts.example.com/f.woff2",
+                    files={"next/a.css": "@font-face{src:url(https://fonts.example.com/f.woff2)}"})
+        self.errors("external asset //x.test/b.css", files={"next/a.css": '@import "//x.test/b.css";'})
+        ok = self.site({"next/a.css": '@font-face{src:url("/f.woff2")} .a{background:url(data:image/png;base64,AAAA)}',
+                        "f.woff2": ""})
+        self.assertEqual(cs.check_site(ok), [])
+
+    def test_js_budget(self):
+        import os
+        noise = os.urandom(cs.JS_BUDGET + 4096).hex()
+        self.errors("JavaScript is", files={"next/a.js": noise})
+
+    def test_css_budget(self):
+        import os
+        self.errors("CSS is", files={"next/a.css": os.urandom(cs.CSS_BUDGET + 2048).hex()})
+
+    def test_cta_href_must_match_config(self):
+        self.errors("a[data-cta] links to https://example.com/x",
+                    body='<h1>x</h1><a data-cta href="https://example.com/x">j</a>')
+
+    def test_images_need_pixel_dimensions(self):
+        self.errors("is not a pixel count", body='<h1>x</h1><img src="/a.png" alt="" width="100%" height="1">',
+                    files={"a.png": ""})
+        self.errors("(no width/height)", body='<h1>x</h1><img src="/a.png" alt="">', files={"a.png": ""})
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Style guide — Preflop</title>
+<meta name="description" content="Tokens and components for the next Preflop site. Not public.">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0f14" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/mark-v2.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/Outfit-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/next/css/tokens.css">
+<link rel="stylesheet" href="/next/css/components.css">
+<script defer src="/next/js/config.js"></script>
+<script defer src="/assets/vendor/gsap/gsap.min.js"></script>
+<script defer src="/assets/vendor/gsap/ScrollTrigger.min.js"></script>
+<script defer src="/next/js/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<div class="wrap">
+<div class="sg-bar">
+<span class="sg-bar__brand" translate="no">Preflop / next</span>
+<button class="btn btn--secondary" type="button" data-theme-toggle hidden>Light mode</button>
+</div>
+</div>
+<main id="content">
+<div class="wrap sg-intro">
+<h1 class="t-display">Style guide</h1>
+<p>Tokens and components for the next site. Every element appears in dark and light.</p>
+</div>
+
+<section class="sg-row" id="colour">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Colour</h2>
+<p>From <code>AppTheme.swift</code>. Dark is default; light follows the system until the toggle sets <code>data-theme</code>. No gradients.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="sg-swatches"><div class="sw"><div class="sw__chip sw--bg"></div><span class="sw__name">bg</span></div><div class="sw"><div class="sw__chip sw--panel"></div><span class="sw__name">panel</span></div><div class="sw"><div class="sw__chip sw--well"></div><span class="sw__name">well</span></div><div class="sw"><div class="sw__chip sw--text"></div><span class="sw__name">text</span></div><div class="sw"><div class="sw__chip sw--text-2"></div><span class="sw__name">text-2</span></div><div class="sw"><div class="sw__chip sw--accent"></div><span class="sw__name">accent (text, strokes)</span></div><div class="sw"><div class="sw__chip sw--accent-fill"></div><span class="sw__name">accent-fill (buttons)</span></div><div class="sw"><div class="sw__chip sw--celebration"></div><span class="sw__name">celebration</span></div><div class="sw"><div class="sw__chip sw--good"></div><span class="sw__name">good</span></div><div class="sw"><div class="sw__chip sw--bad"></div><span class="sw__name">bad</span></div><div class="sw"><div class="sw__chip sw--raise"></div><span class="sw__name">act-raise</span></div><div class="sw"><div class="sw__chip sw--call"></div><span class="sw__name">act-call</span></div><div class="sw"><div class="sw__chip sw--fold"></div><span class="sw__name">act-fold</span></div></div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="sg-swatches"><div class="sw"><div class="sw__chip sw--bg"></div><span class="sw__name">bg</span></div><div class="sw"><div class="sw__chip sw--panel"></div><span class="sw__name">panel</span></div><div class="sw"><div class="sw__chip sw--well"></div><span class="sw__name">well</span></div><div class="sw"><div class="sw__chip sw--text"></div><span class="sw__name">text</span></div><div class="sw"><div class="sw__chip sw--text-2"></div><span class="sw__name">text-2</span></div><div class="sw"><div class="sw__chip sw--accent"></div><span class="sw__name">accent (text, strokes)</span></div><div class="sw"><div class="sw__chip sw--accent-fill"></div><span class="sw__name">accent-fill (buttons)</span></div><div class="sw"><div class="sw__chip sw--celebration"></div><span class="sw__name">celebration</span></div><div class="sw"><div class="sw__chip sw--good"></div><span class="sw__name">good</span></div><div class="sw"><div class="sw__chip sw--bad"></div><span class="sw__name">bad</span></div><div class="sw"><div class="sw__chip sw--raise"></div><span class="sw__name">act-raise</span></div><div class="sw"><div class="sw__chip sw--call"></div><span class="sw__name">act-call</span></div><div class="sw"><div class="sw__chip sw--fold"></div><span class="sw__name">act-fold</span></div></div>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="type">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Type</h2>
+<p>Outfit. Weight rises with size; display and title are tracked in.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="sg-type">
+<p class="t-display">Know your play</p>
+<p class="t-title">Every answer, explained</p>
+<p class="t-section">Section title in sentence case</p>
+<p>Body text in Outfit. Terse, plain, one idea at a time.</p>
+<p class="t-meta">Meta text for small print and captions.</p>
+<p class="t-label">Label</p>
+</div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="sg-type">
+<p class="t-display">Know your play</p>
+<p class="t-title">Every answer, explained</p>
+<p class="t-section">Section title in sentence case</p>
+<p>Body text in Outfit. Terse, plain, one idea at a time.</p>
+<p class="t-meta">Meta text for small print and captions.</p>
+<p class="t-label">Label</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="shape">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Shape and space</h2>
+<p>Radii 20, 16, 9. One hairline.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="sg-shapes">
+<div class="sg-shape sg-shape--panel">20 panel</div>
+<div class="sg-shape sg-shape--button">16 button</div>
+<div class="sg-shape sg-shape--card">9 card</div>
+</div>
+<p class="sg-note">1px borders. Spacing on an 8px grid: 8, 16, 24, 32, 48, 64.</p>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="sg-shapes">
+<div class="sg-shape sg-shape--panel">20 panel</div>
+<div class="sg-shape sg-shape--button">16 button</div>
+<div class="sg-shape sg-shape--card">9 card</div>
+</div>
+<p class="sg-note">1px borders. Spacing on an 8px grid: 8, 16, 24, 32, 48, 64.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="buttons">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Buttons</h2>
+<p>Primary is bright amber with its own ink. Secondary is a hairline. Press dips and springs back.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="sg-stack">
+<a class="btn btn--primary" href="#buttons">Primary</a>
+<a class="btn btn--secondary" href="#buttons">Secondary</a>
+</div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="sg-stack">
+<a class="btn btn--primary" href="#buttons">Primary</a>
+<a class="btn btn--secondary" href="#buttons">Secondary</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="cta">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">TestFlight call to action</h2>
+<p>Every <code>a[data-cta]</code> reads <code>next/js/config.js</code>. Set <code>mode</code> to <code>coming-soon</code> and every slot becomes the badge on the right.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="sg-stack">
+<a class="btn btn--primary" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<span class="badge-soon">Coming soon</span>
+</div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="sg-stack">
+<a class="btn btn--primary" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<span class="badge-soon">Coming soon</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sg-row" id="section-header">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Section header</h2>
+<p>Eyebrow, headline, line.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="section-header">
+<p class="t-label section-header__eyebrow">Eyebrow</p>
+<h3 class="t-title section-header__title">A headline that says it once</h3>
+<p class="section-header__line">One line of support, no more.</p>
+</div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="section-header">
+<p class="t-label section-header__eyebrow">Eyebrow</p>
+<h3 class="t-title section-header__title">A headline that says it once</h3>
+<p class="section-header__line">One line of support, no more.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="card">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Card</h2>
+<p>A 20px panel, a 1px border, a 9px well inside.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<article class="card">
+<h3 class="t-section card__title">Card title</h3>
+<p class="card__body">One or two terse lines.</p>
+<div class="card__stat"><span class="card__figure">30,000+</span><span class="card__figure-label">spots</span></div>
+</article>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<article class="card">
+<h3 class="t-section card__title">Card title</h3>
+<p class="card__body">One or two terse lines.</p>
+<div class="card__stat"><span class="card__figure">30,000+</span><span class="card__figure-label">spots</span></div>
+</article>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="faq">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">FAQ item</h2>
+<p>A <code>details</code> element. Opens with a short fade.</p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div>
+<details class="faq" open>
+<summary class="faq__q">Is it free?</summary>
+<p class="faq__a">An answer that is honest about limits, in a sentence or two.</p>
+</details>
+<details class="faq">
+<summary class="faq__q">What is not covered?</summary>
+<p class="faq__a">Closed by default. Works without JavaScript.</p>
+</details>
+</div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div>
+<details class="faq" open>
+<summary class="faq__q">Is it free?</summary>
+<p class="faq__a">An answer that is honest about limits, in a sentence or two.</p>
+</details>
+<details class="faq">
+<summary class="faq__q">What is not covered?</summary>
+<p class="faq__a">Closed by default. Works without JavaScript.</p>
+</details>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="reveal">
+<div class="wrap">
+<div class="sg-row__head">
+<h2 class="t-section">Scroll reveal</h2>
+<p>Rise 12px and fade in, 40ms stagger, capped. With Reduce Motion or no JS the cards are simply there. <button class="btn btn--secondary" type="button" data-reveal-replay="#reveal" hidden>Replay</button></p>
+</div>
+<div class="sg-pair">
+<div class="scope" data-theme="dark">
+<span class="t-label sg-pair__tag">Dark</span>
+<div class="sg-stack sg-stack--col" id="reveal-dark-items" data-reveal-group>
+<article class="card" data-reveal><h3 class="t-section card__title">One</h3></article>
+<article class="card" data-reveal><h3 class="t-section card__title">Two</h3></article>
+<article class="card" data-reveal><h3 class="t-section card__title">Three</h3></article>
+<article class="card" data-reveal><h3 class="t-section card__title">Four</h3></article>
+</div>
+</div>
+<div class="scope" data-theme="light">
+<span class="t-label sg-pair__tag">Light</span>
+<div class="sg-stack sg-stack--col" id="reveal-light-items" data-reveal-group>
+<article class="card" data-reveal><h3 class="t-section card__title">One</h3></article>
+<article class="card" data-reveal><h3 class="t-section card__title">Two</h3></article>
+<article class="card" data-reveal><h3 class="t-section card__title">Three</h3></article>
+<article class="card" data-reveal><h3 class="t-section card__title">Four</h3></article>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="sg-row" id="motion"><div class="wrap"><div class="sg-row__head"><h2 class="t-section">Motion</h2><p>From <code>PreflopMotion.swift</code>, as <code>--dur-*</code> and <code>--ease-*</code> in <code>tokens.css</code>. Animate transform and opacity only. Reduce Motion: durations go to zero, GSAP does not run, content just appears.</p></div><div class="sg-table-wrap"><table class="sg-motion"><thead><tr><th>Token</th><th>Timing</th><th>For</th></tr></thead><tbody><tr><td>snappy</td><td>200ms ease-out</td><td>Selection, quick state</td></tr><tr><td>settle</td><td>300ms ease-out</td><td>Default state change</td></tr><tr><td>entrance</td><td>240ms ease-out</td><td>Staggered entrance, 12px rise, 40ms step, 160ms cap</td></tr><tr><td>reveal</td><td>550ms ease-out</td><td>Soft reveal</td></tr><tr><td>press</td><td>240ms spring .22 / .70</td><td>Press feedback, scale .97</td></tr><tr><td>emphasis</td><td>370ms spring .34 / .68</td><td>Something that earned attention</td></tr><tr><td>slide</td><td>330ms spring .33 / .86</td><td>Sliding between positions</td></tr><tr><td>count</td><td>900ms ease-out</td><td>Counting numbers</td></tr><tr><td>breath</td><td>1500ms ease-in-out</td><td>Idle swell</td></tr></tbody></table></div></div></section>
+<section class="sg-row" id="rules"><div class="wrap">
+<div class="sg-row__head"><h2 class="t-section">Rules</h2></div>
+<ul class="sg-note">
+<li>No gradients. No dashed or dotted lines.</li>
+<li>Two ambers: <code>--accent-fill</code> behind a label, <code>--accent</code> for text and strokes.</li>
+<li>Text on a panel is <code>--text</code>, never a fixed white.</li>
+<li>Green and red mean right and wrong, or raise and fold. Not chrome.</li>
+<li>Content and the primary CTA are in the HTML. Nothing waits on JS.</li>
+<li>No inline scripts or styles. No requests leave the origin.</li>
+</ul>
+</div></section>
+</main>
+<footer class="wrap sg-foot">Not linked, not indexed, not in the sitemap.</footer>
+</body>
+</html>

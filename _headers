@@ -27,6 +27,21 @@
   ! Content-Security-Policy
   X-Frame-Options: DENY
 
+# The /next/ preview of the redesigned site (not linked, not in the sitemap).
+# Like /landing and /s, each page enforces its own CSP in its <head>, here
+# script-src 'self' for the vendored GSAP and next/js; no inline scripts. The
+# header would otherwise add script-src 'none'. X-Robots-Tag keeps it out of
+# search results even if a page forgets its noindex meta.
+/next
+  ! Content-Security-Policy
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex, nofollow
+
+/next/*
+  ! Content-Security-Policy
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex, nofollow
+
 # Universal Links: iOS fetches this to let preflopapp.com/s/* open the app.
 # It has to be JSON, served without a redirect.
 /.well-known/apple-app-site-association

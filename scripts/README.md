@@ -67,3 +67,31 @@ the next time the landing page is re-imported.
 `check-site.py` holds every page's dollar amounts and "N hands a day" to
 `facts.json`, which the app repo's `scripts/check_site_facts.py` holds to the
 app. See `CLAUDE.md` at the root.
+
+## The `/next/` preview (website overhaul)
+
+The redesign is built behind `/next/` (noindex, `X-Robots-Tag`, not in
+`sitemap.xml`) and replaces `/` only at the final cutover. Phase 0 is the
+foundation, shown at `/next/styleguide/`:
+
+- `next/css/tokens.css`: colour (dark default, light via system or
+  `data-theme`), type, shape, spacing and motion, all taken from the app's
+  `AppTheme.swift`, `AppFont.swift` and `PreflopMotion.swift`.
+- `next/css/components.css`: button, TestFlight CTA and "Coming soon" badge,
+  section header, card, FAQ item, reveal.
+- `next/js/config.js`: the one place the CTA is configured. Set `mode` to
+  `"coming-soon"` to turn every `a[data-cta]` into the badge; change
+  `testflightUrl` (then the checker lists the `data-cta` hrefs to update) when
+  the link changes.
+- `next/js/site.js`: CTA slots, theme toggle, scroll reveal. Enhancement only.
+- `assets/vendor/gsap/`: GSAP + ScrollTrigger 3.15.0 with the licence text.
+  Self-hosted, no CDN, no build step. To upgrade, replace both files from one
+  npm version and re-read `LICENSE.txt`.
+
+Rules for `/next/` pages, enforced by `check-site.py`: `noindex`; a page CSP
+with `script-src 'self'` (the `_headers` rule drops the site-wide one, as for
+`/landing` and `/s`), so no inline script, style or event handlers; scripts
+use `defer`; no external asset URLs anywhere on the site; JS under 150 KB and
+CSS under 30 KB gzipped; every `img` has pixel `width` and `height`.
+Reveal rules: animate `transform` and `opacity` only, never put `data-reveal`
+on the headline or primary CTA, and nothing is hidden until JS runs.

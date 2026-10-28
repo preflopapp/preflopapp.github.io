@@ -7,8 +7,17 @@ Fails on: an internal link or asset that does not exist, a shared block
 og:url are missing or whose og:url is not its canonical, a page without exactly
 one <h1>, an <img> without alt/width/height, the old product name, or a price
 or free-tier number that disagrees with facts.json (see check_facts).
+
+Anywhere on the site it also fails an external asset (a src, srcset, or a
+<link> stylesheet/preload/icon pointing off the origin, or a url()/@import in a
+local stylesheet): the privacy page promises no third-party requests.
+
+Pages under /next/ (the redesign preview) have their own rules, see
+check_next: noindex and out of the sitemap, a page CSP that allows only
+'self' scripts, no inline script or style, no render-blocking script, the CTA
+link in step with next/js/config.js, and JS/CSS byte budgets.
 """
-import json, pathlib, re, sys
+import gzip, json, pathlib, re, sys
 from html.parser import HTMLParser
 
 SHARED = ("head", "header", "footer")
@@ -16,6 +25,14 @@ SHARED = ("head", "header", "footer")
 # their own app-matched layouts.
 # All metadata, link, asset, and banned-name checks still apply.
 INDEPENDENT_LAYOUTS = {"landing/index.html", "s/index.html"}
+NEXT_PREFIX = "next/"  # the /next/ preview: independent layout, see check_next
+# Gzipped bytes, summed over the files a /next/ page loads. The spec's budget is
+# 150 KB of JS (GSAP core + ScrollTrigger are ~46 KB of it); CSS has no spec
+# number, 30 KB is generous for a token sheet and a component sheet.
+JS_BUDGET = 150 * 1024
+CSS_BUDGET = 30 * 1024
+ASSET_RELS = {"stylesheet", "preload", "modulepreload", "prefetch", "icon",
+              "shortcut", "apple-touch-icon", "manifest"}
 BANNED = ("Preflop Trainer",)
 SKIP_DIRS = {"scripts", "_site", "node_modules"}
 
@@ -23,8 +40,31 @@ class _Refs(HTMLParser):
     def __init__(self):
         super().__init__(); self.refs = []; self.meta = set(); self.title = False
         self.canonical = None; self.og = {}; self.h1 = 0; self.bad_imgs = []
+        self.assets = []; self.scripts = []; self.stylesheets = []; self.inline = []
+        self.robots = ""; self.csp = ""; self.ctas = []; self._script = None
+    def handle_endtag(self, tag):
+        if tag == "script": self._script = None
+    def handle_data(self, data):
+        if self._script is not None and data.strip(): self.inline.append("inline <script>")
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == "script":
+            self._script = tag
+            if a.get("src"): self.scripts.append(a)
+        for name in a:
+            if name.startswith("on"): self.inline.append(f"{name}= attribute")
+        if "style" in a: self.inline.append("style= attribute")
+        if tag == "meta" and (a.get("name") or "").lower() == "robots": self.robots = (a.get("content") or "").lower()
+        if tag == "meta" and (a.get("http-equiv") or "").lower() == "content-security-policy": self.csp = a.get("content") or ""
+        if tag == "a" and "data-cta" in a: self.ctas.append(a.get("href") or "")
+        if tag == "link":
+            rels = set((a.get("rel") or "").lower().split())
+            if rels & ASSET_RELS and a.get("href"):
+                self.assets.append(a["href"])
+                if "stylesheet" in rels: self.stylesheets.append(a["href"])
+        for key in ("src", "srcset"):
+            if a.get(key):
+                self.assets += [part.strip().split()[0] for part in a[key].split(",")] if key == "srcset" else [a[key]]
         for key in ("href", "src"):
             if a.get(key): self.refs.append(a[key])
         if a.get("srcset"):
@@ -34,6 +74,8 @@ class _Refs(HTMLParser):
         if tag == "img":
             missing = [k for k in ("alt", "width", "height") if k not in a]
             if missing: self.bad_imgs.append(f"{a.get('src')} (no {'/'.join(missing)})")
+            bad = [k for k in ("width", "height") if k in a and not (a[k] or "").strip().isdigit()]
+            if bad: self.bad_imgs.append(f"{a.get('src')} ({'/'.join(bad)} is not a pixel count)")
         if tag == "meta" and (a.get("property") or "").startswith("og:"): self.og[a["property"]] = a.get("content") or ""
         if tag == "meta" and a.get("name") == "description" and a.get("content"): self.meta.add("description")
         if tag == "link" and a.get("rel") == "canonical" and a.get("href"):
@@ -110,9 +152,89 @@ def check_facts(root, pages):
                 errors.append(f"ERROR {rel}: '{count} hands a day' but facts.json says {values['dailyFreeHands']}")
     return errors
 
+def _external(ref):
+    return bool(re.match(r"^(?:[a-z][a-z0-9+.-]*:)?//", ref.strip(), re.I)) and not ref.strip().lower().startswith("data:")
+
+def _local(root, page, ref):
+    """The file a page's href/src names, or None if it is off-site or absent."""
+    path = ref.split("#")[0].split("?")[0]
+    if not path or _external(path) or re.match(r"^[a-z]+:", path): return None
+    target = root / path.lstrip("/") if path.startswith("/") else page.parent / path
+    return target if target.is_file() else None
+
+def _stylesheets(root, pages):
+    seen = {}
+    for page in pages:
+        parser = _Refs(); parser.feed(page.read_text())
+        for ref in parser.stylesheets:
+            f = _local(root, page, ref)
+            if f: seen[f] = None
+    return list(seen)
+
+def check_css_assets(root, pages):
+    """No url() or @import in a stylesheet may leave the origin."""
+    errors = []
+    for css in _stylesheets(root, pages):
+        text = re.sub(r"/\*.*?\*/", "", css.read_text(), flags=re.S)
+        for ref in re.findall(r"url\(\s*['\"]?([^'\")]+)", text) + re.findall(r"@import\s+['\"]([^'\"]+)", text):
+            if _external(ref): errors.append(f"ERROR {css.relative_to(root).as_posix()}: external asset {ref}")
+    return errors
+
+def _gz(path):
+    return len(gzip.compress(path.read_bytes(), 9, mtime=0))
+
+def check_next(root, next_pages):
+    """The /next/ preview: hidden, locked down, light on bytes, CTA in step.
+
+    Not linked, so it must say noindex and stay out of the sitemap. Its pages
+    carry their own CSP (the _headers rule removes the site-wide one, as for
+    /landing and /s) allowing scripts from 'self' only, which means no inline
+    script, no inline style and no event-handler attributes, and scripts that
+    do not block first paint. Every a[data-cta] must link where
+    next/js/config.js says, since without JS the HTML's href is what loads.
+    """
+    errors = []
+    if not next_pages: return errors
+    sitemap = root / "sitemap.xml"
+    if sitemap.is_file() and re.search(r"<loc>[^<]*/next(?:/|<)", sitemap.read_text()):
+        errors.append("ERROR sitemap.xml: lists a /next/ page")
+    headers = root / "_headers"
+    if headers.is_file():
+        block = re.search(r"(?m)^/next/\*\s*\n((?:[ \t]+.*\n?)+)", headers.read_text())
+        if not block or not re.search(r"^\s*! Content-Security-Policy\s*$", block.group(1), re.M):
+            errors.append("ERROR _headers: /next/* must detach the site-wide Content-Security-Policy")
+    config = root / "next/js/config.js"
+    url = re.search(r"testflightUrl:\s*[\"']([^\"']+)", config.read_text()) if config.is_file() else None
+    js_total = css_total = 0
+    js_seen, css_seen = set(), set()
+    for page, rel, p in next_pages:
+        if "noindex" not in p.robots: errors.append(f"ERROR {rel}: /next/ page needs <meta name=robots content=noindex>")
+        scripts = re.findall(r"script-src ([^;]*)", p.csp)
+        if not scripts: errors.append(f"ERROR {rel}: missing page CSP with script-src")
+        elif scripts[0].split() != ["'self'"]: errors.append(f"ERROR {rel}: script-src must be exactly 'self', found {scripts[0].strip()}")
+        for what in sorted(set(p.inline)): errors.append(f"ERROR {rel}: {what} (blocked by the page CSP)")
+        for a in p.scripts:
+            if "defer" not in a and "async" not in a and a.get("type") != "module":
+                errors.append(f"ERROR {rel}: render-blocking <script src={a['src']}>, add defer")
+            f = _local(root, page, a["src"])
+            if f and f not in js_seen: js_seen.add(f); js_total += _gz(f)
+        for ref in p.stylesheets:
+            f = _local(root, page, ref)
+            if f and f not in css_seen: css_seen.add(f); css_total += _gz(f)
+        if url:
+            for href in p.ctas:
+                if href != url.group(1):
+                    errors.append(f"ERROR {rel}: a[data-cta] links to {href}, next/js/config.js says {url.group(1)}")
+        elif p.ctas:
+            errors.append(f"ERROR {rel}: a[data-cta] on the page but next/js/config.js has no testflightUrl")
+    if js_total > JS_BUDGET: errors.append(f"ERROR /next/ JavaScript is {js_total} bytes gzipped, budget {JS_BUDGET}")
+    if css_total > CSS_BUDGET: errors.append(f"ERROR /next/ CSS is {css_total} bytes gzipped, budget {CSS_BUDGET}")
+    return errors
+
 def check_site(root):
     root = pathlib.Path(root); errors = []
     pages = html_pages(root)
+    next_pages = []
     index = root / "index.html"
     canon = {n: extract_block(index.read_text(), n) for n in SHARED} if index.is_file() else {}
     for page in pages:
@@ -122,7 +244,9 @@ def check_site(root):
         parser = _Refs(); parser.feed(text)
         if not parser.title: errors.append(f"ERROR {rel}: missing <title>")
         if "description" not in parser.meta: errors.append(f"ERROR {rel}: missing meta description")
-        if rel != "404.html" and "canonical" not in parser.meta: errors.append(f"ERROR {rel}: missing canonical link")
+        is_next = rel.startswith(NEXT_PREFIX)
+        if is_next: next_pages.append((page, rel, parser))
+        if rel != "404.html" and not is_next and "canonical" not in parser.meta: errors.append(f"ERROR {rel}: missing canonical link")
         # Link previews (iMessage, Slack, social) read these, not <title>.
         if parser.canonical:
             for prop in ("og:title", "og:description", "og:url"):
@@ -131,11 +255,13 @@ def check_site(root):
                 errors.append(f"ERROR {rel}: og:url {parser.og['og:url']} differs from canonical {parser.canonical}")
         if parser.h1 != 1: errors.append(f"ERROR {rel}: {parser.h1} <h1> elements, expected 1")
         for img in parser.bad_imgs: errors.append(f"ERROR {rel}: <img> {img}")
-        for n in (() if rel in INDEPENDENT_LAYOUTS else SHARED):
+        for n in (() if rel in INDEPENDENT_LAYOUTS or is_next else SHARED):
             block = extract_block(text, n)
             if block is None: errors.append(f"ERROR {rel}: missing shared:{n} block")
             elif canon.get(n) is not None and block != canon[n]:
                 errors.append(f"ERROR {rel}: shared:{n} block differs from index.html")
+        for ref in parser.assets:
+            if _external(ref): errors.append(f"ERROR {rel}: external asset {ref}")
         for ref in parser.refs:
             if re.match(r"^[a-z]+:", ref) or ref.startswith("//") or ref.startswith("#"): continue
             if ref.startswith("/") or not ref.startswith(("http", "mailto")):
@@ -143,6 +269,8 @@ def check_site(root):
                 if not _resolves(root, absolute):
                     errors.append(f"ERROR {rel}: broken link {ref}")
     errors += check_facts(root, pages)
+    errors += check_css_assets(root, pages)
+    errors += check_next(root, next_pages)
     sitemap = root / "sitemap.xml"
     if sitemap.is_file():
         for loc in re.findall(r"<loc>https://preflopapp\.com(/[^<]*)</loc>", sitemap.read_text()):
