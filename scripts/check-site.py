@@ -143,6 +143,13 @@ def check_facts(root, pages):
         values["practiceSpotsShown"] = f"{shown:,}"
         if shown > facts.get("practiceSpots", shown):
             errors.append(f"ERROR facts.json: practiceSpotsShown {shown} is more than practiceSpots {facts['practiceSpots']}")
+    # The same count by stack depth: exact figures a page may show in a marker.
+    by_depth = facts.get("spotsByDepth")
+    if by_depth:
+        for depth, n in by_depth.items():
+            values[f"spots{depth}"] = f"{n:,}"
+        if "practiceSpots" in facts and sum(by_depth.values()) != facts["practiceSpots"]:
+            errors.append(f"ERROR facts.json: spotsByDepth adds up to {sum(by_depth.values()):,}, practiceSpots is {facts['practiceSpots']:,}")
     # The plan prices, and annual as a monthly figure ("about $3.33 a month").
     prices = set(facts["prices"].values()) | {facts["annualPerMonth"]}
     # The app's only trial is on annual, and the paywall serves the lineup in
@@ -346,6 +353,35 @@ def check_page_csp_headers(root, pages):
                 errors.append(f"ERROR _headers: {route} must detach the site-wide Content-Security-Policy ({rel} sets its own)")
     return errors
 
+# Elements with no end tag, and the ones HTML lets authors leave open.
+_VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+_OPTIONAL_END = {"p", "li", "dt", "dd", "tr", "td", "th", "option", "thead", "tbody", "tfoot", "colgroup"}
+
+class _Nesting(HTMLParser):
+    """Finds a stray or missing end tag among the structural elements.
+
+    A doubled </div> closed the homepage's bento grid early and every card
+    after it lost its columns; nothing else flagged it (Phase 8)."""
+    def __init__(self):
+        super().__init__(); self.stack = []; self.problems = []
+    def handle_starttag(self, tag, attrs):
+        if tag not in _VOID: self.stack.append((tag, self.getpos()[0]))
+    def handle_startendtag(self, tag, attrs): pass
+    def handle_endtag(self, tag):
+        if tag in _VOID: return
+        while self.stack and self.stack[-1][0] != tag and self.stack[-1][0] in _OPTIONAL_END:
+            self.stack.pop()
+        if self.stack and self.stack[-1][0] == tag: self.stack.pop()
+        else: self.problems.append(f"stray </{tag}> at line {self.getpos()[0]}")
+    def close(self):
+        super().close()
+        for tag, line in self.stack:
+            if tag not in _OPTIONAL_END: self.problems.append(f"<{tag}> opened at line {line} is never closed")
+
+def nesting_problems(text):
+    p = _Nesting(); p.feed(text); p.close(); return p.problems
+
+
 def check_site(root):
     root = pathlib.Path(root); errors = []
     pages = html_pages(root)
@@ -363,6 +399,7 @@ def check_site(root):
         rel = page.relative_to(root).as_posix(); text = page.read_text()
         for bad in BANNED:
             if bad in text: errors.append(f"ERROR {rel}: contains banned string '{bad}'")
+        for problem in nesting_problems(text): errors.append(f"ERROR {rel}: {problem}")
         parser = _Refs(); parser.feed(text)
         if not parser.title: errors.append(f"ERROR {rel}: missing <title>")
         if "description" not in parser.meta: errors.append(f"ERROR {rel}: missing meta description")

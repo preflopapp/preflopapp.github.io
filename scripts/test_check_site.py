@@ -378,5 +378,35 @@ class SpotCountTests(unittest.TestCase):
         self.assertTrue(any("next/js/demo.js" in e and "30,000+" in e for e in errs), errs)
 
 
+class SpotsByDepthTests(SpotCountTests):
+    """The per-depth split is exact figures in markers, and must add up to the total."""
+    F = SpotCountTests.F.replace('"practiceSpotsShown": 25000}', '"practiceSpotsShown": 25000, "spotsByDepth": {"100": 6431, "30": 9552, "20": 9496}}')
+
+    def test_a_matching_depth_figure_passes(self):
+        self.assertEqual(cs.check_site(self.site("<h1>T</h1><!-- fact:spots30 -->9,552<!-- /fact -->")), [])
+
+    def test_a_wrong_depth_figure_fails(self):
+        errs = cs.check_site(self.site("<h1>T</h1><!-- fact:spots30 -->9,500<!-- /fact -->"))
+        self.assertTrue(any("fact spots30 says 9,500" in e for e in errs), errs)
+
+    def test_depths_must_add_up(self):
+        bad = self.F.replace('"20": 9496', '"20": 9000')
+        errs = cs.check_site(self.site("<h1>T</h1>", facts=bad))
+        self.assertTrue(any("spotsByDepth adds up to 24,983" in e for e in errs), errs)
+
+
+class NestingTests(unittest.TestCase):
+    def test_balanced_markup_passes(self):
+        self.assertEqual(cs.nesting_problems("<div><ul><li>a<li>b</ul><p>x<br><img src=a></div>"), [])
+
+    def test_a_doubled_close_is_reported(self):
+        probs = cs.nesting_problems("<div><div><p>a</p></div></div></div>")
+        self.assertTrue(any("stray </div>" in x for x in probs), probs)
+
+    def test_an_unclosed_div_is_reported(self):
+        probs = cs.nesting_problems("<main><div><p>a</p></main>")
+        self.assertTrue(probs, probs)
+
+
 if __name__ == "__main__":
     unittest.main()

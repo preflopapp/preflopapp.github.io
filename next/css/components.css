@@ -5,6 +5,10 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + var(--space-2)); }
+/* Big screens: everything is in rem, so growing the root grows the page (and
+   its measure) instead of leaving a small column in the middle of a wide one. */
+@media (min-width: 120rem) { html { font-size: 112.5%; } }
+@media (min-width: 150rem) { html { font-size: 125%; } }
 
 body {
   margin: 0;
@@ -311,10 +315,12 @@ a { color: var(--accent); }
   background: var(--panel); color: var(--text);
   border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
 }
-.cta-band__title { margin: 0; }
-.cta-band__line { margin: var(--space-1) 0 0; color: var(--text-2); max-width: var(--measure); }
+.cta-band__title { margin: 0; text-wrap: balance; }
+.cta-band__line { margin: var(--space-1) 0 0; color: var(--text-2); max-width: var(--measure); text-wrap: pretty; }
+.cta-band__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 @media (min-width: 48rem) {
-  .cta-band { flex-direction: row; align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-4); }
+  .cta-band { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-5); padding: var(--space-4) var(--space-5); }
+  .cta-band__actions { flex: none; flex-wrap: nowrap; }
 }
 
 /* ---- Hero ------------------------------------------------------------------

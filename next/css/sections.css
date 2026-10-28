@@ -9,6 +9,7 @@
    one token, --section-y; a --panel band breaks it up once, around the story. */
 
 .section { padding-block: var(--section-y); }
+.section--cta { padding-block: var(--space-5); }
 .section--flush { padding-top: 0; }
 .band { background: var(--panel); border-block: var(--stroke) solid var(--border); }
 
@@ -57,7 +58,7 @@
    its list twice (the copy is aria-hidden) so the loop has no seam. Reduce
    Motion: one wrapped row, no movement. */
 
-.marquee { display: grid; gap: var(--space-1); padding-block: var(--space-5); overflow: clip; }
+.marquee { display: grid; gap: var(--space-1); padding-block: var(--space-4); overflow: clip; }
 .marquee__row { display: flex; overflow: hidden; user-select: none; }
 .marquee__track {
   display: flex; flex: none; align-items: center; justify-content: space-around; gap: var(--space-1);
@@ -84,7 +85,7 @@
    One sentence, large. home.js dims its words and lights them as it scrolls
    through; without it (or with Reduce Motion) it is just text. */
 
-.statement { padding-block: var(--space-6) var(--section-y); }
+.statement { padding-block: var(--space-5) var(--section-y); }
 .statement__text {
   margin: 0 auto; max-width: 18em; text-align: center; text-wrap: balance;
   font-size: var(--fs-statement); font-weight: var(--fw-display);
@@ -127,7 +128,7 @@
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-5);
 }
 .story[data-pin] .story__chapter {
-  display: flex; align-items: center; min-height: 90svh;
+  display: flex; align-items: center; min-height: 72svh;
   opacity: 0.3; transition: opacity var(--dur-reveal) var(--ease-out);
 }
 .story[data-pin] .story__chapter.is-active { opacity: 1; }
@@ -473,8 +474,13 @@
 @media (prefers-reduced-motion: reduce) { .badges[data-fx] .badge__disc::after { transition: none; } .badge { transition: none; } }
 
 /* Bento extras: the depth chips, the glossary line and the captions on drawn pictures. */
-.chips--depth { margin-top: var(--space-1); }
-.pos--depth { border-color: var(--accent); color: var(--accent); }
+.depths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); margin: var(--space-3) 0 0; padding: 0; list-style: none; }
+.depth {
+  display: grid; gap: 0.15rem; padding: var(--space-2);
+  background: var(--well); border: var(--stroke) solid var(--border); border-radius: var(--r-card);
+}
+.depth__bb { color: var(--accent); font-size: var(--fs-section); font-weight: var(--fw-title); letter-spacing: var(--track-title); }
+.depth__n { color: var(--text-2); font-size: var(--fs-meta); }
 .gloss { margin: 0; padding: var(--space-3); border-radius: var(--r-button); background: var(--well); }
 .gloss__term { margin: 0; color: var(--text-3); }
 .gloss__def { margin: var(--space-1) 0 0; color: var(--text); }

@@ -91,3 +91,12 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   a line played 25% of the time is credited, and the spot count is the
   `practiceSpotsShown` fact ("25,000+"), enforced by `check-site.py` in pages and
   in `next/js/*.js` (Phase 7, after the site said 30,000+ for the app's 25,479).
+- **A stray `</div>` silently breaks the grid it sits in.** A string-slice edit of
+  the homepage left `</div></div>`, closing the bento early: every later card
+  went full width with no gap, and no check noticed. `check-site.py` now fails
+  an unbalanced or stray end tag (`nesting_problems`). After an edit that
+  replaces a block of markup, screenshot the section, not just the checker
+  (Phase 8).
+- **The per-depth spot counts are `fact:spots100/30/20` markers.** They come from
+  `facts.json` `spotsByDepth` (the app's `spot-counts.json`) and must add up to
+  `practiceSpots`; show them as exact figures, never with a "+" (Phase 8).
