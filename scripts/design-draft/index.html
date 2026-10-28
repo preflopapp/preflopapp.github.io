@@ -82,7 +82,7 @@ html[data-lp=c] .scope[data-theme=light] .eyebrow::before{content:"";display:inl
 .hand-top{display:flex;justify-content:space-between;align-items:center}
 .cards{display:flex;gap:10px;margin:18px 0}
 .pcard{width:62px;height:88px;border-radius:var(--r-card);background:var(--card);color:var(--card-ink);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 30px/1 var(--font-body)}
-.pcard small{font-size:24px} .pcard.red{color:var(--card-red)}
+.suit{width:26px;height:26px;margin-top:2px;fill:currentColor} .pcard.red{color:var(--card-red)}
 .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .act{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:var(--r-button);border:1px solid var(--border);font-weight:600;color:var(--text)}
 .act i,.chip i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
@@ -130,7 +130,7 @@ html[data-lp=c] .scope[data-theme=light] .link{color:var(--text);text-decoration
 
   <div class="panel hand">
     <div class="hand-top"><span class="label">Button, 100bb</span><span class="chip good"><i></i>Correct</span></div>
-    <div class="cards"><span class="pcard">A<small>♠</small></span><span class="pcard red">K<small>♦</small></span></div>
+    <div class="cards"><span class="pcard">A<svg class="suit"><use href="assets/suits/suits-sprite.svg#suit-spade"/></svg></span><span class="pcard red">K<svg class="suit"><use href="assets/suits/suits-sprite.svg#suit-diamond"/></svg></span></div>
     <div class="actions"><span class="act fold"><i></i>Fold</span><span class="act call"><i></i>Call</span><span class="act raise"><i></i>Raise</span></div>
   </div>
 
@@ -151,7 +151,7 @@ html[data-lp=c] .scope[data-theme=light] .link{color:var(--text);text-decoration
 
   <div class="panel hand">
     <div class="hand-top"><span class="label">Button, 100bb</span><span class="chip good"><i></i>Correct</span></div>
-    <div class="cards"><span class="pcard">A<small>♠</small></span><span class="pcard red">K<small>♦</small></span></div>
+    <div class="cards"><span class="pcard">A<svg class="suit"><use href="assets/suits/suits-sprite.svg#suit-spade"/></svg></span><span class="pcard red">K<svg class="suit"><use href="assets/suits/suits-sprite.svg#suit-diamond"/></svg></span></div>
     <div class="actions"><span class="act fold"><i></i>Fold</span><span class="act call"><i></i>Call</span><span class="act raise"><i></i>Raise</span></div>
   </div>
 
