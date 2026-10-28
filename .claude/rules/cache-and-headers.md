@@ -16,14 +16,16 @@ paths:
   (`og-v2.png` 1539cc3, `mark-v2.svg` 31436d3). Update every reference in the
   same commit; the checker finds the broken ones.
 - **The site CSP is `script-src 'none'`.** Only `/` (the homepage, `script-src 'self'`),
-  `/next/*`, `/landing` and `/s` replace it, each with its own CSP in its
+  the text pages (`/faq`, `/support`, `/press`, `/privacy`, `/terms`), `/next/*`,
+  `/landing` and `/s` replace it, each with its own CSP in its
   `<head>` (see `_headers`; `/` is the exact path, so no other page is affected). An inline
   script anywhere else is silently blocked. Test in a browser, not just the
   checker.
 - **Wrap every `mailto:` anchor in `email_off` markers.** The zone's Email
   Address Obfuscation rewrites mailto links to a decoder script our CSP blocks,
   so the address dies. CI can't see it: the smoke test hits `pages.dev`, which
-  is outside the zone (e898552).
+  is outside the zone (e898552). The smoke test does check that each page with
+  its own CSP is detached at the edge (Phase 6).
 - **`.well-known/apple-app-site-association` must deploy and be served as JSON
   with no redirect**, or Universal Links for `/s/*` stop opening the app. The
   deploy drops dot-entries except `.well-known` (see the comment in
