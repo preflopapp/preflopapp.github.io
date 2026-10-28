@@ -16,7 +16,9 @@ Pages under /next/ (the redesign preview) have their own rules, see
 check_next: noindex and out of the sitemap, a page CSP that allows only
 'self' scripts, no inline script or style, no render-blocking script, the CTA
 link in step with next/js/config.js, unique ids with aria-controls pointing at
-one (the nav menu toggle), and JS/CSS byte budgets.
+one (the nav menu toggle), JS/CSS byte budgets, no gradient or dashed/dotted
+line in its CSS/JS (a settled design call), no trial wording, and the QR code
+(assets/qr/*.svg) encoding the same URL as the CTA constant.
 """
 import gzip, json, pathlib, re, sys
 from html.parser import HTMLParser
@@ -187,6 +189,41 @@ def check_css_assets(root, pages):
 def _gz(path):
     return len(gzip.compress(path.read_bytes(), 9, mtime=0))
 
+# What /next/ stylesheets and scripts must not draw: gradients, dashed or dotted
+# lines (borders, outlines, SVG dash arrays). Settled design calls, 2026-10-28.
+DRAWN = re.compile(r"gradient\(|(?:border|outline)[\w-]*\s*:[^;{}]*\b(?:dashed|dotted)\b|stroke-dasharray|dasharray", re.I)
+
+def check_next_assets(root, next_pages):
+    """No gradients or dashed/dotted lines in any CSS/JS a /next/ page loads."""
+    errors, seen = [], set()
+    for page, rel, p in next_pages:
+        for ref in p.stylesheets + [a["src"] for a in p.scripts]:
+            f = _local(root, page, ref)
+            if not f or f in seen: continue
+            seen.add(f)
+            text = re.sub(r"/\*.*?\*/", "", f.read_text(), flags=re.S)
+            for m in sorted({m.group(0).strip() for m in DRAWN.finditer(text)}):
+                errors.append(f"ERROR {f.relative_to(root).as_posix()}: '{m}' (no gradients, no dashed or dotted lines)")
+    return errors
+
+def check_next_qr(root, next_pages, url):
+    """A QR on a /next/ page must encode the CTA constant, or it is a dead end.
+
+    scripts/make-qr.py stamps `<!-- qr: URL -->` into the SVG it writes.
+    """
+    errors = []
+    for page, rel, p in next_pages:
+        for ref in p.refs:
+            if not re.match(r"^/assets/qr/[\w.-]+\.svg$", ref): continue
+            f = root / ref.lstrip("/")
+            if not f.is_file(): continue  # a broken link is reported elsewhere
+            stamp = re.search(r"<!-- qr: (\S+) -->", f.read_text())
+            if not stamp:
+                errors.append(f"ERROR {rel}: {ref} has no '<!-- qr: URL -->' stamp, regenerate it with scripts/make-qr.py")
+            elif url and stamp.group(1) != url:
+                errors.append(f"ERROR {rel}: {ref} encodes {stamp.group(1)}, next/js/config.js says {url}; run scripts/make-qr.py")
+    return errors
+
 def check_next(root, next_pages):
     """The /next/ preview: hidden, locked down, light on bytes, CTA in step.
 
@@ -211,7 +248,12 @@ def check_next(root, next_pages):
     url = re.search(r"testflightUrl:\s*[\"']([^\"']+)", config.read_text()) if config.is_file() else None
     js_total = css_total = 0
     js_seen, css_seen = set(), set()
+    errors += check_next_assets(root, next_pages)
+    errors += check_next_qr(root, next_pages, url.group(1) if url else None)
     for page, rel, p in next_pages:
+        # The app's trial is annual-only and the preview does not sell it.
+        if TRIAL.search(page.read_text()):
+            errors.append(f"ERROR {rel}: /next/ must not advertise a free trial")
         if "noindex" not in p.robots: errors.append(f"ERROR {rel}: /next/ page needs <meta name=robots content=noindex>")
         scripts = re.findall(r"script-src ([^;]*)", p.csp)
         if not scripts: errors.append(f"ERROR {rel}: missing page CSP with script-src")

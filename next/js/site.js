@@ -1,5 +1,5 @@
-/* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle and
-   scroll reveals.
+/* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle,
+   scroll reveals and the proof bar's count-up.
    Everything here is enhancement. With no JS, or with Reduce Motion, the page
    is complete and nothing is hidden. Animates transform and opacity only, with
    the durations and easing parsed from tokens.css so the numbers live once. */
@@ -10,6 +10,8 @@
   /* ---- CTA slots -------------------------------------------------------- */
   var cfg = (window.PreflopConfig || {}).cta;
   if (cfg) {
+    /* The QR encodes the same URL, so it goes when the link does. */
+    if (cfg.mode === "coming-soon") doc.querySelectorAll("[data-cta-qr]").forEach(function (el) { el.hidden = true; });
     doc.querySelectorAll("a[data-cta]").forEach(function (a) {
       if (cfg.mode === "coming-soon") {
         var badge = doc.createElement("span");
@@ -108,11 +110,9 @@
     });
   });
 
-  /* ---- Scroll reveals ---------------------------------------------------- */
+  /* ---- Motion helpers --------------------------------------------------- */
   var gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!gsap || !ScrollTrigger || reduce) return;
-  gsap.registerPlugin(ScrollTrigger);
 
   var css = getComputedStyle(root);
   function token(name, fallback) { return css.getPropertyValue(name).trim() || fallback; }
@@ -141,6 +141,16 @@
   var step = ms("--entrance-step", "40ms");
   var maxDelay = ms("--entrance-max-delay", "160ms");
 
+  /* The tokens, parsed once, for the other page scripts (home.js). */
+  window.PreflopMotion = Object.freeze({
+    reduce: reduce, ease: ease, rise: rise, step: step, maxDelay: maxDelay,
+    dur: { entrance: dur, reveal: ms("--dur-reveal", "550ms"), count: ms("--dur-count", "900ms"), slide: ms("--dur-slide", "330ms") }
+  });
+
+  /* ---- Scroll reveals ---------------------------------------------------- */
+  if (!gsap || !ScrollTrigger || reduce) return;
+  gsap.registerPlugin(ScrollTrigger);
+
   function play(els) {
     gsap.fromTo(els,
       { opacity: 0, y: rise },
@@ -165,6 +175,27 @@
     ScrollTrigger.create({
       trigger: g.trigger, start: "top 88%", once: true,
       onEnter: function () { play(g.items); }
+    });
+  });
+
+  /* Proof bar: each [data-count] counts up once, when it scrolls in. The final
+     number is in the HTML, so with no JS or Reduce Motion (which returned
+     above) it is simply there. Animates the text, not layout: the figure sits
+     on its own line, in tabular digits. */
+  var countDur = ms("--dur-count", "900ms");
+  doc.querySelectorAll("[data-count]").forEach(function (el) {
+    var end = parseFloat(el.getAttribute("data-count"));
+    if (!(end > 0)) return;
+    var final = el.textContent, tally = { n: 0 };
+    ScrollTrigger.create({
+      trigger: el, start: "top 92%", once: true,
+      onEnter: function () {
+        gsap.to(tally, {
+          n: end, duration: countDur, ease: ease,
+          onUpdate: function () { el.textContent = Math.round(tally.n).toLocaleString("en-US"); },
+          onComplete: function () { el.textContent = final; }
+        });
+      }
     });
   });
 

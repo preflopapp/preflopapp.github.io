@@ -250,6 +250,28 @@ class NextTests(unittest.TestCase):
         self.errors("a[data-cta] links to https://example.com/x",
                     body='<h1>x</h1><a data-cta href="https://example.com/x">j</a>')
 
+    def test_no_gradients_or_dashed_lines_in_next_assets(self):
+        self.errors("a.css: 'gradient('", files={"next/a.css": ".a{background:linear-gradient(#000,#fff)}"})
+        self.errors("a.css: 'gradient('", files={"next/a.css": ".a{background:radial-gradient(#000,#fff)}"})
+        self.errors("a.css: 'border: 1px dashed", files={"next/a.css": ".a{border: 1px dashed red}"})
+        self.errors("a.css: 'border-top: 1px dotted", files={"next/a.css": ".a{border-top: 1px dotted red}"})
+        self.errors("a.js: 'stroke-dasharray", files={"next/a.js": 'el.innerHTML = "<circle stroke-dasharray=1 2>"'})
+        # A comment that mentions them, and a solid border, are fine.
+        ok = self.site({"next/a.css": "/* no gradient(s) or dashed lines */ .a{border: 1px solid red}"})
+        self.assertEqual(cs.check_site(ok), [])
+
+    def test_next_pages_must_not_advertise_a_trial(self):
+        self.errors("must not advertise a free trial", body=f'<h1>x</h1><a data-cta href="{TF}">j</a><p>Start your 7-day free trial</p>')
+        self.errors("must not advertise a free trial", body=f'<h1>x</h1><a data-cta href="{TF}">j</a><p>7&#8209;day free</p>')
+
+    def test_qr_must_encode_the_cta_constant(self):
+        img = '<h1>x</h1><img src="/assets/qr/tf.svg" alt="" width="1" height="1">'
+        good = f'<!-- qr: {TF} --><svg xmlns="http://www.w3.org/2000/svg"/>'
+        self.assertEqual(cs.check_site(self.site(body=img, files={"assets/qr/tf.svg": good})), [])
+        self.errors("encodes https://testflight.apple.com/join/old, next/js/config.js says " + TF, body=img,
+                    files={"assets/qr/tf.svg": '<!-- qr: https://testflight.apple.com/join/old --><svg/>'})
+        self.errors("has no '<!-- qr: URL -->' stamp", body=img, files={"assets/qr/tf.svg": "<svg/>"})
+
     def test_aria_controls_must_name_an_id_and_ids_are_unique(self):
         self.errors("aria-controls names menu, no element has that id",
                     body='<h1>x</h1><button aria-controls="menu">m</button>')

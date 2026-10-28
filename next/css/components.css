@@ -31,6 +31,11 @@ a { color: var(--accent); }
 /* A themed surface. The style guide wraps each scheme in one of these. */
 .scope { background: var(--bg); color: var(--text); }
 
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
 /* ---- Type roles ---------------------------------------------------------- */
 
 .t-display {
@@ -70,6 +75,7 @@ a { color: var(--accent); }
 .btn--secondary:hover { background: var(--well); }
 
 .btn--sm { padding: 0.5rem var(--space-2); }
+.btn--lg { min-height: 3.25rem; padding: 0.875rem var(--space-4); font-size: 1.125rem; }
 
 /* "Coming soon": the fallback for a CTA slot when the TestFlight link is off.
    Not a link, so no hover or press. */
@@ -160,7 +166,8 @@ a { color: var(--accent); }
 /* ---- Nav ------------------------------------------------------------------
    Sticky, translucent, one hairline underneath. The bar is a container, so it
    collapses by its own width (the style guide shows the narrow form in a
-   narrow box). Without JS the links sit in a row under the bar; site.js sets
+   narrow box). Without JS a wide bar shows its links inline and a narrow one just the brand
+   and the button (the footer has the links); site.js sets
    [data-enhanced], turns that row into a menu behind the toggle and runs it
    (aria-expanded, focus trap, Escape) and sets [data-open] while it is open. The CTA stays in the bar at every
    width. Open and close fade and rise 12px: transform and opacity only. */
@@ -232,6 +239,10 @@ a { color: var(--accent); }
 @container (max-width: 39.99rem) {
   .nav__panel { order: 5; flex-basis: 100%; padding-bottom: var(--space-1); }
   .nav__links { margin-inline: calc(var(--space-2) * -1); }
+  /* Before JS has built the menu a narrow bar shows brand and button only (the
+     links are in the footer). A row of links here made the bar taller until JS
+     collapsed it into the menu, shifting the whole page once on load. */
+  .nav:not([data-enhanced]) .nav__panel { display: none; }
   .nav[data-enhanced] .nav__toggle { display: block; }
   .nav[data-enhanced] .nav__panel {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 2;
@@ -304,6 +315,78 @@ a { color: var(--accent); }
 .cta-band__line { margin: var(--space-1) 0 0; color: var(--text-2); max-width: var(--measure); }
 @media (min-width: 48rem) {
   .cta-band { flex-direction: row; align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-4); }
+}
+
+/* ---- Hero ------------------------------------------------------------------
+   Copy on the left (headline, one line, the one primary button, the QR beside
+   it on a desktop), the playable demo on the right; stacked on a phone, in
+   that order. The headline and the button are plain HTML: no reveal, nothing
+   waits on JS, so the headline is what paints first. The glow is a flat amber
+   disc, blurred, that swells slowly: transform and opacity only, still under
+   Reduce Motion. */
+
+.hero { position: relative; overflow: clip; padding-block: var(--space-5) var(--space-5); }
+.hero__grid { display: grid; gap: var(--space-5); }
+.hero__title { max-width: 11em; text-wrap: balance; }
+.hero__accent { color: var(--accent); }
+.hero__line { margin: var(--space-3) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-section); }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.hero__cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+.hero__note { margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
+
+.hero__demo { position: relative; isolation: isolate; justify-self: center; display: flex; flex-direction: column; align-items: center; }
+.hero__glow {
+  position: absolute; z-index: -1; left: 50%; top: 50%; pointer-events: none;
+  width: 24rem; height: 24rem; margin: -12rem 0 0 -12rem; border-radius: 50%;
+  --glow-lo: 0.07; --glow-hi: 0.14;
+  background: var(--accent); opacity: var(--glow-lo); filter: blur(64px);
+  animation: glow calc(var(--dur-breath) * 6) var(--ease-in-out) infinite alternate;
+}
+/* No glow on light: a faint amber over off-white bands into visible rings at
+   8 bits, and there is nothing to see through the panel anyway. */
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .hero__glow { display: none; } }
+[data-theme="light"] .hero__glow { display: none; }
+@keyframes glow {
+  from { opacity: var(--glow-lo); transform: scale(0.9); }
+  to { opacity: var(--glow-hi); transform: scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) { .hero__glow { animation: none; } }
+
+@media (min-width: 60rem) {
+  .hero { padding-block: var(--space-6) var(--space-6); }
+  .hero__grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-5); }
+  .hero__demo { justify-self: end; }
+  .hero__glow { width: 32rem; height: 32rem; margin: -16rem 0 0 -16rem; filter: blur(80px); }
+}
+
+/* The QR sits beside the button on a desktop with a pointer and nowhere else:
+   a phone has the button, and the code is for opening the link on one. A card
+   like the rest, around a static SVG made offline by scripts/make-qr.py from
+   the same URL the button uses. */
+.qr {
+  display: none; align-items: center; gap: var(--space-2); margin: 0;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+  background: var(--panel); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.qr__img { width: 6.5rem; height: 6.5rem; border-radius: var(--r-card); }
+.qr__cap { max-width: 8rem; margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
+@media (min-width: 60rem) and (hover: hover) { .qr { display: flex; } }
+
+/* ---- Proof bar --------------------------------------------------------------
+   Four facts straight under the hero, each a card with the figure on its own
+   line (so counting up never moves a neighbour). The numbers are in the HTML;
+   site.js counts the figures up once, as the bar scrolls in. */
+
+.proof { padding-bottom: var(--space-5); }
+.proof__list {
+  display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.proof__item { padding: var(--space-2); }
+.proof__item .card__figure { font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); }
+@media (min-width: 48rem) {
+  .proof__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .proof__item { padding: var(--space-3); }
 }
 
 /* ---- Page scaffold ---------------------------------------------------------

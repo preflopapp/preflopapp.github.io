@@ -126,3 +126,13 @@ CSS under 30 KB gzipped; every `img` has pixel `width` and `height`; ids are uni
 `aria-controls` names one.
 Reveal rules: animate `transform` and `opacity` only, never put `data-reveal`
 on the headline or primary CTA, and nothing is hidden until JS runs.
+
+## /next/ QR and demo markup
+
+`assets/qr/testflight.svg` is the hero QR, made offline from the CTA URL in
+`next/js/config.js` (`pip install segno`, then `python3 scripts/make-qr.py`).
+Re-run it whenever that URL changes; `check-site.py` fails a QR that encodes a
+different URL. `scripts/capture-demo-static.js` prints the demo's first-hand
+markup for `next/index.html` (see its header). `scripts/gen-range-chart.py`
+prints the 13x13 range-chart cells for the bento card from the landing demo's
+range data; paste its output into `.chart__grid` if that data changes.

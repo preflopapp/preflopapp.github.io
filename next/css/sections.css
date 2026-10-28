@@ -1,0 +1,312 @@
+/* The home page's sections, below the hero and the proof bar: the spot marquee,
+   the scroll-read statement, the story with a sticky phone, the bento, the
+   plans, the FAQ and the closing panel.
+
+   Built from tokens.css and components.css; no colour literals. The rules the
+   rest of /next/ keeps hold here too: transform and opacity are the only things
+   that animate, no gradients, no dashed or dotted lines, and nothing is hidden
+   until JS has run (home.js sets every start state itself). Vertical rhythm is
+   one token, --section-y; a --panel band breaks it up once, around the story. */
+
+.section { padding-block: var(--section-y); }
+.section--flush { padding-top: 0; }
+.band { background: var(--panel); border-block: var(--stroke) solid var(--border); }
+
+.t-headline {
+  margin: 0; font-size: var(--fs-headline); font-weight: var(--fw-display);
+  letter-spacing: var(--track-title); line-height: 1.08; text-wrap: balance;
+}
+.section-header--center { margin-inline: auto; text-align: center; }
+.section-header--center .section-header__line { margin-inline: auto; }
+.lede { margin: var(--space-2) 0 0; max-width: var(--measure); color: var(--text-2); font-size: var(--fs-section); }
+.tag {
+  display: inline-block; margin-left: var(--space-1); padding: 0.125rem 0.625rem; vertical-align: 0.15em;
+  border: var(--stroke) solid var(--accent); border-radius: var(--r-pill);
+  color: var(--accent); font-size: var(--fs-label); font-weight: var(--fw-label);
+  letter-spacing: var(--track-label); text-transform: uppercase;
+}
+
+/* ---- Hero extras -----------------------------------------------------------
+   Decorative pieces floating at the demo's edge on a desktop. The outer
+   element is moved by scroll (home.js), the inner one bobs: two transforms,
+   so two elements. Hidden below 60rem, and the bob stops under Reduce Motion. */
+
+.float { display: none; position: absolute; z-index: 2; pointer-events: none; }
+.float__in { animation: bob calc(var(--dur-breath) * 3) var(--ease-in-out) infinite alternate; }
+.float--cards { left: -4.5rem; top: 4.5rem; }
+.float--cards .float__in { display: flex; transform-origin: 50% 100%; }
+.float--cards .pcard { width: 3.25rem; height: 4.5rem; font-size: 1.5rem; }
+.float--cards .pcard__suit { width: 1.25rem; height: 1.25rem; }
+.float--cards .pcard + .pcard { margin-left: -1.25rem; transform: rotate(9deg) translateY(0.5rem); }
+.float--cards .pcard:first-child { transform: rotate(-8deg); }
+.float--right { left: -6rem; bottom: 9rem; }
+.float--right .float__in { animation-duration: calc(var(--dur-breath) * 4); animation-direction: alternate-reverse; }
+.pill {
+  display: inline-flex; align-items: center; gap: var(--space-1); padding: 0.5rem var(--space-2);
+  background: var(--panel); color: var(--text); border: var(--stroke) solid var(--border);
+  border-radius: var(--r-pill); font-size: var(--fs-meta); font-weight: 600; white-space: nowrap;
+}
+.pill__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--good); }
+@keyframes bob { from { transform: translateY(-0.4rem); } to { transform: translateY(0.4rem); } }
+@media (min-width: 60rem) { .float { display: block; } }
+@media (prefers-reduced-motion: reduce) { .float__in { animation: none; } }
+
+/* ---- Marquee ----------------------------------------------------------------
+   Two rows of spot names drifting in opposite directions, the way the app
+   names them. Pure CSS, so it runs with no JS; hover pauses it. Each row holds
+   its list twice (the copy is aria-hidden) so the loop has no seam. Reduce
+   Motion: one wrapped row, no movement. */
+
+.marquee { display: grid; gap: var(--space-1); padding-block: var(--space-5); overflow: clip; }
+.marquee__row { display: flex; overflow: hidden; user-select: none; }
+.marquee__track {
+  display: flex; flex: none; align-items: center; justify-content: space-around; gap: var(--space-1);
+  min-width: 100%; margin: 0; padding: 0 var(--space-half) 0 0; list-style: none;
+  animation: marquee 55s linear infinite;
+}
+.marquee__row--rev .marquee__track { animation-direction: reverse; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-100%); } }
+.spot {
+  display: inline-flex; align-items: baseline; gap: 0.4em; padding: 0.5rem var(--space-2);
+  background: var(--panel); color: var(--text-2);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
+  font-size: var(--fs-meta); white-space: nowrap;
+}
+.spot b { color: var(--text); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee__row { overflow: visible; }
+  .marquee__track { animation: none; flex-wrap: wrap; justify-content: center; padding-inline: var(--gutter); }
+  .marquee__track[aria-hidden] { display: none; }
+}
+
+/* ---- Statement ---------------------------------------------------------------
+   One sentence, large. home.js dims its words and lights them as it scrolls
+   through; without it (or with Reduce Motion) it is just text. */
+
+.statement { padding-block: var(--space-6) var(--section-y); }
+.statement__text {
+  margin: 0 auto; max-width: 18em; text-align: center; text-wrap: balance;
+  font-size: var(--fs-statement); font-weight: var(--fw-display);
+  letter-spacing: var(--track-title); line-height: 1.12;
+}
+
+/* ---- Shot: an app screenshot in a phone frame ----------------------------------
+   The same slim bezel as the demo. Screenshots are 600 x 1304. */
+
+.shot {
+  width: var(--shot-w, 16rem); margin: 0; background: var(--well);
+  border: 6px solid var(--well); border-radius: 38px; overflow: hidden;
+  box-shadow: 0 0 0 var(--stroke) var(--border);
+}
+.shot img { width: 100%; height: auto; }
+
+/* ---- Story --------------------------------------------------------------------
+   Four chapters, each with its screenshot beside it; stacked on a phone. On a
+   desktop with motion, home.js sets [data-pin]: the screenshots move into one
+   sticky phone and the chapters scroll past it, each lighting the right
+   screen. Reduce Motion or no JS keeps the stacked layout, no pin. */
+
+.story { --shot-w: 16rem; }
+.story__chapters { display: grid; gap: var(--space-6); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
+.story__chapter { display: grid; gap: var(--space-4); align-items: center; justify-items: start; }
+.story__num { margin: 0 0 var(--space-1); color: var(--accent); }
+.story__title { margin: 0; font-size: var(--fs-title); font-weight: var(--fw-title); letter-spacing: var(--track-title); line-height: var(--lh-title); }
+.story__body { margin: var(--space-2) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-section); }
+.story__inline { justify-self: center; }
+.story__stage { display: none; }
+@media (min-width: 48rem) {
+  .story__chapter { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-6); }
+  .story__chapter:nth-child(even) .story__inline { order: -1; }
+}
+
+.story[data-pin] { --shot-w: min(17.5rem, calc((100svh - var(--nav-h) - 6rem) * 0.44)); }
+.story[data-pin] .story__chapters { margin-top: 0; gap: 0; }
+.story[data-pin] .story__grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-5);
+}
+.story[data-pin] .story__chapter {
+  display: flex; align-items: center; min-height: 90svh;
+  opacity: 0.3; transition: opacity var(--dur-reveal) var(--ease-out);
+}
+.story[data-pin] .story__chapter.is-active { opacity: 1; }
+.story[data-pin] .story__inline { display: none; }
+.story[data-pin] .story__stage {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3);
+  position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h));
+}
+.story__screens { display: grid; }
+.story__screens img { grid-area: 1 / 1; }
+.story__img {
+  opacity: 0; transform: translateY(var(--entrance-rise)) scale(0.985);
+  transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+}
+.story__img.is-active { opacity: 1; transform: none; }
+.story__dots { display: flex; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.story__dots li { width: 1.75rem; height: 4px; border-radius: var(--r-pill); background: var(--border); }
+.story__dots li.is-active { background: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .story[data-pin] .story__chapter, .story__img { transition: none; }
+}
+
+/* ---- Bento ---------------------------------------------------------------------
+   Seven cards of different sizes, each with its own small picture that plays
+   once as it scrolls in. One column on a phone, two from 48rem, a 12-column
+   grid from 64rem. A card lifts on hover. */
+
+.bento { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
+.bento__card {
+  display: flex; flex-direction: column; gap: var(--space-3); min-width: 0;
+  padding: var(--space-3); overflow: hidden;
+  transition: transform var(--dur-press) var(--ease-press);
+}
+.bento__card:hover { transform: translateY(-4px); }
+.bento__title { margin: 0; }
+.bento__text p { margin: var(--space-1) 0 0; color: var(--text-2); }
+.bento__visual { margin-top: auto; }
+@media (min-width: 48rem) { .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bento__card--wide { grid-column: 1 / -1; } }
+@media (min-width: 64rem) {
+  .bento { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-3); }
+  .bento__card { padding: var(--space-4); }
+  .bento__card--5 { grid-column: span 5; }
+  .bento__card--7 { grid-column: span 7; }
+  .bento__card--4 { grid-column: span 4; }
+  .bento__card--6 { grid-column: span 6; }
+}
+@media (prefers-reduced-motion: reduce) { .bento__card:hover { transform: none; } }
+
+/* The mix: how often the chart takes each action with a hand. Three real
+   hands from the demo's spots. */
+.mix { display: grid; gap: var(--space-3); margin: 0; }
+.mix__group { display: grid; gap: var(--space-1); }
+.mix__hand { margin: 0 0 var(--space-half); color: var(--text-2); font-size: var(--fs-meta); font-weight: 600; }
+.mix__row { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr) 2.75rem; align-items: center; gap: var(--space-2); font-size: var(--fs-meta); }
+.mix__name { color: var(--text-2); }
+.mix__track { height: 0.625rem; border-radius: var(--r-pill); background: var(--well); overflow: hidden; }
+.mix__bar { display: block; width: 100%; height: 100%; background: var(--act); transform-origin: left; transform: scaleX(var(--f, 0)); }
+.mix__bar--fold { --act: var(--act-fold); }
+.mix__bar--call { --act: var(--act-call); }
+.mix__bar--raise { --act: var(--act-raise); }
+.mix__bar--v28 { --f: 0.28; } .mix__bar--v39 { --f: 0.39; } .mix__bar--v49 { --f: 0.49; }
+.mix__bar--v51 { --f: 0.51; } .mix__bar--v61 { --f: 0.61; } .mix__bar--v72 { --f: 0.72; }
+.mix__pct { text-align: right; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+
+/* The range chart: 169 cells, coloured by what the chart does with each hand. */
+.chart { margin: 0 auto; max-width: 28rem; container-type: inline-size; }
+.chart__grid { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 2px; }
+.chart__grid i { position: relative; aspect-ratio: 1; border-radius: 2px; background: var(--well); }
+.chart__grid .r1 { background: color-mix(in srgb, var(--act-raise) 28%, var(--well)); }
+.chart__grid .r2 { background: color-mix(in srgb, var(--act-raise) 52%, var(--well)); }
+.chart__grid .r3 { background: color-mix(in srgb, var(--act-raise) 76%, var(--well)); }
+.chart__grid .r4 { background: var(--act-raise); }
+.chart__grid .c1 { background: color-mix(in srgb, var(--act-call) 28%, var(--well)); }
+.chart__grid .c2 { background: color-mix(in srgb, var(--act-call) 52%, var(--well)); }
+.chart__grid .c3 { background: color-mix(in srgb, var(--act-call) 76%, var(--well)); }
+.chart__grid .c4 { background: var(--act-call); }
+.chart__grid .sel::after { content: ""; position: absolute; inset: -2px; border: 2px solid var(--text); border-radius: 3px; }
+.chart__legend { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin: var(--space-2) 0 0; padding: 0; list-style: none; color: var(--text-2); font-size: var(--fs-meta); }
+.chart__legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
+.chart__legend i { width: 0.75rem; height: 0.75rem; border-radius: 2px; }
+.chart__legend .lg-raise { background: var(--act-raise); }
+.chart__legend .lg-call { background: var(--act-call); }
+.chart__legend .lg-fold { background: var(--well); }
+.chart__cap { margin: var(--space-1) 0 0; color: var(--text-3); font-size: var(--fs-meta); }
+
+/* Positions, streak dots, privacy chips. */
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.pos {
+  display: inline-grid; place-items: center; min-width: 3.25rem; padding: 0.5rem 0.75rem;
+  background: var(--well); color: var(--text); border-radius: var(--r-button);
+  font-size: var(--fs-meta); font-weight: 600;
+}
+.streak { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.streak li { width: 2rem; height: 2rem; border-radius: 50%; background: var(--well); }
+.streak li.on { background: var(--accent-fill); }
+.bento__lock { display: grid; place-items: center; width: 5rem; height: 5rem; background: var(--well); border-radius: var(--r-panel); }
+.icon { width: 2.5rem; height: 2.5rem; fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Home Screen widgets, drawn at their three sizes. */
+.widgets { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-1); }
+.widget {
+  display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-1);
+  padding: var(--space-1) var(--space-2); background: var(--well); color: var(--text); border-radius: var(--r-panel);
+}
+.widget--s { width: 5rem; height: 5rem; }
+.widget--m { width: 10rem; height: 5rem; }
+.widget--l { width: 10rem; height: 10rem; }
+.widget__label { color: var(--text-2); }
+.widget__num { font-size: var(--fs-title); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+.widget__row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-1); }
+.widget .pcard { width: 1.875rem; height: 2.625rem; font-size: 1rem; gap: 0.125rem; }
+.widget .pcard__suit { width: 0.75rem; height: 0.75rem; }
+.widget--l .pcard { width: 2.75rem; height: 3.75rem; font-size: 1.25rem; }
+.widget--l .pcard__suit { width: 1rem; height: 1rem; }
+
+.trend { width: 100%; height: auto; }
+.trend__base { fill: var(--border); }
+.trend__line { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.trend__cover { fill: var(--panel); }
+
+/* ---- Plans ---------------------------------------------------------------------- */
+
+.plans { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
+@media (min-width: 48rem) { .plans { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); } }
+.plan {
+  display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4);
+  background: var(--panel); color: var(--text); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.plan--pro { border-color: var(--accent); }
+.plan__tier { margin: 0; color: var(--text-2); }
+.plan--pro .plan__tier { color: var(--accent); }
+.plan__price { margin: var(--space-1) 0 0; font-size: var(--fs-headline); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+.plan__per { font-size: var(--fs-body); font-weight: 400; letter-spacing: 0; color: var(--text-2); }
+.plan__alt { margin: var(--space-1) 0 0; color: var(--text-2); }
+.plan__alt b { color: var(--text); font-weight: 600; }
+.plan__lead { margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
+.plan__list { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.plan__list li { position: relative; padding-left: 1.75rem; }
+.plan__list li::before {
+  content: ""; position: absolute; left: 0.3rem; top: 0.35em; width: 0.4rem; height: 0.75rem;
+  border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg);
+}
+.plan__list b { font-weight: 600; }
+.plan .btn, .plan .badge-soon { margin-top: auto; align-self: flex-start; }
+.plans__fine { margin: var(--space-3) auto 0; max-width: var(--measure); color: var(--text-3); font-size: var(--fs-meta); text-align: center; }
+
+/* ---- FAQ -------------------------------------------------------------------------- */
+
+.faqs { display: grid; gap: var(--space-5); }
+.faqs__aside p { margin: var(--space-2) 0 0; color: var(--text-2); }
+.faqs__list { border-top: var(--stroke) solid var(--border); }
+@media (min-width: 64rem) {
+  .faqs { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-7); }
+  .faqs__aside { align-self: start; position: sticky; top: calc(var(--nav-h) + var(--space-3)); }
+}
+
+/* ---- Closing ------------------------------------------------------------------------
+   One big panel: the line, the button, the QR on a desktop, and the phone coming
+   up from the bottom edge (it drifts as the page scrolls). */
+
+.closing {
+  position: relative; display: grid; gap: var(--space-4); overflow: hidden;
+  padding: var(--space-5) var(--space-3) 0;
+  background: var(--panel); color: var(--text); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.closing__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding-bottom: var(--space-3); }
+.closing__line { margin: 0; max-width: 24rem; color: var(--text-2); font-size: var(--fs-section); }
+.closing__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.closing__phone { --shot-w: 15rem; justify-self: center; height: 20rem; overflow: hidden; }
+.closing__phone .shot { border-bottom: 0; border-radius: 38px 38px 0 0; }
+@media (min-width: 60rem) {
+  .closing { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: var(--space-6) var(--space-6) 0; gap: var(--space-6); }
+  .closing__copy { padding-bottom: var(--space-6); }
+  .closing__phone { --shot-w: 17rem; height: 26rem; align-self: end; }
+}
+
+/* ---- Page progress ----------------------------------------------------------
+   A 3px amber line along the top of the viewport, scaled by home.js as the
+   page scrolls. Nothing until JS has drawn it. */
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: 3px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left; pointer-events: none;
+}
