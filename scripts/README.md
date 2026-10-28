@@ -75,8 +75,11 @@ The redesign is built behind `/next/` (noindex, `X-Robots-Tag`, not in
 foundation, shown at `/next/styleguide/`:
 
 - `next/css/tokens.css`: colour (dark default, light via system or
-  `data-theme`), type, shape, spacing and motion, all taken from the app's
-  `AppTheme.swift`, `AppFont.swift` and `PreflopMotion.swift`.
+  `data-theme`), type, shape, spacing and motion. Colour, spacing and motion
+  come from the app's `AppTheme.swift` and `PreflopMotion.swift`. The typeface
+  (Hanken Grotesk) and radii (14 / 10 / 6) deliberately lead the app: they are
+  the new brand-wide design language, decided 2026-10-28, and the app adopts
+  them next. Suits are `assets/suits/*.svg` (two-colour deck only on the site).
 - `next/css/components.css`: button, TestFlight CTA and "Coming soon" badge,
   section header, card, FAQ item, reveal.
 - `next/js/config.js`: the one place the CTA is configured. Set `mode` to
