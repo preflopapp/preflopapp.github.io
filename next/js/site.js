@@ -95,6 +95,12 @@
   });
 
   /* ---- Theme toggle: system by default, data-theme once the visitor picks - */
+  /* A choice made on one page carries to the next. Stored on this device only,
+     and the page works the same when storage is blocked. */
+  var KEY = "preflop-theme";
+  function saved() { try { var v = localStorage.getItem(KEY); return v === "light" || v === "dark" ? v : null; } catch (e) { return null; } }
+  function save(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private mode: per page load, as before */ } }
+  if (saved()) root.setAttribute("data-theme", saved());
   var light = matchMedia("(prefers-color-scheme: light)");
   function isDark() {
     var set = root.getAttribute("data-theme");
@@ -105,7 +111,9 @@
     function label() { btn.textContent = isDark() ? "Light mode" : "Dark mode"; }
     label();
     btn.addEventListener("click", function () {
-      root.setAttribute("data-theme", isDark() ? "light" : "dark");
+      var next = isDark() ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      save(next);
       label();
     });
   });
