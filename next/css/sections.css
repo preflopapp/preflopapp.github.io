@@ -117,6 +117,7 @@
 .story__stage { display: none; }
 @media (min-width: 48rem) {
   .story__chapter { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-6); }
+  .story__chapter:nth-child(even) { grid-template-columns: auto minmax(0, 1fr); }
   .story__chapter:nth-child(even) .story__inline { order: -1; }
 }
 

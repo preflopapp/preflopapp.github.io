@@ -47,6 +47,13 @@
 @media (max-width: 373px) { .phone { --s: 0.8; } }
 @media (max-width: 353px) { .phone { --s: 0.75; } }
 @media (max-width: 333px) { .phone { --s: 0.68; } }
+/* Beside the copy (tablet and up) the phone must also fit the screen's height,
+   or its bottom, the answer buttons, falls below the fold. */
+@media (min-width: 48rem) and (max-width: 63.99rem) { .phone { --s: 0.8; } }
+@media (min-width: 48rem) and (max-height: 820px) { .phone { --s: 0.9; } }
+@media (min-width: 48rem) and (max-height: 740px) { .phone { --s: 0.8; } }
+@media (min-width: 48rem) and (max-height: 660px) { .phone { --s: 0.7; } }
+@media (min-width: 48rem) and (max-height: 580px) { .phone { --s: 0.6; } }
 
 /* ---- Frame ----------------------------------------------------------------
    Built like the page's cards: a --panel screen, a hairline, and a slim --well
