@@ -129,7 +129,7 @@
 }
 .story[data-pin] .story__chapter {
   display: flex; align-items: center; min-height: 72svh;
-  opacity: 0.3; transition: opacity var(--dur-reveal) var(--ease-out);
+  opacity: 0.5; transition: opacity var(--dur-reveal) var(--ease-out);
 }
 .story[data-pin] .story__chapter.is-active { opacity: 1; }
 .story[data-pin] .story__inline { display: none; }
@@ -435,9 +435,16 @@
 .cell__seg--f { background: var(--act-fold); } .cell__seg--c { background: var(--act-call); } .cell__seg--r { background: var(--act-raise); }
 .cell__t {
   position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
-  font-size: clamp(0.4rem, 2.5cqw, 0.75rem); font-weight: 600; letter-spacing: -0.02em; color: var(--accent-fill-ink); opacity: 0.85;
+  font-size: clamp(0.4rem, 2.5cqw, 0.75rem); font-weight: 600; letter-spacing: -0.02em; color: var(--accent-fill-ink);
 }
-.cell--empty .cell__t { color: var(--text-3); opacity: 0.7; }
+.cell--empty .cell__t { color: var(--text-3); }
+/* Label ink per fill, as on the buttons: dark on the dark scheme's fills, and in
+   light white on fold and call (3.9 to 4.9:1 either way round). */
+.cgrid { --cell-ink: #150f02; --cell-ink-raise: #150f02; }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .cgrid { --cell-ink: #ffffff; } }
+[data-theme="light"] .cgrid { --cell-ink: #ffffff; }
+.cell--ink-f .cell__t, .cell--ink-c .cell__t { color: var(--cell-ink); }
+.cell--ink-r .cell__t { color: var(--cell-ink-raise); }
 .cell.is-hero::before { content: ""; position: absolute; inset: 0; z-index: 1; border: 2px solid var(--text); border-radius: 2px; pointer-events: none; }
 /* The picked hand gets a ring, not a bigger square: a scaled square would cover its
    neighbours and steal the pointer from them. */
@@ -477,7 +484,7 @@
 .depths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); margin: var(--space-3) 0 0; padding: 0; list-style: none; }
 .depth {
   display: grid; gap: 0.15rem; padding: var(--space-2);
-  background: var(--well); border: var(--stroke) solid var(--border); border-radius: var(--r-card);
+  background: var(--bg); border: var(--stroke) solid var(--border); border-radius: var(--r-card);
 }
 .depth__bb { color: var(--accent); font-size: var(--fs-section); font-weight: var(--fw-title); letter-spacing: var(--track-title); }
 .depth__n { color: var(--text-2); font-size: var(--fs-meta); }

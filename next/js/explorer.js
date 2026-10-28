@@ -42,10 +42,14 @@
       var cell = el("div", "cell"), h = handAt(i), parts = parse(code);
       cell.dataset.i = i;
       if (!parts.length) cell.classList.add("cell--empty");
+      var run = 0;
       parts.forEach(function (p) {
         var seg = el("span", "cell__seg cell__seg--" + p[0]);
         seg.style.width = p[1] + "%";
         cell.appendChild(seg);
+        /* The label sits at the cell's middle, so its ink follows the segment under it. */
+        if (run <= 50 && run + p[1] > 50) cell.classList.add("cell--ink-" + p[0]);
+        run += p[1];
       });
       cell.appendChild(el("span", "cell__t", h));
       if (h === chart.hero) cell.classList.add("is-hero");

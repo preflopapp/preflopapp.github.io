@@ -7,10 +7,9 @@
 # page and /s/a/b stays a 404.
 /s/:id  /s/  200
 
-# Phase 5 cutover: the redesigned homepage is /. The old playable page and the
-# /next/ preview now land there. A redirect is followed even where a file
-# exists, so landing/index.html stays in the repo as a way back: remove these
-# lines to bring it back.
+# The redesigned homepage is /. The old playable page (/landing, deleted in
+# Phase 8) and the /next/ preview land there; old links and the app may still
+# use them, so these stay.
 /landing   /  301
 /landing/  /  301
 /next      /  301

@@ -6,18 +6,7 @@
 /assets/*
   Cache-Control: public, max-age=604800
 
-# The landing page enforces a hash-pinned CSP in its <head>. The site's
-# script-src 'none' header would otherwise block its interactive demo.
-# X-Frame-Options supplies the frame protection unavailable to meta CSP.
-/landing
-  ! Content-Security-Policy
-  X-Frame-Options: DENY
-
-/landing/*
-  ! Content-Security-Policy
-  X-Frame-Options: DENY
-
-# Shared-hand page (/s/<spot id>): like the landing page, it enforces its own
+# Shared-hand page (/s/<spot id>): it enforces its own
 # hash-pinned CSP in its <head>, since it decodes the hand in a script.
 /s
   ! Content-Security-Policy
@@ -28,7 +17,7 @@
   X-Frame-Options: DENY
 
 # The homepage (the redesigned site, cut over from /next/ in Phase 5). Like
-# /landing and /s it enforces its own CSP in its <head>, script-src 'self' for
+# /s it enforces its own CSP in its <head>, script-src 'self' for
 # the vendored GSAP and next/js; the site-wide header would add script-src
 # 'none'. Only the exact path: every other page keeps the site-wide policy.
 /

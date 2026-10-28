@@ -71,8 +71,11 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
 - **A page-CSP check that skips on `'none'` must read `script-src` alone.** The
   first version tested the whole string, `default-src 'none'` matched, and every
   real page was skipped; only a test against a page with that exact CSP showed it.
-- **The theme toggle is per page load.** It sets `data-theme` and stores nothing,
-  so a visitor who picks light on `/` gets their system scheme on `/faq/`.
+- **The theme choice is stored in `localStorage` (`preflop-theme`)**, read in
+  `site.js`, so it carries from `/` to `/faq/`. Reads and writes are in try/catch
+  (private windows throw). It applies when the deferred script runs, so a
+  visitor who overrode their system scheme may see one frame of it first
+  (Phase 8).
 - **A hover UI must not move under its own pointer.** The chart explorer froze
   twice in a test: the picked square scaled up and covered its neighbours, then
   the inspector's text changed height and the vertically centred chart shifted,

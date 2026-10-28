@@ -31,7 +31,7 @@
       if (i < words.length - 1) el.appendChild(doc.createTextNode(" "));
       return s;
     });
-    gsap.set(spans, { opacity: 0.18 });
+    gsap.set(spans, { opacity: 0.4 });
     gsap.to(spans, {
       opacity: 1, ease: "none", stagger: 0.12,
       scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: 0.4 }

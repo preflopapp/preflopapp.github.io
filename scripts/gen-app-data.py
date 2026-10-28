@@ -83,7 +83,7 @@ def badges_html():
         needs = " · ".join(f'{x["tier"].capitalize()} {x["correctAnswersNeeded"]}' for x in tiers)
         rows.append(f'<li class="badge" data-family="{html.escape(family)}"><span class="badge__discs" role="img" '
                     f'aria-label="{html.escape(subject)}: {html.escape(needs)} correct answers">{discs}</span>'
-                    f'<span class="badge__name">{html.escape(subject)}</span></li>')
+                    f'<span class="badge__name">{html.escape(subject).replace("-", "&#8209;")}</span></li>')  # no break inside "all-in"
     return rows, len(b)
 
 
