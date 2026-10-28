@@ -63,6 +63,8 @@ def _resolves(root, ref):
 PRICE = re.compile(r"\$(\d+\.\d\d)")
 DAILY = re.compile(r"\b(\d+) (?:more |new |free )?hands? (?:a day|every day|each day)", re.I)
 FACT = re.compile(r"<!-- fact:(\w+) -->(.*?)<!-- /fact -->", re.S)
+# A trial offer: "free trial", "7-day free", with the site's non-breaking hyphen.
+TRIAL = re.compile(r"free trial|\d(?:&#8209;|[-\u2011 ])day free", re.I)
 
 def check_facts(root, pages):
     """Every price and daily-hand figure on the site against facts.json.
@@ -84,6 +86,11 @@ def check_facts(root, pages):
               "freeHistoryHands": str(facts["freeHistoryHands"])}
     # The plan prices, and annual as a monthly figure ("about $3.33 a month").
     prices = set(facts["prices"].values()) | {facts["annualPerMonth"]}
+    # The app's only trial is on annual, and the paywall serves the lineup in
+    # paywall.json. No annual there means no trial anywhere: a page that
+    # advertises one is a promise the paywall breaks (app issue #551).
+    paywall = root / "paywall.json"
+    trial_offered = (not paywall.is_file()) or "annual" in json.loads(paywall.read_text()).get("plans", [])
     for page in pages:
         rel = page.relative_to(root).as_posix()
         # Inline images and fonts are base64; nothing in them is a claim.
@@ -96,6 +103,8 @@ def check_facts(root, pages):
         for amount in PRICE.findall(text):
             if amount not in prices:
                 errors.append(f"ERROR {rel}: price ${amount} is not a plan price in facts.json")
+        if not trial_offered and TRIAL.search(text):
+            errors.append(f"ERROR {rel}: advertises a free trial but paywall.json has no annual plan")
         for count in DAILY.findall(text):
             if count != values["dailyFreeHands"]:
                 errors.append(f"ERROR {rel}: '{count} hands a day' but facts.json says {values['dailyFreeHands']}")

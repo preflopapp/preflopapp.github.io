@@ -144,6 +144,16 @@ class FactsTests(unittest.TestCase):
         root = self.site({"index.html": page(body="<h1>T</h1><p><!-- fact:annual -->49.99<!-- /fact --></p>")})
         self.assertTrue(any("fact annual says 49.99" in e for e in cs.check_site(root)))
 
+    def test_trial_copy_fails_when_paywall_has_no_annual(self):
+        root = self.site({"paywall.json": '{"plans": ["monthly", "lifetime"]}',
+                          "index.html": page(body="<h1>T</h1><p>$39.99 a year with a 7&#8209;day free trial</p>")})
+        self.assertTrue(any("advertises a free trial" in e for e in cs.check_site(root)))
+
+    def test_trial_copy_passes_when_paywall_serves_annual(self):
+        root = self.site({"paywall.json": '{"plans": ["monthly", "annual", "lifetime"]}',
+                          "index.html": page(body="<h1>T</h1><p>$39.99 a year with a free trial</p>")})
+        self.assertEqual(cs.check_site(root), [])
+
     def test_missing_facts_file_fails(self):
         tmp = pathlib.Path(tempfile.mkdtemp())
         (tmp / "index.html").write_text(page())
