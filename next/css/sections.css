@@ -474,8 +474,13 @@
 @media (prefers-reduced-motion: reduce) { .badges[data-fx] .badge__disc::after { transition: none; } .badge { transition: none; } }
 
 /* Bento extras: the depth chips, the glossary line and the captions on drawn pictures. */
-.chips--depth { margin-top: var(--space-1); }
-.pos--depth { border-color: var(--accent); color: var(--accent); }
+.depths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); margin: var(--space-3) 0 0; padding: 0; list-style: none; }
+.depth {
+  display: grid; gap: 0.15rem; padding: var(--space-2);
+  background: var(--well); border: var(--stroke) solid var(--border); border-radius: var(--r-card);
+}
+.depth__bb { color: var(--accent); font-size: var(--fs-section); font-weight: var(--fw-title); letter-spacing: var(--track-title); }
+.depth__n { color: var(--text-2); font-size: var(--fs-meta); }
 .gloss { margin: 0; padding: var(--space-3); border-radius: var(--r-button); background: var(--well); }
 .gloss__term { margin: 0; color: var(--text-3); }
 .gloss__def { margin: var(--space-1) 0 0; color: var(--text); }
