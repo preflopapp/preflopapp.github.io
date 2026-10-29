@@ -6,25 +6,13 @@ where it stands, and what it needs. Move an item into a phase's scope in
 
 ## From Stan's review of the live site, 2026-10-29
 
-### 1. Remove the badges section: done, one question open
-- **Wanted:** no badges section on the homepage.
-- **Status:** the 60-badge grid and its unlock pills were deleted in Phase 4
-  (PR #47, live since 2026-10-29).
-- **Open:** card 1 of "Free for everyone" still shows one badge (Facing an
-  open) in its four tiers beside the streak, and its copy says "XP, levels and
-  badges". Keep it, or make card 1 the streak alone?
+Done and removed from this list:
+- **The badges section** went in Phase 4. Stan: "just remove the badges. Big
+  section, the rest is fine", so card 1's badge tiers stay.
+- **The spacing and figures in "Every seat. Every depth."** were fixed in
+  PR #48.
 
-### 2. "Every seat. Every depth.": spacing and figures: done
-- **Wanted:** fix the spacing; show simple figures ("5K+, 8K+"), not exact
-  counts.
-- **Fixed** in the PR after #47:
-  - **Spacing:** the list and the section shared the class `spots`. The list's
-    `padding: 0` and top hairline also hit the section, so it lost its
-    `--section-y` padding above and below and drew a line across its top.
-  - **Figures:** the depth bars read 6K+ · 9K+ · 9K+. The counts are rounded
-    down to thousands, and `check-site.py` derives them from `spotsByDepth`.
-
-### 3. Real widget and Live Activity assets
+### 1. Real widget and Live Activity assets
 - **Wanted:** screenshots or exported assets of the Home Screen widgets and
   the Live Activity, for the site and the press kit.
 - **Status:**
@@ -45,7 +33,7 @@ where it stands, and what it needs. Move an item into a phase's scope in
     is free;
   - check the Free/Pro split against the app repo's `docs/AppStorePlan.md` §4a.
 
-### 4. Bankroll tracker and bankroll management
+### 2. Bankroll tracker and bankroll management
 - **Wanted:** the site should talk about the bankroll tracker. On the live
   site before Phase 4, it never did.
 - **Status:** Phase 4 (live now) added a "A bankroll tracker" card to "Free

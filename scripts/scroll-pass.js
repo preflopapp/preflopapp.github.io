@@ -236,12 +236,12 @@ function frameProbe(cfg) {
     return o > 0.05 && o < 0.9;
   })).map(function (el) { return desc(el) + " @" + opac(el).toFixed(2); }));
 
-  /* pending: an entrance, fill, pop, draw or wash that should have run. The
+  /* pending: an entrance, fill, pop, draw, wash or deal that should have run. The
      old design's [data-reveal] hidden while in view counts too, so the
      baseline shows it. */
   add("pending", "fail", all.filter(function (el) {
     if (!inView(R(el))) return false;
-    if (["data-enter", "data-fill", "data-pop", "data-draw", "data-wash"].some(function (a) { return el.getAttribute(a) === "pending"; })) return true;
+    if (["data-enter", "data-fill", "data-pop", "data-draw", "data-wash", "data-deal"].some(function (a) { return el.getAttribute(a) === "pending"; })) return true;
     return el.hasAttribute("data-reveal") && shown(el) && opac(el) <= 0.05;
   }).map(desc));
 

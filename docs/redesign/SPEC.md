@@ -551,8 +551,7 @@ at 2400 (existing rule), so every rem value scales with it.
 
 **Purpose:** brand, three links, the persistent CTA.
 **Content:** mark + "Preflop" (600, 18 px) · links "How it works" (`/#features`;
-*the label changes in Phase 5 with the other shared-header text, Stan
-2026-10-29*),
+*changed from "Features" in Phase 5, with the other shared-header text*),
 "Pricing" (`/#pricing`), "FAQ" (`/#faq` on the homepage, `/faq/` on text pages)
 · `Join the beta` (CTA N) · menu toggle (narrow, JS only).
 
@@ -1021,6 +1020,9 @@ annual, a trial, or $39.99.
 **Motion:** none. **Accept:** `check-site.py` passes; the two cards' heights are
 equal at ≥ 768; no annual and no "trial".
 
+*Phase 5:* the cards' padding is 24 px on a phone (32 from 768), which keeps
+the section at 1,363 px at 390 with six items in each list.
+
 ### 6.9 FAQ (`#faq`)
 
 **Copy:** eyebrow "FAQ" · h2 "Before you join." · "More answers in the
@@ -1046,6 +1048,10 @@ equal at ≥ 768; no annual and no "trial".
 **Motion:** *disclosure*. **Accept:** height within budget; `#faq` anchor
 lands correctly.
 
+*Phase 5:* the aside and list keep the existing 1fr / 2fr columns from 1024
+(about 4 and 8 of 12). The aside's text rule had also greyed the "FAQ"
+eyebrow, the only grey one on the page; it now applies to the last line only.
+
 ### 6.10 Closing and CTA E
 
 **Copy:** h2 "Start with a hand." · line "Join the beta on TestFlight. Free,
@@ -1061,6 +1067,13 @@ phone.
 **Motion:** *deal* on the cards, once. **No JS:** static fan.
 **Accept:** height within budget; QR only with a fine pointer at ≥ 60rem.
 
+*Phase 5:* at 1440 the copy takes columns 1–8 and the cards 9–12. In 1–7 the
+button-and-note column and the QR card (about 575 px together) did not fit, and
+the QR wrapped under the button, taking the panel over its height budget. The
+cluster's note is the hero's ("Free on TestFlight · iPhone, iOS 17 or later").
+The fan is the `.bigcard` pair in `sections.css`; `site.js`'s *deal* reads each
+card's own transform as its end state.
+
 ### 6.11 Footer
 
 Structure and copy unchanged (brand line, Product / Help / Legal, mailto in
@@ -1068,6 +1081,17 @@ Structure and copy unchanged (brand line, Product / Help / Legal, mailto in
 "How it works". At ≥ 360 px the three link groups sit in **3 columns** (today
 2), so the footer is ≤ 360 px tall on a phone. **Accept:** height within
 budget, every link ≥ 44 px tall.
+
+*Phase 5 (needs Stan's OK):* 396 px at 390, not ≤ 360. The three groups alone
+are 160 px (the label plus three 44 px links), and the rest is the brand row,
+the address with the theme toggle beside it, and the fine print. To fit:
+- the tagline sits beside the brand on a phone;
+- the address and the toggle share a row;
+- the padding is 24 px;
+- the three groups are columns at 320 too (they fit, with each link on one
+  line).
+The budget is 400 at 390 until Stan says otherwise. At 1440 it is 314 px
+(≤ 320).
 
 ---
 
@@ -1084,6 +1108,15 @@ budget, every link ≥ 44 px tall.
   contain`, a `--panel` background with 12% padding for every tile, including
   the OG card), and the grid is `minmax(11rem, 1fr)`, so captions fit on one
   line at 1440. Refreshing the screenshots is §12.
+  *Phase 5:* the press screenshots are the gallery's five `app-*` shots.
+  - **PNGs:** the downloads (`app-*.png`) are made from the WebPs, which are
+    lossy (VP8), not lossless as §12 #7 assumed. No other original is in this
+    repo.
+  - **Captions:** "Home, with the spot to fix next (Pro)" wrapped at 1440, so
+    the caption is "Home dashboard (Pro)".
+  - **Old shots:** `play`, `explain`, `leaks` and `history` are no longer used
+    by any page. `scripts/og-card.html` still uses `explain.png`. Phase 6
+    deletes them.
 - **Privacy**: **no edits** to its markup or text without Stan. CSS in
   `pages.css` may change, and must be checked on this page at 390 and 1440 in
   both schemes. A table of contents is §12.
@@ -1185,7 +1218,8 @@ it if Stan says so (§12).
 - Advertise only **$7.99/month and $59.99 lifetime**. No annual plan, no $39.99,
   no trial. **20 free hands a day.**
 - Grades are **Correct / Mixed / Wrong**. Spots are **"25,000+"** at
-  **100/30/20bb**; per-depth figures are exact and have no "+".
+  **100/30/20bb**; per-depth figures are rounded down to thousands, "6K+"
+  (Stan, 2026-10-29, after Phase 4; they were exact before).
 - No "solver" or "GTO" claims, and no content-source claims.
 - No invented ratings, testimonials, logos, user counts or press. Levels are
   numbers only.
@@ -1460,8 +1494,8 @@ column says where it stands.
 | 3 | The demo's hands become A5s, J8s and KTs (the app's spots that also have charts and explanations) instead of K5s, AQo and AJo | **Yes**: the app's own explanation text after every answer, and a matching chart. | Accepted (Phase 2). |
 | 4 | Nav: solid background instead of blurred glass | **Solid** (iOS robustness). | Accepted (Phase 1). |
 | 5 | **Owner actions in Cloudflare**: switch off Web Analytics and Bot Fight Mode "JS Detections" on the zone; add a `www` → apex redirect rule; optionally set Browser Cache TTL to "Respect existing headers" | **Do all three.** The site says "no tracking" for the app, and the zone injects a (blocked) beacon into the website. | Web Analytics: off (the beacon is gone from live pages, checked 2026-10-29). Bot Fight Mode: Stan switched it off, but its JS Detections script (`/cdn-cgi/challenge-platform/scripts/jsd/main.js`) was still injected at 04:10 UTC, after the Phase 1 deploy; JavaScript detections is its own switch (Security → Bots). `www` → apex redirect: done (`www` answers 301 to the apex, path and query kept, checked 04:06 UTC). Browser Cache TTL: optional. |
-| 6 | Remove "cancel any time" from the Pro price line (the app's voice note says no "cancel anytime" lines) | **Remove it.** | Accepted (Phase 5). |
-| 7 | Press kit: replace the older `play/explain/leaks/history` screenshots with the `app-*` set (PNG made from the lossless WebP) | **Yes**, in Phase 5. | Accepted (Phase 5). |
+| 6 | Remove "cancel any time" from the Pro price line (the app's voice note says no "cancel anytime" lines) | **Remove it.** | Done in Phase 5. |
+| 7 | Press kit: replace the older `play/explain/leaks/history` screenshots with the `app-*` set (PNG made from the lossless WebP) | **Yes**, in Phase 5. | Done in Phase 5. The WebPs turned out to be lossy (§7). |
 | 8 | Privacy page: add a table of contents (markup change, needs your OK) | **Not now**: the policy was just approved. | Accepted: no table of contents for now. |
 | 9 | Style guide `/next/styleguide/`: rebuild it on the new components, or delete it | **Delete it** unless you use it. Keeping it current costs a phase. | Accepted: delete it in Phase 6. |
 | 10 | When light-mode screenshots exist: should the gallery follow the theme? | **Keep it dark.** Dark is the app's default look, and one dark band gives the page its rhythm. | Accepted. |
