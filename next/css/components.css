@@ -146,7 +146,7 @@ a { color: var(--accent); }
 /* ---- Playing card ----------------------------------------------------------
    White face in either scheme, a hairline edge, the card radius. Rank in the
    suit's colour with the suit shape beneath it: <img class="pcard__suit"
-   src="/assets/suits/spade.svg" alt="" width="26" height="26">. Add
+   src="/assets/suits/spade-v2.svg" alt="" width="26" height="26">. Add
    .pcard--red for hearts and diamonds. Name the card for assistive tech on the
    element, e.g. aria-label="Ace of spades". Two-colour deck only on the site. */
 
@@ -182,7 +182,12 @@ a { color: var(--accent); }
 }
 .faq[open] > .faq__q::after { transform: rotate(-135deg); }
 .faq__a { margin: 0; padding: 0 0 var(--space-2); color: var(--text-2); max-width: var(--measure); }
-.faq[open] > .faq__a { animation: faq-in var(--dur-snappy) var(--ease-out) both; }
+/* Only with motion allowed, and no fill after the end: a finished animation
+   that holds its last frame stays in document.getAnimations(), which Reduce
+   Motion must leave empty (redesign Phase 2, the demo probe). */
+@media (prefers-reduced-motion: no-preference) {
+  .faq[open] > .faq__a { animation: faq-in var(--dur-snappy) var(--ease-out) backwards; }
+}
 @keyframes faq-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---- Entrance ----------------------------------------------------------------
@@ -362,28 +367,37 @@ a { color: var(--accent); }
   .cta-band__actions { flex: none; flex-wrap: nowrap; }
 }
 
-/* ---- Hero ------------------------------------------------------------------
-   Copy on the left (headline, one line, the one primary button, the QR beside
-   it on a desktop), the playable demo on the right; stacked on a phone, in
-   that order. The headline and the button are plain HTML: no reveal, nothing
-   waits on JS, so the headline is what paints first. */
+/* ---- Hero (redesign SPEC §6.2) ----------------------------------------------
+   Copy, then the playable demo: stacked on a phone, side by side from 768px,
+   on the 12-column grid from 1024px (copy in columns 1-6, the phone's right
+   edge on column 12, in line with the nav button). The headline and the button
+   are plain HTML: no entrance, nothing waits on JS, so the headline is what
+   paints first (it must stay the LCP element). A landscape phone stacks too,
+   the phone at its natural size below the copy. */
 
-.hero { position: relative; overflow: clip; padding-block: var(--space-5) var(--space-5); }
-.hero__grid { display: grid; gap: var(--space-5); }
+.hero { padding-block: var(--space-3) var(--space-5); }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
 .hero__title { max-width: 11em; text-wrap: balance; }
 .hero__accent { color: var(--accent); }
-.hero__line { margin: var(--space-3) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-lede); line-height: 1.5; }
-.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.hero__line { margin: var(--space-2) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-lede); line-height: 1.5; }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
 .hero__cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
 @media (max-width: 37.49rem) { .hero__cta { width: 100%; } }
 .hero__note { margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
-
-.hero__demo { position: relative; justify-self: center; display: flex; flex-direction: column; align-items: center; }
+.hero__demo { display: flex; flex-direction: column; align-items: center; min-width: 0; }
 
 @media (min-width: 48rem) {
-  .hero { padding-block: var(--space-6) var(--space-6); }
+  .hero { padding-block: clamp(1.5rem, 4svh, 3rem); }
   .hero__grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-5); }
-  .hero__demo { justify-self: end; }
+}
+@media (min-width: 64rem) {
+  .hero__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-3); }
+  .hero__copy { grid-column: 1 / 7; }
+  .hero__demo { grid-column: 7 / 13; justify-self: end; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr); }
+  .hero__copy, .hero__demo { grid-column: auto; justify-self: stretch; }
 }
 
 /* The QR sits beside the button on a desktop with a pointer and nowhere else:
@@ -399,21 +413,67 @@ a { color: var(--accent); }
 .qr__cap { max-width: 8rem; margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
 @media (min-width: 60rem) and (hover: hover) and (pointer: fine) { .qr { display: flex; } }
 
-/* ---- Proof bar --------------------------------------------------------------
-   Four facts straight under the hero, each a card with the figure on its own
-   line (so counting up never moves a neighbour). The numbers are in the HTML;
-   site.js counts the figures up once, as the bar scrolls in. */
+/* ---- Proof strip (redesign SPEC §6.3) -----------------------------------------
+   Four true numbers flush under the hero: no cards, a hairline grid. 2 x 2
+   below 1024px (a rule between the columns and one between the rows), four
+   columns from there. The figure stays on one line at every width, which is
+   why "bb" lives in the label. The numbers are in the HTML; site.js counts two
+   of them up only if they start below the screen. */
 
-.proof { padding-bottom: var(--space-5); }
-.proof__list {
-  display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.proof { padding-block: 0 var(--section-y); }
+.proof__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.proof__item { display: flex; flex-direction: column; min-width: 0; padding: var(--space-2) 0.75rem; }
+.proof__fig {
+  font-size: var(--fs-figure); font-weight: 700; line-height: 1.05; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
 }
-.proof__item { padding: var(--space-2); }
-.proof__item .card__figure { font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); }
-@media (min-width: 48rem) {
+.proof__label { color: var(--text-2); font-size: var(--fs-meta); line-height: 1.45; }
+@media (max-width: 22.49rem) { .proof__fig { font-size: 1.5rem; } }
+@media (max-width: 63.99rem) {
+  .proof__item:nth-child(odd) { padding-left: 0; border-right: var(--stroke) solid var(--border); }
+  .proof__item:nth-child(-n+2) { border-bottom: var(--stroke) solid var(--border); }
+}
+@media (min-width: 64rem) {
   .proof__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .proof__item { padding: var(--space-3); }
+  .proof__item:first-child { padding-left: 0; }
+  .proof__item + .proof__item { border-left: var(--stroke) solid var(--border); }
 }
+
+/* ---- Range chart (SPEC §5) ------------------------------------------------------
+   Drawn by next/js/chart.js: 13 x 13, each cell a bar split fold / call /
+   raise left to right, widths set through the CSSOM. The hero's hand has an
+   amber ring inside the cell ("amber outlined = you"), with a --bg line inside
+   that, so the ring clears 3:1 on every fill (amber on the raise green alone is
+   1.4:1). A picked hand gets a --text outline outside the cell, never a bigger
+   square: a scaled cell would cover its neighbours and steal the pointer. */
+
+.cgrid { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 2px; border-radius: var(--r-card); }
+.cell { position: relative; aspect-ratio: 1; display: flex; overflow: hidden; border-radius: 2px; background: var(--well); }
+.cell__seg { display: block; height: 100%; flex: 0 0 auto; }
+.cell__seg--f { background: var(--act-fold); } .cell__seg--c { background: var(--act-call); } .cell__seg--r { background: var(--act-raise); }
+.cell__t {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-size: clamp(0.4rem, 2.5cqw, 0.75rem); font-weight: 600; letter-spacing: -0.02em; color: var(--text);
+}
+.cell--empty .cell__t { color: var(--text-3); }
+/* Label ink on a fill is --act-ink, as on the buttons: near-black clears 4.5:1
+   on every fill in both schemes, where white on the light fold red was 3.7:1. */
+.cell--ink-f .cell__t, .cell--ink-c .cell__t, .cell--ink-r .cell__t { color: var(--act-ink); }
+.cell.is-hero::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  border: 2px solid var(--accent); border-radius: 2px; box-shadow: inset 0 0 0 1px var(--bg);
+}
+.cell.is-sel { z-index: 2; outline: 2px solid var(--text); outline-offset: 1px; }
+
+.clegend { display: flex; flex-wrap: wrap; gap: var(--space-half) var(--space-2); margin: 0; padding: 0; list-style: none; color: var(--text-2); font-size: var(--fs-meta); }
+.clegend li { display: inline-flex; align-items: center; gap: 0.4em; }
+.clegend__sw { width: 0.75em; height: 0.75em; border-radius: 2px; }
+.clegend__sw--f { background: var(--act-fold); } .clegend__sw--c { background: var(--act-call); } .clegend__sw--r { background: var(--act-raise); }
+
+/* ---- Caption ----------------------------------------------------------------------
+   Under a picture that could be taken for a capture, saying what it is
+   (SPEC §4.2): 14px, --text-3, at most two lines. */
+.figcap { margin: 0; color: var(--text-3); font-size: var(--fs-meta); line-height: 1.45; text-wrap: balance; }
 
 [hidden] { display: none !important; }

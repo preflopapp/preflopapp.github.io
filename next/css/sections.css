@@ -236,24 +236,10 @@
 .explorer__live { container-type: inline-size; max-width: 36rem; margin-inline: auto; }
 .explorer__static { margin: 0; display: grid; place-items: center; }
 .explorer[data-enhanced] .explorer__static { display: none; }
-.cgrid { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 2px; touch-action: manipulation; outline-offset: 4px; border-radius: var(--r-card); }
-.cell {
-  position: relative; aspect-ratio: 1; display: flex; overflow: hidden; border-radius: 2px; background: var(--well); cursor: pointer;
-}
-.cell__seg { display: block; height: 100%; flex: 0 0 auto; }
-.cell__seg--f { background: var(--act-fold); } .cell__seg--c { background: var(--act-call); } .cell__seg--r { background: var(--act-raise); }
-.cell__t {
-  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
-  font-size: clamp(0.4rem, 2.5cqw, 0.75rem); font-weight: 600; letter-spacing: -0.02em; color: var(--accent-fill-ink);
-}
-.cell--empty .cell__t { color: var(--text-3); }
-/* Label ink on a fill is --act-ink, as on the buttons: near-black clears 4.5:1
-   on every fill in both schemes, where white on the light fold red was 3.7:1. */
-.cell--ink-f .cell__t, .cell--ink-c .cell__t, .cell--ink-r .cell__t { color: var(--act-ink); }
-.cell.is-hero::before { content: ""; position: absolute; inset: 0; z-index: 1; border: 2px solid var(--text); border-radius: 2px; pointer-events: none; }
-/* The picked hand gets a ring, not a bigger square: a scaled square would cover its
-   neighbours and steal the pointer from them. */
-.cell.is-sel { z-index: 2; outline: 2px solid var(--text); outline-offset: 1px; }
+/* The grid itself is the shared range chart (components.css, chart.js). Here
+   it is picked by pointer and keys. */
+.explorer .cgrid { touch-action: manipulation; outline-offset: 4px; }
+.explorer .cell { cursor: pointer; }
 
 /* ---- Badges ------------------------------------------------------------------------ */
 

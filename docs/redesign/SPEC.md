@@ -530,7 +530,7 @@ name works if it is used consistently.
 | **Phone frame** `.phone` | Existing `--s` scaling. Text floors: every text in `#demo` is ≥ 11 px computed, except `.pod__detail` and `.pot__meta` (≥ 10 px). Use `max(11px, calc(N px * var(--s)))`. Sizing per §6.2. |
 | **Decision slab** `.dbtn` | App look: 48 px × `--s`, `--r-button`, label 16/600. Before the answer: `--act` fill with `--act-ink` (existing per-scheme inks). After: `--well`, plus a full-height `--act-tint` fill layer with `scaleX(--f)`, the label on top in `--text`, and the percentage under the label (13 px/700). Picked: a 2 px `--text` ring with the grade-colour flash on a pseudo-element (§4.7 reveal). Replaces today's 5 px bar. |
 | **Answer card** `.answer` | §6.2. Shared look with §6.4's card. |
-| **Range chart** `.cgrid` | `next/js/chart.js` (new, shared by the demo and §6.4). 13 × 13, 2 px gap, cell radius 2. Segments f / c / r in the app's order, width % set through the CSSOM (allowed under the CSP). **Hero cell**: a 2 px `--accent` inner ring ("amber outlined = you", `MD:` rules). **Selected cell**: a 2 px `--text` outline, offset 1 px (`ISSUES:EXPL-04`). Cell labels show only when cells are ≥ 30 px (container query on the grid); otherwise the hand's name is in the card. No transform on cells, ever. |
+| **Range chart** `.cgrid` | `next/js/chart.js` (new, shared by the demo and §6.4). 13 × 13, 2 px gap, cell radius 2. Segments f / c / r in the app's order, width % set through the CSSOM (allowed under the CSP). **Hero cell**: a 2 px `--accent` inner ring ("amber outlined = you", `MD:` rules), with a 1 px `--bg` line inside it (*Phase 2*: amber on the raise green alone is 1.4:1; with the line the ring borders dark on both sides and clears 3:1 on every fill). **Selected cell**: a 2 px `--text` outline, offset 1 px (`ISSUES:EXPL-04`). Cell labels show only when cells are ≥ 30 px (container query on the grid); otherwise the hand's name is in the card. No transform on cells, ever. |
 | **Mix row** `.mix__row` | Name, track, percentage (existing). The bar is the full `--act` colour on a `--well` track (text sits beside the bar, never on it, so no tint is needed). |
 | **Playing card** `.pcard` | Existing: white face, two-colour deck. |
 | **Shot** `.shot` | A captured screenshot: `width: var(--shot-w)`; 4 px `--well` bezel; radius `calc(var(--shot-w) * .1)`; `<img width="600" height="1304" loading="lazy" decoding="async">`. |
@@ -649,7 +649,13 @@ guarantees the fit; check at 320).
 **Chart view.** `Chart` swaps (§4.7 *swap*) the table area for that spot's
 13×13 grid, drawn by `chart.js` from `app-data.js`, with the hero cell ringed,
 no cell labels, a title (the chart's title and sub) and a legend. The button
-becomes "Back to answer". Cells are not interactive here.
+becomes "Back to answer". Cells are not interactive here. *Phase 2:* while the chart
+shows, the answer card keeps only its button row, at the foot of the table
+area, as the app's chart screen does; the legend sits above it.
+
+**Folded seats** (*Phase 2*) lose their cards and grey their text with
+`--text-2` / `--text-3`, not opacity: an opacity dim takes their labels under
+4.5:1 (§4.10 counts dimmed states). They need no `[data-dim]`.
 
 **Score screen** (CTA B): "N / 3" + label "Correct or mixed" + the existing
 title and copy (which says "25,000+", checked by `check_js_claims`) +
@@ -662,12 +668,12 @@ title and copy (which says "25,000+", checked by `check_js_claims`) +
 
 | | 320×568 | 390×844 | 820×1180 | 1440×900 | 1920×1080 / 2560×1440 |
 |---|---|---|---|---|---|
-| Grid | one column: copy, then the phone | same | 2 cols: copy `minmax(0,1fr)`, phone `auto`, gap 48, `align-items: center` (from 768) | 12 cols: copy cols 1–6, phone cols 8–12 `justify-self: end` | same as 1440 |
+| Grid | one column: copy, then the phone | same | 2 cols: copy `minmax(0,1fr)`, phone `auto`, gap 48, `align-items: center` (from 768) | 12 cols: copy cols 1–6, phone cols 8–12 `justify-self: end` (*Phase 2*: placed in 7–12, still end-aligned, so a 402 px phone never overflows the five columns at 1024 wide; where it fits, the result is the same) | same as 1440 |
 | Padding top / bottom | 24 / 48 | 24 / 48 | `clamp(1.5rem, 4svh, 3rem)` | same | same |
 | h1 (measured: 2 lines at every width) | 38 px | 40 px | 51.5 px, `max-width: 11em` | 68 px | 76.5 / 85 px |
 | CTA | full width, 52 px | full width | auto width | auto width + QR | + QR |
 | Phone width | 100% of content (288) | 100% (358) | `402px × 0.8` | `402px × 1` (`--s` 0.9 at height ≤ 820, 0.8 at ≤ 740) | `--s` 1.125 at `(min-width:120rem) and (min-height:1000px)`; 1.25 at `(min-width:150rem) and (min-height:1300px)` |
-| Phone height | `clamp(27.5rem, calc(100svh - var(--nav-h) - 2rem), 37.5rem)` → 440 here | same → 600 (in emulation; ≈ 568 on a real iPhone) | `608px × --s` | `608px × --s` | `608px × --s` |
+| Phone height | `clamp(27.5rem, calc(100svh - var(--nav-h) - 2rem), 37.5rem)` → 472 here (*Phase 2*: the formula gives 472 at 568 tall; "440" was its floor) | same → 600 (in emulation; ≈ 568 on a real iPhone) | `608px × --s` | `608px × --s` | `608px × --s` |
 | Table area | stage fills the screen's free height (flex), seats in %: a tall oval like the app | same | fixed stage `374×435 × --s` (existing) | same | same |
 | `--s` (type, pods) | 0.75 | 0.85 | 0.8 | 1 | 1.125 / 1.25 |
 
@@ -1082,7 +1088,7 @@ it if Stan says so (§12).
 | NAV-02 no current page | `aria-current` from `site.js` | 0 | DOM check on /faq/ |
 | FOCUS-01 CTAs focused mid-fade | CTAs and text never enter-animated | 1 | Tab probe: focused element opacity 1 |
 | THEME-01 Safari bar colour | `theme-color` metas updated | 0 | probe reads the meta after toggling |
-| RESIZE-01 scroll resets on resize | No `gsap.matchMedia`. *Phase 1, pending Stan's OK:* with GSAP gone the page no longer jumps to the top, but the browser keeps the pixel offset, which after a reflow is another section: Chromium's scroll anchoring stands down when the anchor's ancestors change padding or margin (every breakpoint does) and WebKit has none. A small `site.js` keeper notes the first text block on screen once scrolling stops (read only) and, after a width change only, scrolls it back into place once, instantly. That is the only JS scroll write. | 1 | resize and rotate probes |
+| RESIZE-01 scroll resets on resize | No `gsap.matchMedia`. *Phase 1, approved by Stan with the Phase 1 merge (2026-10-29):* with GSAP gone the page no longer jumps to the top, but the browser keeps the pixel offset, which after a reflow is another section: Chromium's scroll anchoring stands down when the anchor's ancestors change padding or margin (every breakpoint does) and WebKit has none. A small `site.js` keeper notes the first text block on screen once scrolling stops (read only) and, after a width change only, scrolls it back into place once, instantly. That is the only JS scroll write. | 1 | resize and rotate probes |
 | RELOAD-01, ANCHOR-01, SCROLLUP-01, RM-01, NOJS-01 (all pass) | Keep passing | every phase | regression probes |
 | TEXT-01 press tiles | Square tiles, wider minimum | 5 | 1440 light screenshot |
 | TEXT-02 plain text pages | Accepted; privacy TOC is §12 | — | — |
@@ -1410,7 +1416,7 @@ column says where it stands.
 | 2 | Drop GSAP and ScrollTrigger (vendored, merged in Phase 0 of the last overhaul) | **Drop them**: no pattern here needs them, and they are 46 KB. Delete the files in Phase 6. | Accepted. Phase 1 stops loading them; Phase 6 deletes the files. |
 | 3 | The demo's hands become A5s, J8s and KTs (the app's spots that also have charts and explanations) instead of K5s, AQo and AJo | **Yes**: the app's own explanation text after every answer, and a matching chart. | Accepted (Phase 2). |
 | 4 | Nav: solid background instead of blurred glass | **Solid** (iOS robustness). | Accepted (Phase 1). |
-| 5 | **Owner actions in Cloudflare**: switch off Web Analytics and Bot Fight Mode "JS Detections" on the zone; add a `www` → apex redirect rule; optionally set Browser Cache TTL to "Respect existing headers" | **Do all three.** The site says "no tracking" for the app, and the zone injects a (blocked) beacon into the website. | Web Analytics: off (the beacon is gone from live pages, checked 2026-10-29). Bot Fight Mode: Stan switched it off, but its JS Detections script was still injected at 03:04 UTC; recheck at the start of Phase 1. `www` → apex redirect: not set yet (steps on the Phase 0 PR). Browser Cache TTL: optional. |
+| 5 | **Owner actions in Cloudflare**: switch off Web Analytics and Bot Fight Mode "JS Detections" on the zone; add a `www` → apex redirect rule; optionally set Browser Cache TTL to "Respect existing headers" | **Do all three.** The site says "no tracking" for the app, and the zone injects a (blocked) beacon into the website. | Web Analytics: off (the beacon is gone from live pages, checked 2026-10-29). Bot Fight Mode: Stan switched it off, but its JS Detections script (`/cdn-cgi/challenge-platform/scripts/jsd/main.js`) was still injected at 04:10 UTC, after the Phase 1 deploy; JavaScript detections is its own switch (Security → Bots). `www` → apex redirect: done (`www` answers 301 to the apex, path and query kept, checked 04:06 UTC). Browser Cache TTL: optional. |
 | 6 | Remove "cancel any time" from the Pro price line (the app's voice note says no "cancel anytime" lines) | **Remove it.** | Accepted (Phase 5). |
 | 7 | Press kit: replace the older `play/explain/leaks/history` screenshots with the `app-*` set (PNG made from the lossless WebP) | **Yes**, in Phase 5. | Accepted (Phase 5). |
 | 8 | Privacy page: add a table of contents (markup change, needs your OK) | **Not now**: the policy was just approved. | Accepted: no table of contents for now. |
