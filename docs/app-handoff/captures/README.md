@@ -1,4 +1,4 @@
-# Real app captures: widgets, Live Activity, bankroll tracker
+# Real app captures: widgets, Live Activity, bankroll tracker, badges
 
 Captured 2026-10-29 from app `main` @ 8b760fa, `Preflop Dev` build, on an
 iPhone 17 Pro Max simulator (iOS 26.5), 1320×2868, status bar overridden to
@@ -25,6 +25,30 @@ Data is the app's own Dev sample (`BankrollSample`, `-PreflopBankroll sample`/`l
 in USD): a regular's few months at Bellagio, Aria, a home game and Wynn, a
 $6,000 start and a "Move up to 5/10" goal. Widgets use the `regular` profile:
 4-day streak, free user with 12 hands left.
+
+## Badges and progress (added 2026-10-29, app `main` @ 622eda0)
+
+Same device, size, status bar and light/dark pairs. In-app screens only, so
+no "PT Dev" label in frame.
+
+| File | What it shows |
+|---|---|
+| `progress-profile-*.png` | Profile: level ring (level 20), 45-day streak, 600 hands played, the badge bar (60 of 60), Bankroll row, free Plan card |
+| `badges-all-tiers-*.png` | Badges gallery with every tier earned: each ladder's bronze (25), silver (100) and gold (500) side by side |
+| `badges-in-progress-*.png` | The same gallery part-way: 19 of 60, bronze earned, silver and gold locked, progress bars ("48 / 100") |
+| `badge-earned-banner-*.png` (+ `-crop`) | A single badge: the "Badge earned · Bronze · Blind Defense" banner over the answer panel after a correct hand |
+
+Data: the Dev `veteran` profile (`-PreflopProfile veteran`, with
+`-PreflopBadges all` for the full gallery) and `regular` with the badges its
+history earns for the in-progress gallery. The banner is
+`-PreflopBadges armed` and a correct Fold on 72o.
+
+- There is no badge detail screen: gallery rows aren't tappable. The banner
+  is the only single-badge view.
+- Profile's "0 best run" is the sample profile's value, not a bug in the
+  shot; the free Plan card with Go Pro is in frame.
+- The gallery scrolls on past Positions to the category ladders; only the
+  top is captured.
 
 ## Caveats
 
