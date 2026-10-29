@@ -265,7 +265,14 @@ function frameProbe(cfg) {
       var p = t.parentElement;
       if (!t.nodeValue.trim() || !p || p.closest(".sr-only") || !shown(p) || opac(p) <= 0.05) continue;
       var range = document.createRange(); range.selectNodeContents(t);
-      Array.prototype.forEach.call(range.getClientRects(), function (q) { if (q.width > 1 && q.height > 1 && inView(q) && q.bottom > barBottom + 2) rs.push(q); });
+      /* A text rect is the font's whole content area, taller than the glyphs:
+         a heading's touches the eyebrow above it without any ink meeting.
+         Trimmed by 15% top and bottom, only drawn text over drawn text counts. */
+      Array.prototype.forEach.call(range.getClientRects(), function (q) {
+        if (!(q.width > 1 && q.height > 1 && inView(q) && q.bottom > barBottom + 2)) return;
+        var trim = q.height * 0.15;
+        rs.push({ left: q.left, right: q.right, top: q.top + trim, bottom: q.bottom - trim });
+      });
     }
     if (rs.length) items.push([el, rs]);
   });
