@@ -182,7 +182,12 @@ function frameProbe(cfg) {
     return parts.join(" > ");
   }
   function opac(el) { var o = 1; for (var n = el; n && n.nodeType === 1; n = n.parentElement) o *= parseFloat(st(n).opacity); return o; }
-  function shown(el) { return st(el).visibility === "visible" && el.getClientRects().length > 0; }
+  /* Rendered: not display none, not visibility hidden, and not inside a
+     closed <details> (whose content keeps stale layout boxes in Chromium). */
+  function shown(el) {
+    if (el.checkVisibility && !el.checkVisibility({ visibilityProperty: true })) return false;
+    return st(el).visibility === "visible" && el.getClientRects().length > 0;
+  }
   function inView(r) { return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw; }
   function outermost(els) {
     var set = new Set(els);
@@ -258,7 +263,7 @@ function frameProbe(cfg) {
     var rs = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), t;
     while ((t = walk.nextNode())) {
       var p = t.parentElement;
-      if (!t.nodeValue.trim() || !p || p.closest(".sr-only") || st(p).visibility !== "visible" || opac(p) <= 0.05) continue;
+      if (!t.nodeValue.trim() || !p || p.closest(".sr-only") || !shown(p) || opac(p) <= 0.05) continue;
       var range = document.createRange(); range.selectNodeContents(t);
       Array.prototype.forEach.call(range.getClientRects(), function (q) { if (q.width > 1 && q.height > 1 && inView(q) && q.bottom > barBottom + 2) rs.push(q); });
     }
@@ -325,6 +330,7 @@ function textBoxes() {
     var key = el.tagName.toLowerCase() + "|" + text.slice(0, 60), r = el.getBoundingClientRect(), s = getComputedStyle(el);
     present.push(key);
     if (!(r.width > 0 && r.height > 0) || s.visibility !== "visible") return;
+    if (el.checkVisibility && !el.checkVisibility({ visibilityProperty: true })) return;
     var o = opac(el);
     if (o < 0.9) { faded.push(el.tagName.toLowerCase() + " “" + text.slice(0, 30) + "” @" + o.toFixed(2)); return; }
     visible.push(key);
