@@ -16,7 +16,7 @@ Pages under /next/ (the redesign preview) have their own rules, see
 check_next: noindex and out of the sitemap, a page CSP that allows only
 'self' scripts, no inline script or style, no render-blocking script, the CTA
 link in step with next/js/config.js, unique ids with aria-controls pointing at
-one (the nav menu toggle), JS/CSS byte budgets, no gradient or dashed/dotted
+one (the nav menu toggle), JS/CSS byte budgets (40/26 KB gzip), no gradient or dashed/dotted
 line in its CSS/JS (a settled design call), no trial wording, and the QR code
 (assets/qr/*.svg) encoding the same URL as the CTA constant.
 
@@ -36,11 +36,11 @@ NEXT_PREFIX = "next/"  # the /next/ preview: independent layout, see check_next
 # shared blocks, its own CSP. It gets check_next's rules, but is public (no
 # noindex, canonical, in the sitemap). Told apart by having no shared head.
 HOME = "index.html"
-# Gzipped bytes, summed over the files a /next/ page loads. The spec's budget is
-# 150 KB of JS (GSAP core + ScrollTrigger are ~46 KB of it); CSS has no spec
-# number, 30 KB is generous for a token sheet and a component sheet.
-JS_BUDGET = 150 * 1024
-CSS_BUDGET = 30 * 1024
+# Gzipped bytes, summed over the files the /next/ pages load (the homepage and
+# the style guide). The redesign's budgets (SPEC §4.9): no GSAP, so 40 KB of JS;
+# 26 KB of CSS.
+JS_BUDGET = 40 * 1024
+CSS_BUDGET = 26 * 1024
 ASSET_RELS = {"stylesheet", "preload", "modulepreload", "prefetch", "icon",
               "shortcut", "apple-touch-icon", "manifest"}
 # The <link> rels whose href scripts/stamp-assets.py stamps (with src/srcset).

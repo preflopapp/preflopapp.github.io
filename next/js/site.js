@@ -1,5 +1,7 @@
-/* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle,
-   scroll reveals and the proof bar's count-up.
+/* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle, the
+   motion tokens (window.PreflopMotion), picture entrances and the proof
+   figures' count-up. No library: IntersectionObserver, the Web Animations API
+   and requestAnimationFrame.
    Everything here is enhancement. With no JS, or with Reduce Motion, the page
    is complete and nothing is hidden. Animates transform and opacity only, with
    the durations and easing parsed from tokens.css so the numbers live once. */
@@ -149,16 +151,17 @@
   openTarget();
   addEventListener("hashchange", openTarget);
 
-  /* ---- Motion helpers --------------------------------------------------- */
-  var gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
-  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+  /* ---- Motion: the tokens -------------------------------------------------
+     Durations and easings live once, in tokens.css. This reads them for the
+     page's scripts: milliseconds and CSS easing strings, for the Web
+     Animations API and requestAnimationFrame. Under Reduce Motion the tokens
+     are zero and nothing below runs. */
   var css = getComputedStyle(root);
   function token(name, fallback) { return css.getPropertyValue(name).trim() || fallback; }
-  function ms(name, fallback) { return parseFloat(token(name, fallback)) / 1000; }
-  function px(name, fallback) { return parseFloat(token(name, fallback)); }
+  function ms(name, fallback) { return parseFloat(token(name, fallback)); }
 
-  /* cubic-bezier(x1, y1, x2, y2) from tokens.css as a GSAP ease function. */
+  /* cubic-bezier(x1, y1, x2, y2) as a function of progress, for what CSS
+     can't animate (the count's digits). */
   function bezier(str) {
     var p = (str.match(/-?[\d.]+/g) || [0, 0, 0.58, 1]).map(Number);
     var x1 = p[0], y1 = p[1], x2 = p[2], y2 = p[3];
@@ -174,79 +177,102 @@
     };
   }
 
-  var ease = bezier(token("--ease-out", "cubic-bezier(0, 0, 0.58, 1)"));
-  var dur = ms("--dur-entrance", "240ms");
-  var rise = px("--entrance-rise", "12");
-  var step = ms("--entrance-step", "40ms");
-  var maxDelay = ms("--entrance-max-delay", "160ms");
-
-  /* The tokens, parsed once, for the other page scripts (home.js). */
-  window.PreflopMotion = Object.freeze({
-    reduce: reduce, ease: ease, rise: rise, step: step, maxDelay: maxDelay,
-    dur: { entrance: dur, reveal: ms("--dur-reveal", "550ms"), count: ms("--dur-count", "900ms"), slide: ms("--dur-slide", "330ms") }
+  var still = !matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  var M = window.PreflopMotion = Object.freeze({
+    reduce: still,
+    rise: parseFloat(token("--entrance-rise", "12")),
+    step: ms("--entrance-step", "40ms"),
+    maxDelay: ms("--entrance-max-delay", "160ms"),
+    dur: Object.freeze({
+      snappy: ms("--dur-snappy", "200ms"), settle: ms("--dur-settle", "300ms"),
+      entrance: ms("--dur-entrance", "240ms"), emphasis: ms("--dur-emphasis", "370ms"),
+      slide: ms("--dur-slide", "330ms"), press: ms("--dur-press", "240ms"), count: ms("--dur-count", "900ms")
+    }),
+    ease: Object.freeze({
+      out: token("--ease-out", "cubic-bezier(0, 0, 0.58, 1)"), inOut: token("--ease-in-out", "ease-in-out"),
+      emphasis: token("--ease-emphasis", "ease-out"), slide: token("--ease-slide", "ease-out"), press: token("--ease-press", "ease-out")
+    }),
+    bezier: bezier
   });
 
-  /* ---- Scroll reveals ---------------------------------------------------- */
-  if (!gsap || !ScrollTrigger || reduce) return;
-  gsap.registerPlugin(ScrollTrigger);
+  /* ---- Motion: entrance and count ------------------------------------------
+     Nothing on the page waits for these, and CSS hides nothing by itself. An
+     element gets a start state (data-enter="pending", or a count's 0) only
+     when all of these hold (redesign SPEC §4.7, rule 5): motion is allowed,
+     IntersectionObserver exists, the element is still below the screen now,
+     and the observer that reveals it is registered here, in the same task.
+     Each plays once. A safety net reveals anything left: before printing, on a
+     page restored from the back/forward cache, at load and every 4 s for
+     whatever is on screen. */
+  if (still || !("IntersectionObserver" in window) || !Element.prototype.animate) return;
 
-  function play(els) {
-    gsap.fromTo(els,
-      { opacity: 0, y: rise },
-      { opacity: 1, y: 0, duration: dur, ease: ease, clearProps: "transform,opacity",
-        delay: function (i) { return Math.min(i * step, maxDelay); } });
+  var waiting = new Map(); /* element -> function (instant) that shows it */
+  function release(el, instant) {
+    var show = waiting.get(el);
+    if (!show) return;
+    waiting.delete(el);
+    observer.unobserve(el);
+    show(instant);
   }
-
-  /* Items already on screen at load stay put: reveals are for what scrolls in,
-     and nothing above the fold waits on this script. */
-  var groups = [];
-  doc.querySelectorAll("[data-reveal-group]").forEach(function (g) {
-    groups.push({ trigger: g, items: g.querySelectorAll("[data-reveal]") });
+  /* Released the moment any part is on screen: an element still hidden while
+     visible (at a -10% bottom margin, for one) is the half-shown state the
+     harness fails. */
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) release(e.target, false); });
   });
-  doc.querySelectorAll("[data-reveal]").forEach(function (el) {
-    if (!el.closest("[data-reveal-group]")) groups.push({ trigger: el, items: [el] });
-  });
+  function below(el) { return el.getBoundingClientRect().top > innerHeight; }
+  function onScreen(el) { var r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }
 
-  groups.forEach(function (g) {
-    if (!g.items.length) return;
-    if (g.trigger.getBoundingClientRect().top < innerHeight * 0.88) return;
-    gsap.set(g.items, { opacity: 0, y: rise });
-    ScrollTrigger.create({
-      trigger: g.trigger, start: "top 88%", once: true,
-      onEnter: function () { play(g.items); }
+  /* Entrance: a picture ([data-enter]) fades in and rises 12px; in a
+     [data-enter-group] its pictures follow 40ms apart, at most 160ms late. */
+  function enterItems(target) {
+    return target.hasAttribute("data-enter-group")
+      ? Array.prototype.slice.call(target.querySelectorAll("[data-enter]")) : [target];
+  }
+  doc.querySelectorAll("[data-enter-group], [data-enter]").forEach(function (target) {
+    if (target.hasAttribute("data-enter") && target.parentElement && target.parentElement.closest("[data-enter-group]")) return;
+    if (!below(target)) return;
+    var items = enterItems(target);
+    items.forEach(function (el) { el.setAttribute("data-enter", "pending"); });
+    waiting.set(target, function (instant) {
+      items.forEach(function (el, i) {
+        el.setAttribute("data-enter", "done");
+        if (instant) return;
+        el.animate([
+          { opacity: 0, transform: "translateY(" + M.rise + "px)" },
+          { opacity: 1, transform: "none" }
+        ], { duration: M.dur.entrance, delay: Math.min(i * M.step, M.maxDelay), easing: M.ease.out, fill: "backwards" });
+      });
     });
+    observer.observe(target);
   });
 
-  /* Proof bar: each [data-count] counts up once, when it scrolls in. The final
-     number is in the HTML, so with no JS or Reduce Motion (which returned
-     above) it is simply there. Animates the text, not layout: the figure sits
-     on its own line, in tabular digits. */
-  var countDur = ms("--dur-count", "900ms");
+  /* Count: a figure ([data-count] holding its final number) counts up from 0
+     once. Only the digits change, never the layout or the opacity: the figure
+     sits on its own line in tabular digits. A number already on screen when
+     the script runs is never reset. */
   doc.querySelectorAll("[data-count]").forEach(function (el) {
     var end = parseFloat(el.getAttribute("data-count"));
-    if (!(end > 0)) return;
-    var final = el.textContent, tally = { n: 0 };
-    ScrollTrigger.create({
-      trigger: el, start: "top 92%", once: true,
-      onEnter: function () {
-        gsap.to(tally, {
-          n: end, duration: countDur, ease: ease,
-          onUpdate: function () { el.textContent = Math.round(tally.n).toLocaleString("en-US"); },
-          onComplete: function () { el.textContent = final; }
-        });
-      }
+    if (!(end > 0) || !below(el)) return;
+    var final = el.textContent, curve = bezier(M.ease.out);
+    el.textContent = "0";
+    waiting.set(el, function (instant) {
+      if (instant) { el.textContent = final; return; }
+      var t0 = performance.now();
+      (function tick(now) {
+        var p = Math.min(1, Math.max(0, (now - t0) / M.dur.count));
+        el.textContent = p < 1 ? Math.round(end * curve(p)).toLocaleString("en-US") : final;
+        if (p < 1) requestAnimationFrame(tick);
+      })(t0);
     });
+    observer.observe(el);
   });
 
-  /* Replay buttons run the same animation on demand (style guide). */
-  doc.querySelectorAll("[data-reveal-replay]").forEach(function (btn) {
-    btn.hidden = false;
-    btn.addEventListener("click", function () {
-      var scope = doc.querySelector(btn.getAttribute("data-reveal-replay"));
-      if (!scope) return;
-      var items = scope.querySelectorAll("[data-reveal]");
-      gsap.set(items, { opacity: 0, y: rise });
-      play(items);
-    });
-  });
+  function sweep(all) {
+    Array.from(waiting.keys()).forEach(function (el) { if (all || onScreen(el)) release(el, all); });
+  }
+  addEventListener("beforeprint", function () { sweep(true); });
+  addEventListener("pageshow", function (e) { if (e.persisted) sweep(true); });
+  addEventListener("load", function () { sweep(false); });
+  var net = setInterval(function () { sweep(false); if (!waiting.size) clearInterval(net); }, 4000);
 })();

@@ -12,7 +12,8 @@
 
    Rules that carry over:
    - No gradients. No dashed or dotted lines; a quiet edge is a solid hairline.
-   - Two ambers. --accent-fill is bright and carries a label (buttons, chips).
+   - Two ambers. --accent-fill is bright and carries a label (buttons, chips);
+     --accent-edge is its lip, the darker line along a button's bottom edge.
      --accent is amber drawn as text, a stroke or a dot. In dark the two are the
      same amber; in light --accent is a deeper gold (#946200, the brightest amber
      that still reads as 4.5:1 text on white) and --accent-fill stays bright.
@@ -23,7 +24,6 @@
      light fills). */
 
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Regular.woff2?v=787b3fdd") format("woff2"); }
-@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Medium.woff2?v=31f666af") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("/assets/fonts/HankenGrotesk-SemiBold.woff2?v=58f23b7a") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Bold.woff2?v=d85de6e2") format("woff2"); }
 
@@ -46,6 +46,7 @@
   --accent: #f5b942;
   --accent-fill: #f5b942;
   --accent-fill-ink: #150f02;
+  --accent-edge: #b4841f;
   --celebration: #9b8cff;
   --good: #3fbf7a;
   --mid: #e0a93f;
@@ -75,6 +76,7 @@
     --accent: #946200;
     --accent-fill: #f0a50f;
     --accent-fill-ink: #150f02;
+    --accent-edge: #b87808;
     --celebration: #4f3dbb;
     --good: #177644;
     --mid: #9e7112;
@@ -104,6 +106,7 @@
   --accent: #946200;
   --accent-fill: #f0a50f;
   --accent-fill-ink: #150f02;
+  --accent-edge: #b87808;
   --celebration: #4f3dbb;
   --good: #177644;
   --mid: #9e7112;
@@ -139,19 +142,23 @@
    little lower than most, so body stays at 16px and never drops below it. The
    app's sizes are 62 hero, 23/21 title, 18 section, 16 button, 13.5 body, 12
    meta, 10 label; the web scale keeps their ratios but floors body at 16px and
-   the uppercase label at 12px for legibility on a laptop. */
+   the uppercase label at 12px for legibility on a laptop. The sizes are the
+   redesign's (SPEC §4.6): a larger display for the first screen, smaller
+   section headlines and card titles so the page is shorter, one lede size, and
+   a figure size for numbers and prices. Weights are 400, 600 and 700 only. */
 
 :root {
   --font: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  --fs-display: clamp(2.5rem, 1.9rem + 3vw, 3.875rem);   /* 40 → 62 */
-  --fs-title: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);    /* 24 → 36 */
-  --fs-section: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); /* 18 → 22 */
-  --fs-body: 1rem;                                       /* 16 */
-  --fs-meta: 0.875rem;                                   /* 14 */
-  --fs-label: 0.75rem;                                   /* 12 */
-  --fs-headline: clamp(2rem, 1.35rem + 2.6vw, 3.5rem);    /* 32 → 56, a section's big line */
-  --fs-statement: clamp(1.75rem, 1.1rem + 3.2vw, 3.75rem); /* 28 → 60, the scroll-read sentence */
+  --fs-display: clamp(2.25rem, 1.85rem + 2.667vw, 4.25rem);  /* 38 @320, 40 @390, 68 @1440: the h1 only */
+  --fs-headline: clamp(1.875rem, 1.456rem + 1.714vw, 3rem);  /* 30 → 48, a section's h2 */
+  --fs-title: clamp(1.25rem, 1.111rem + 0.571vw, 1.625rem);  /* 20 → 26, a card's h3 */
+  --fs-figure: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);       /* 28 → 40, figures and prices */
+  --fs-lede: clamp(1.125rem, 1.078rem + 0.19vw, 1.25rem);    /* 18 → 20, every lede */
+  --fs-section: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);  /* 18 → 22, FAQ questions */
+  --fs-body: 1rem;                                           /* 16 */
+  --fs-meta: 0.875rem;                                       /* 14 */
+  --fs-label: 0.75rem;                                       /* 12 */
 
   --fw-display: 600;
   --fw-title: 600;
@@ -161,11 +168,13 @@
   --fw-label: 600;
 
   --track-display: -0.035em;
-  --track-title: -0.03em;
+  --track-headline: -0.03em;
+  --track-title: -0.02em;
   --track-body: 0;
   --track-label: 0.14em;
 
-  --lh-display: 1.05;
+  --lh-display: 1.04;
+  --lh-headline: 1.08;
   --lh-title: 1.15;
   --lh-body: 1.55;
 }
@@ -190,7 +199,7 @@
   --space-7: 6rem;
   --space-8: 8rem;
 
-  --section-y: clamp(3.25rem, 2.25rem + 4.5vw, 6.5rem);  /* vertical rhythm between sections */
+  --section-y: clamp(3rem, 2rem + 3vw, 5rem);  /* 48 @390 → 80; vertical rhythm between sections */
   --gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
   --measure: 40rem;   /* reading width */
   --page-max: 72rem;
@@ -200,8 +209,8 @@
 /* ---- Motion --------------------------------------------------------------
    PreflopMotion.Curve. SwiftUI's easeOut is CSS ease-out, cubic-bezier(0, 0,
    0.58, 1). The three springs are sampled into linear() (response/damping as
-   in the app) so CSS and GSAP read one set of numbers: site.js parses
-   --dur-* and --ease-out from here.
+   in the app) so CSS and script read one set of numbers: site.js parses
+   --dur-* and the easings from here into window.PreflopMotion.
 
    Entrance: 12px rise plus fade, 40ms stagger capped at 160ms of delay, the
    whole thing inside a 400ms budget. Animate transform and opacity only. */
@@ -234,7 +243,8 @@
 }
 
 /* Reduce Motion: content simply appears. Durations go to zero here; site.js
-   also skips every GSAP animation, and no content waits on one. */
+   sets no start state and plays no entrance or count, and no content waits on
+   one. */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur-snappy: 0ms;

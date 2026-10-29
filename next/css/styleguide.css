@@ -1,0 +1,93 @@
+/* The style guide page (/next/styleguide/) and the scaffold it shows: loaded
+   there only, so none of it ships with the site's pages (redesign SPEC §7). */
+
+/* ---- Page scaffold ---------------------------------------------------------
+   What /next/ is made of until the real sections land: a hero with its CTA, and
+   a section with a header and a "Placeholder" panel. The hero has no reveal:
+   the headline and button are in the HTML and never wait on JS. */
+
+.hero-stub { padding-block: var(--space-6) var(--space-5); }
+.hero-stub__title { max-width: 16ch; }
+.hero-stub__line { margin: var(--space-3) 0 0; max-width: var(--measure); color: var(--text-2); font-size: var(--fs-section); }
+.hero-stub__actions { margin: var(--space-4) 0 0; }
+
+.stub { padding-block: var(--space-5); }
+.stub__panel {
+  margin-top: var(--space-3); padding: var(--space-4) var(--space-3);
+  background: var(--panel); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+}
+.stub__panel p { margin: 0; color: var(--text-2); }
+.stub__panel .t-label { display: block; margin-bottom: var(--space-half); color: var(--text-3); }
+
+/* ---- Style guide page ------------------------------------------------------ */
+
+.sg-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+  padding-block: var(--space-2);
+}
+.sg-bar__brand { font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+.sg-intro { padding-block: var(--space-4) var(--space-3); }
+.sg-intro p { margin: var(--space-2) 0 0; color: var(--text-2); max-width: var(--measure); }
+
+.sg-row { padding-block: var(--space-5); border-top: var(--stroke) solid var(--border); }
+.sg-row__head { margin-bottom: var(--space-3); }
+.sg-row__head p { margin: var(--space-half) 0 0; color: var(--text-2); font-size: var(--fs-meta); max-width: var(--measure); }
+.sg-row__head code, .sg-note code { font-size: 0.9em; color: var(--text); }
+
+.sg-pair { display: grid; gap: var(--space-2); grid-template-columns: 1fr; }
+@media (min-width: 48rem) { .sg-pair { grid-template-columns: 1fr 1fr; } }
+.sg-pair > .scope {
+  padding: var(--space-3);
+  border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
+  min-width: 0;
+}
+.sg-pair.sg-pair--one { grid-template-columns: 1fr; }
+.sg-pair__tag { display: block; margin-bottom: var(--space-3); color: var(--text-3); }
+.sg-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.sg-stack--col { flex-direction: column; align-items: stretch; }
+.sg-note { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-meta); max-width: var(--measure); }
+
+.sg-swatches { display: grid; gap: var(--space-1); grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+.sw { padding: var(--space-1); border: var(--stroke) solid var(--border); border-radius: var(--r-card); background: var(--bg); }
+.sw__chip { height: 2.5rem; border-radius: var(--r-card); border: var(--stroke) solid var(--border); }
+.sw__name { display: block; margin-top: var(--space-1); font-size: var(--fs-meta); color: var(--text); }
+.sw--bg { background: var(--bg); }
+.sw--panel { background: var(--panel); }
+.sw--well { background: var(--well); }
+.sw--accent { background: var(--accent); }
+.sw--accent-fill { background: var(--accent-fill); }
+.sw--celebration { background: var(--celebration); }
+.sw--good { background: var(--good); }
+.sw--bad { background: var(--bad); }
+.sw--raise { background: var(--act-raise); }
+.sw--call { background: var(--act-call); }
+.sw--fold { background: var(--act-fold); }
+.sw--text { background: var(--text); }
+.sw--text-2 { background: var(--text-2); }
+
+.sg-type > * + * { margin-top: var(--space-2); }
+
+.sg-shapes { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sg-shape {
+  display: grid; place-items: center; width: 6rem; height: 4.5rem;
+  background: var(--panel); border: var(--stroke) solid var(--border);
+  font-size: var(--fs-meta); color: var(--text-2);
+}
+.sg-shape--panel { border-radius: var(--r-panel); }
+.sg-shape--button { border-radius: var(--r-button); }
+.sg-shape--card { border-radius: var(--r-card); }
+
+.sg-motion { width: 100%; border-collapse: collapse; font-size: var(--fs-meta); }
+.sg-motion th, .sg-motion td { padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; border-bottom: var(--stroke) solid var(--border); }
+.sg-motion th { color: var(--text-2); font-weight: 600; }
+.sg-motion td:first-child { color: var(--text); font-weight: 600; }
+.sg-table-wrap { overflow-x: auto; }
+
+.sg-demo { position: relative; overflow: hidden; border-radius: var(--r-panel); border: var(--stroke) solid var(--border); background: var(--bg); }
+.sg-demo--narrow { max-width: 22rem; min-height: 24rem; }
+.sg-demo .nav { border-radius: var(--r-panel) var(--r-panel) 0 0; }
+.sg-demo .wrap { padding-inline: var(--space-1); }
+@media (min-width: 48rem) { .sg-demo .wrap { padding-inline: var(--space-3); } }
+.sg-demo .footer { padding-block: var(--space-4) var(--space-3); }
+
+.sg-foot { padding-block: var(--space-5) var(--space-6); color: var(--text-3); font-size: var(--fs-meta); }

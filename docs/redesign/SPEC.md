@@ -386,7 +386,7 @@ at 1440). Below 1024 px layouts are 1 or 2 columns.
 
 | Pattern | Applies to | Animation | Duration / easing | Travel / stagger | Trigger | Reduced motion | No JS |
 |---|---|---|---|---|---|---|---|
-| **enter** | Visuals only, marked `[data-enter]`: gallery shots, the §6.7 widget and bankroll visuals (card 1's visual uses its own timing, §6.7) | opacity 0→1, translateY(`--entrance-rise`)→0 | `--dur-entrance` 240 ms, `--ease-out` | 12 px; in a `[data-enter-group]`, `--entrance-step` 40 ms per item, capped at `--entrance-max-delay` 160 ms | IO, `rootMargin: 0px 0px -10% 0px`, once | never hidden | visible |
+| **enter** | Visuals only, marked `[data-enter]`: gallery shots, the §6.7 widget and bankroll visuals (card 1's visual uses its own timing, §6.7) | opacity 0→1, translateY(`--entrance-rise`)→0 | `--dur-entrance` 240 ms, `--ease-out` | 12 px; in a `[data-enter-group]`, `--entrance-step` 40 ms per item, capped at `--entrance-max-delay` 160 ms | IO, `rootMargin: 0px` (any part on screen), once. *Phase 1: the −10% bottom margin first written here left a hidden picture visible in the bottom tenth of the screen, which §10's pending probe fails.* | never hidden | visible |
 | **stagger** | (part of enter) | — | — | as above | — | — | — |
 | **hover** | links, tabs, buttons, chart cells (`hover: hover`) | colour swap (instant) or opacity 1→0.92 on primary | opacity: `--dur-snappy` 200 ms, `--ease-out` | none: **no lifts**; a hovered thing never moves under the pointer | `:hover` | same | same (CSS) |
 | **press** | buttons, tabs, decision slabs | scale(`--press-scale` 0.97) + opacity 0.85 | `--dur-press` 240 ms, `--ease-press` | — | `:active` | none (tokens zeroed) | CSS |
