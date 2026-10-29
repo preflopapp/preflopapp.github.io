@@ -184,7 +184,8 @@ still land, and the nav labels it "How it works".
 **Removed sections:** marquee, statement, story, the old explorer (rebuilt as
 §6.4), the 60-badge grid and unlock pills (folded into §6.5 and §6.7), the
 seven-card bento (replaced by §6.7), both old CTA bands (one survives as C),
-the page progress bar.
+the page progress bar. *Phase 3* removed the "Play your first hand" band, which
+sat between the two sections it replaced; Phase 4 removes "Help shape it".
 
 **Length** is measured by the harness as `scrollHeight / innerHeight`:
 
@@ -465,7 +466,7 @@ Mode "JS Detections" script. Only Stan can switch these off (§12). Until then:
 | `index.html` as served | ≤ 40 KB raw, ≤ 9 KB gzip, ≤ 900 elements before JS (now 50 KB, 1,555 elements) | harness |
 | Images over a full scroll | ≤ 300 KB at 390, ≤ 320 KB at 1440 | harness (transfer sizes) |
 | Font files | 3 (400 and 600 preloaded, 700 not) | harness |
-| Requests before `load` at 1440 | ≤ 20 | harness |
+| Requests before `load` at 1440 | ≤ 20 | harness (*Phase 4:* its runs give Chromium a network estimate, 1 ms of emulated latency, as a browser on broadband has; with none, headless Chromium doubles its lazy-load distance and fetches the gallery's five shots before `load`: 23 instead of 18) |
 | Infinite animations | 0 | harness (`document.getAnimations()`) |
 | Blur layers | 0 elements with `filter` or `backdrop-filter` other than `none` | harness |
 | Video, WebGL, `<canvas>` | none | harness |
@@ -549,7 +550,9 @@ at 2400 (existing rule), so every rem value scales with it.
 ### 6.1 Nav
 
 **Purpose:** brand, three links, the persistent CTA.
-**Content:** mark + "Preflop" (600, 18 px) · links "How it works" (`/#features`),
+**Content:** mark + "Preflop" (600, 18 px) · links "How it works" (`/#features`;
+*the label changes in Phase 5 with the other shared-header text, Stan
+2026-10-29*),
 "Pricing" (`/#pricing`), "FAQ" (`/#faq` on the homepage, `/faq/` on text pages)
 · `Join the beta` (CTA N) · menu toggle (narrow, JS only).
 
@@ -779,6 +782,10 @@ and "s = suited, o = offsuit". Hint: "Hover or tap any hand to see its mix."
 (`hover: hover`) or "Tap any hand to see its mix." Caption: "Drawn from the
 app's chart data."
 
+*Phase 3's departures below (the wash trigger, empty cells, the ARIA
+arrangement, the no-JS capture's width, and the CTA band removed in §4.3)
+were approved by Stan with the Phase 3 merge (2026-10-29).*
+
 **Empty cells** (*Phase 3*): the KTs re-jam chart has 101 hands the cutoff
 never opens, so the spot never arises with them. The app's legend calls them
 "Not opened" (`app-jam-chart.webp`); the legend here adds that swatch for
@@ -810,7 +817,11 @@ each selection), *swap* on tabs, *hover* on cells.
 **No JS:** the tabs are hidden. The KTs card is static HTML (mix widths from
 `.mix__bar--v33` and `--v67`) with its full explanation. The chart area shows
 `assets/screens/app-jam-chart.webp` as a `.shot`, 280 px wide, inside a
-`data-theme="dark"` box, captioned "The same chart in the app." When JS runs it
+`data-theme="dark"` box, captioned "The same chart in the app." *Phase 3:*
+`min(280px, 55vw)` wide, so on a phone it fits the section budget (at 280 its
+609 px height took the no-JS section to 1,386 px at 390 against 1,250). *Phase 4:* the figure is
+inside `<noscript>`. Hidden from `teach.js`, it had already been requested at
+desktop widths, so every visitor with JS fetched its 43 KB. When JS runs it
 hides that figure before it can load (`loading="lazy"`).
 
 **Accept:**
@@ -893,10 +904,17 @@ start`). The existing alt texts carry over:
 | Track | bleeds to both viewport edges; the first item aligns with the gutter | same | starts at the content's left edge and bleeds to the right edge | same |
 | Prev/next | hidden (touch) | shown if it overflows and `(hover:hover)` | hidden when it doesn't overflow | — |
 
+*Phase 4:* `--shot-w` is 14rem (224) at 1440. The sum above put the content's
+left edge at 144 px, but `.wrap` adds its 32 px gutter, so the content starts at
+176 and leaves 1,264 px: 5 × 224 + 4 × 24 + 32 = 1,248. The track's end padding
+is the gutter, not the content edge. The buttons sit at the right of the header
+row.
+
 **CTA C** (inside the band, after the track): title "Play your first hand in a
 minute." (`--fs-title`) · line "Join the beta on TestFlight. No account
 needed." · `Join the beta`. On phones it stacks with a full-width button; at
-≥ 768 it is one row (copy left, button right).
+≥ 768 it is one row (copy left, button right). *Phase 4:* its title is an `h3`
+(one `h2` per section) and the panel is `--bg` on the band, like §6.4's card.
 
 **Motion:** *enter* on the five figures as a group (40 ms step, 160 ms cap). No
 hover effects on the shots.
@@ -950,6 +968,18 @@ unlock pills and the seven-card bento (`ISSUES:BENTO-01`, `BADGE-01`,
 | | 320 / 390 | 820 | 1440 / 1920+ |
 |---|---|---|---|
 | Grid | 1 column, gap 16; card padding 24; visuals ≤ 120 px tall | 2 columns: card 1 spans both (text left, visual right); cards 2 and 3 side by side | 3 equal columns (4/4/4), padding 32, visuals aligned to the card bottom |
+
+*Phase 4:* two columns from 768 to 1199 and three from 1200 (75rem), where
+the cards are wide enough for the copy. The small widget shows when the card
+has 17.25rem for the pair (a container query), so both show in 1440's 280 px
+cards and on phones from about 356 px. The widgets use the system font, as the
+real widget does (`widget-layouts.json`). The bankroll line enters by its cover
+alone, over `--dur-emphasis` (370 ms: at 550 it ran past §4.7's 600 ms once the
+observer's frame was counted). Card 1's pop runs over `--dur-entrance`
+(240 ms) with the discs 60 ms apart, so it is done by 420 ms: at 540 the
+throttled iPhone run still caught circles mid-fade at the 600 ms settle. Pop
+and draw are `site.js` patterns (`[data-pop]`, `[data-draw]`) with the same
+start-state rules as *enter*.
 
 **Accept:**
 - No empty grid cell at any width.

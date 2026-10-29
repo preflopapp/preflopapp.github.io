@@ -27,7 +27,7 @@
    --schemes dark,light  (default dark)
    --modes default,reduced,nojs,blockedjs,iphone  (default default)
    --probes all|name,…  menu keyfocus anchors theme nojs resize rotate fastjump
-                      axe live demo explorer (default: none)
+                      axe live demo explorer gallery perks (default: none)
    --no-passes        run the probes only
    --phase N          which budgets are due (default: "phase" in the budgets file)
    --jobs N           passes run side by side (default 3); throttled iphone runs
@@ -52,7 +52,7 @@ const REPO = path.resolve(__dirname, "..");
 const STANDARD = ["320x568", "360x740", "390x844", "430x932", "600x960", "768x1024", "820x1180",
   "1024x768", "1280x720", "1440x900", "1920x1080", "2560x1440", "844x390"];
 const PROBE_NAMES = ["menu", "keyfocus", "anchors", "theme", "nojs", "resize", "rotate", "fastjump",
-  "axe", "live", "demo", "explorer"];
+  "axe", "live", "demo", "explorer", "gallery", "perks"];
 const SETTLE = 600;           // ms after each scroll step (SPEC §4.7 rule 6)
 const STEP = 0.4;             // of the viewport height
 const MAX_STEPS = 160;
@@ -236,11 +236,12 @@ function frameProbe(cfg) {
     return o > 0.05 && o < 0.9;
   })).map(function (el) { return desc(el) + " @" + opac(el).toFixed(2); }));
 
-  /* pending: an entrance that should have run. The old design's [data-reveal]
-     hidden while in view counts too, so the baseline shows it. */
+  /* pending: an entrance, fill, pop, draw or wash that should have run. The
+     old design's [data-reveal] hidden while in view counts too, so the
+     baseline shows it. */
   add("pending", "fail", all.filter(function (el) {
     if (!inView(R(el))) return false;
-    if (el.getAttribute("data-enter") === "pending") return true;
+    if (["data-enter", "data-fill", "data-pop", "data-draw", "data-wash"].some(function (a) { return el.getAttribute(a) === "pending"; })) return true;
     return el.hasAttribute("data-reveal") && shown(el) && opac(el) <= 0.05;
   }).map(desc));
 
@@ -425,6 +426,12 @@ async function pass(browser, run, o, B, out) {
     await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
     await cdp.send("Network.enable");
     await cdp.send("Network.emulateNetworkConditions", { offline: false, latency: 150, downloadThroughput: 1.6e6 / 8, uploadThroughput: 750e3 / 8 });
+  } else {
+    /* A network estimate, as a browser on broadband has (1 ms, no cap). With
+       none, headless Chromium doubles its lazy-load distance to 2,500 px, and
+       at 1440 it fetched the gallery's five shots before load (Phase 4). */
+    await cdp.send("Network.enable");
+    await cdp.send("Network.emulateNetworkConditions", { offline: false, latency: 1, downloadThroughput: -1, uploadThroughput: -1 });
   }
   const w = watch(page, o, run.mode);
   const dir = path.join(out, "frames", run.id);
@@ -1355,6 +1362,153 @@ const PROBES = {
     }));
     k.check("320: no coverage row runs past three lines", lines.every((l) => l[1] <= 3), lines.map((l) => `${l[0]} ${l[1]}`).join(", "));
     await sm.ctx.close();
+  },
+
+  /* §6.6 the app gallery: the same band in both schemes, the track at three
+     widths, the buttons, the keyboard, and nothing drawn over a shot. */
+  async gallery(k) {
+    /* The band's pixels in dark and light, nav hidden and the edge rows (a
+       fractional box takes 1px of the neighbouring section) left out. */
+    const shot = async (vp, scheme) => {
+      const { ctx, page } = await k.open(vp, scheme, "default");
+      await k.load(page, "/");
+      const clip = await page.evaluate(async () => {
+        const el = document.getElementById("app");
+        el.scrollIntoView();
+        await new Promise((r) => setTimeout(r, 900));
+        await Promise.all(Array.from(el.querySelectorAll("img"), (i) => Promise.race([i.decode().catch(() => 0), new Promise((r) => setTimeout(r, 3000))])));
+        document.querySelector(".nav").style.visibility = "hidden";
+        const r = el.getBoundingClientRect(), top = Math.ceil(scrollY + r.top) + 1;
+        return { x: 0, y: top, width: innerWidth, height: Math.floor(scrollY + r.bottom) - 1 - top };
+      });
+      const png = await page.screenshot({ clip, fullPage: true });
+      await ctx.close();
+      return png;
+    };
+    for (const vp of [{ w: 390, h: 844 }, { w: 1440, h: 900 }]) {
+      const dark = await shot(vp, "dark"), light = await shot(vp, "light");
+      k.check(`${vp.w}: the band is the same pixels in dark and light`, dark.equals(light), `${dark.length} / ${light.length} bytes`);
+    }
+    const geo = (page) => page.evaluate(() => {
+      const t = document.querySelector(".gallery__track"), nav = document.querySelector(".gallery__nav");
+      const fr = Array.from(document.querySelectorAll("#app .gshot__frame"), (f) => { const r = f.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.right)]; });
+      const b = Array.from(nav.querySelectorAll("button"), (x) => x.disabled);
+      return { vw: innerWidth, sw: t.scrollWidth, cw: t.clientWidth, x: Math.round(t.scrollLeft), nav: !nav.hidden, prev: b[0], next: b[1], fr,
+        edge: Math.round(parseFloat(getComputedStyle(t).paddingLeft)), active: document.activeElement && document.activeElement.getAttribute("aria-label") };
+    });
+    /* 1440: all five shots whole, no scrolling, no buttons. */
+    let { ctx, page } = await k.open({ w: 1440, h: 900 }, "dark", "default");
+    await k.load(page, "/");
+    await page.evaluate(() => document.getElementById("app").scrollIntoView());
+    await page.waitForTimeout(900);
+    let g = await geo(page);
+    k.check("1440: all five shots fully visible, no scrolling, no buttons", g.sw <= g.cw && !g.nav && g.fr.length === 5 && g.fr.every((f) => f[0] >= 0 && f[1] <= g.vw), `track ${g.sw}/${g.cw}, frames ${g.fr.map((f) => f.join("-")).join(" ")}`);
+    const covered = await page.evaluate(() => {
+      const bad = [], navB = document.querySelector(".nav").getBoundingClientRect().bottom;
+      document.querySelectorAll("#app .gshot__frame img").forEach((img) => {
+        const r = img.getBoundingClientRect();
+        for (const fx of [0.1, 0.5, 0.9]) for (const fy of [0.1, 0.5, 0.9]) {
+          const x = r.left + r.width * fx, y = r.top + r.height * fy;
+          if (y <= navB || y >= innerHeight) continue;
+          const hit = document.elementFromPoint(x, y);
+          if (hit !== img) bad.push(`${img.getAttribute("src").split("/").pop().split("?")[0]} @${fx},${fy}: ${hit ? hit.className || hit.tagName : "none"}`);
+        }
+      });
+      return bad;
+    });
+    k.check("1440: nothing is drawn over a shot", !covered.length, covered.slice(0, 4).join("; ") || "45 points");
+    const imgs = await page.evaluate(() => Array.from(document.querySelectorAll("#app img"), (i) => [i.getAttribute("width"), i.getAttribute("height"), i.getAttribute("loading"), (i.getAttribute("alt") || "").length]));
+    k.check("every shot has width, height, alt and loading=lazy", imgs.length === 5 && imgs.every((i) => +i[0] > 0 && +i[1] > 0 && i[2] === "lazy" && i[3] > 20), JSON.stringify(imgs));
+    await k.shot(page, "1440");
+    await ctx.close();
+    /* 390 on touch: the second shot peeks, no buttons; then the end of the track. */
+    ({ ctx, page } = await k.open({ w: 390, h: 844 }, "dark", "touch"));
+    await k.load(page, "/");
+    await page.evaluate(() => document.querySelector(".gallery__track").scrollIntoView({ block: "center" }));
+    await page.waitForTimeout(900);
+    g = await geo(page);
+    k.check("390: the second shot peeks by at least 80 px", g.vw - g.fr[1][0] >= 80 && g.fr[1][0] < g.vw, `${g.vw - g.fr[1][0]} px`);
+    k.check("390 touch: no previous/next buttons", !g.nav, g.nav ? "shown" : "hidden");
+    k.check("390: the first shot sits on the content's left edge", g.fr[0][0] === g.edge, `${g.fr[0][0]} vs ${g.edge}`);
+    await k.shot(page, "390-start");
+    await page.evaluate(() => { const t = document.querySelector(".gallery__track"); t.scrollLeft = t.scrollWidth; });
+    await page.waitForTimeout(900);
+    g = await geo(page);
+    const last = g.fr[4];
+    k.check("390: scrolled to the end, the last shot is whole", last[0] >= 0 && last[1] <= g.vw, `last ${last.join("-")} of ${g.vw}`);
+    await k.shot(page, "390-end");
+    await ctx.close();
+    /* 820 with a mouse: buttons, a step per press, disabled at the ends, focus kept. */
+    ({ ctx, page } = await k.open({ w: 820, h: 1180 }, "dark", "default"));
+    await k.load(page, "/");
+    await page.evaluate(() => document.querySelector(".gallery__track").scrollIntoView({ block: "center" }));
+    await page.waitForTimeout(900);
+    g = await geo(page);
+    k.check("820 mouse: buttons shown, previous disabled at the start", g.nav && g.prev && !g.next, JSON.stringify({ nav: g.nav, prev: g.prev, next: g.next }));
+    await page.click('.gallery__btn[data-step="1"]');
+    await page.waitForTimeout(900);
+    g = await geo(page);
+    k.check("820: next moves one shot, which lands on the edge", Math.abs(g.fr[1][0] - g.edge) <= 2 && !g.prev, `shot 2 at ${g.fr[1][0]}, edge ${g.edge}, x ${g.x}`);
+    await page.focus('.gallery__btn[data-step="1"]');
+    let presses = 0;
+    while (presses < 8 && !(await geo(page)).next) { await page.keyboard.press("Enter"); await page.waitForTimeout(700); presses++; }
+    g = await geo(page);
+    k.check("820: at the end next is disabled and the focus moved to previous", g.next && !g.prev && g.active === "Previous screen", `${presses} presses, x ${g.x}/${g.sw - g.cw}, focus ${g.active}`);
+    await k.shot(page, "820-end");
+    await page.evaluate(() => { const t = document.querySelector(".gallery__track"); t.scrollLeft = 0; t.focus(); });
+    await page.waitForTimeout(400);
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(600);
+    g = await geo(page);
+    k.check("820: the track takes focus and the arrow keys scroll it", g.x > 0, `x ${g.x}`);
+    await ctx.close();
+  },
+
+  /* §6.7 Free for everyone: the grid fills its rows, the widget's cards
+     overlap, the captions show, the pictures fit and the motion lands. */
+  async perks(k) {
+    for (const vp of [{ w: 390, h: 844 }, { w: 600, h: 960 }, { w: 768, h: 1024 }, { w: 820, h: 1180 }, { w: 1024, h: 768 }, { w: 1440, h: 900 }]) {
+      const { ctx, page } = await k.open(vp, "dark", "default");
+      await k.load(page, "/");
+      await page.evaluate(() => document.getElementById("progress").scrollIntoView());
+      await page.waitForTimeout(900);
+      await page.evaluate(() => document.querySelector(".trend").scrollIntoView({ block: "center" }));
+      await page.waitForTimeout(900);
+      const r = await page.evaluate(() => {
+        const R = (el) => el.getBoundingClientRect(), grid = R(document.querySelector(".perks__grid"));
+        const rows = {};
+        document.querySelectorAll(".perk").forEach((c) => { const b = R(c), key = Math.round(b.top / 4); (rows[key] = rows[key] || []).push(b); });
+        const gaps = Object.values(rows).filter((row) => Math.abs(Math.min(...row.map((b) => b.left)) - grid.left) > 2 || Math.abs(Math.max(...row.map((b) => b.right)) - grid.right) > 2).length;
+        const cards = Array.from(document.querySelectorAll(".wcard"), R), m = R(document.querySelector(".widget--m")), ws = R(document.querySelector(".widgets"));
+        const small = document.querySelector(".widget--s"), line = document.querySelector(".widget__line");
+        const caps = Array.from(document.querySelectorAll(".perk__cap"), (c) => R(c).height > 0 && c.textContent.trim().length > 10);
+        return {
+          rows: Object.keys(rows).length, gaps,
+          overlap: cards.length === 2 && cards[0].right - cards[1].left > 2 && cards.every((c) => c.left >= m.left && c.right <= m.right),
+          fits: (getComputedStyle(small).display === "none" || R(small).left >= ws.left - 1) && R(document.querySelector(".widget--m")).right <= ws.right + 1 && line.scrollWidth <= line.clientWidth + 1,
+          small: getComputedStyle(small).display !== "none", caps,
+          visuals: Array.from(document.querySelectorAll(".perk__visual > :first-child"), (v) => Math.round(R(v).height)),
+          landed: document.querySelector("[data-pop]").getAttribute("data-pop") !== "pending" && !document.querySelector(".trend__cover"),
+        };
+      });
+      const tag = `${vp.w}`;
+      k.check(`${tag}: no empty grid cell (${r.rows} rows)`, !r.gaps, `${r.gaps} rows short`);
+      k.check(`${tag}: the widget's two cards overlap, inside the widget`, r.overlap, "");
+      k.check(`${tag}: the widgets fit their card, text included`, r.fits, `small ${r.small ? "shown" : "hidden"}`);
+      k.check(`${tag}: both captions show`, r.caps.length === 2 && r.caps.every(Boolean), JSON.stringify(r.caps));
+      if (vp.w === 390) k.check("390: every picture is at most 120 px tall", r.visuals.every((h) => h <= 120), r.visuals.join(", "));
+      k.check(`${tag}: pop and draw have landed in view`, r.landed, "");
+      await page.evaluate(() => document.getElementById("progress").scrollIntoView());
+      await page.waitForTimeout(300);
+      await k.shot(page, `${vp.w}`);
+      await ctx.close();
+    }
+    /* Reduce Motion: no cover, nothing pending, no animations. */
+    const { ctx, page } = await k.open({ w: 390, h: 844 }, "dark", "reduced");
+    await k.load(page, "/");
+    const rm = await page.evaluate(() => ({ cover: !!document.querySelector(".trend__cover"), pending: document.querySelectorAll('[data-pop="pending"], [data-draw="pending"]').length, anims: document.getAnimations().length }));
+    k.check("Reduce Motion: no cover, nothing pending, no animations", !rm.cover && !rm.pending && !rm.anims, JSON.stringify(rm));
+    await ctx.close();
   },
 };
 

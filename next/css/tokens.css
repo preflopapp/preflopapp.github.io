@@ -123,6 +123,11 @@
   --badge-unearned: #8a8c99;
 }
 
+/* A subtree with its own scheme takes that scheme's ink. `color` inherits as a
+   computed value, so without this the app gallery's forced-dark headline kept
+   the light page's dark ink (redesign Phase 4). */
+[data-theme] { color: var(--text); }
+
 /* ---- Playing cards ---------------------------------------------------------
    A card face is white in both schemes, so the suit colours do not follow the
    theme. The site only ever shows the two-colour deck (black spade and club,

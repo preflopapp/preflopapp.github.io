@@ -194,7 +194,14 @@ NODE_PATH=$(npm root -g) node scripts/scroll-pass.js --live --viewports 390x844,
   teaches: hovering 20 cells adds no CLS and no card height, a wheel under a
   still pointer keeps the selection, the tab and grid keyboard patterns, the
   1440 columns end within 120 px, the two rings differ, and no coverage row
-  passes three lines at 320). `axe` needs axe-core outside the repo:
+  passes three lines at 320), `gallery` (the app band is the same pixels in
+  dark and light, all five shots whole at 1440 and nothing drawn over one, the
+  second shot peeks at 390 and the last is whole at the track's end, the
+  buttons step one shot and hand the focus over at the end, the track scrolls
+  from the keyboard) and `perks` (Free for everyone fills every grid row from
+  390 to 1440, the widget's cards overlap and the widgets fit their card, the
+  captions show, pictures stay within 120 px at 390, and pop and draw land,
+  or never start under Reduce Motion). `axe` needs axe-core outside the repo:
   `npm install --prefix "$TMPDIR/scroll-pass-axe" axe-core`.
 - Output goes to `--out` (default `$TMPDIR/scroll-pass/<stamp>`; it refuses a
   folder inside the repo): `report.md`, `report.json`, every frame, and a
