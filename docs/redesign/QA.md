@@ -20,8 +20,13 @@ rather than a cloud sandbox:
   and light, default and nojs, plus anchors, theme, nojs and axe: 53/53 PASS.
 - `check-site.py` (8 pages, 0 problems) and the checker's unit tests (82).
 
+**Live pass (after PR 50 deployed, 15:10 UTC):** `/` at 390 and 1440 in both
+schemes, 4/4 PASS, and the live probe 14/14. HTML is 31,381 B raw and 8,324 B
+gzipped, with 529 elements. `/next/css/*` is served `immutable`, and `/next/`
+answers 301 to `/`.
+
 **Limits.** No WebKit and no real iOS Safari (SPEC §10.4); that is Stan's §13
-check. The live pass runs after the merge, because the merge is what deploys.
+check.
 
 ---
 
@@ -34,6 +39,7 @@ check. The live pass runs after the merge, because the merge is what deploys.
 | [QA-03](#qa-03) | polish | medium | The footer is 396 px at 390 against the SPEC's 360 (budget 400, accepted with Phase 5) |
 | [QA-04](#qa-04) | polish | medium | Under a throttled CPU an entrance can still be running at the harness's 600 ms check |
 | [QA-05](#qa-05) | polish | high | Two old shots and one font stay for the social card's source |
+| [QA-06](#qa-06) | polish | high | The custom domain still serves deleted files from its cache |
 
 ### QA-01
 **minor · high** · every live page · owner action (SPEC §12 #5)
@@ -89,6 +95,19 @@ check. The live pass runs after the merge, because the merge is what deploys.
 - **Fix.** Keep them until the card is redrawn. A redraw with an `app-*` shot
   can delete both.
 
+### QA-06
+**polish · high** · live, `preflopapp.com` only
+
+- **What.**
+  - Fifteen minutes after the deploy, `/next/styleguide/` and
+    `/assets/vendor/gsap/gsap.min.js` still answer 200 with the old files.
+  - `preflopapp.pages.dev/next/styleguide/` answers 404, so the deploy is
+    right.
+- **Cause.** Copies cached at the edge (`cf-cache-status: HIT`; `/assets/*`
+  is cached for 7 days). No page links to them.
+- **Fix.** They expire on their own. To clear them now, purge those two URLs
+  in Cloudflare (Caching → Purge Cache → Custom Purge).
+
 ## Fixed in this phase
 
 - **Harness: false failures on macOS.** Requests failed with
@@ -137,6 +156,6 @@ check. The live pass runs after the merge, because the merge is what deploys.
 | PERF-01 | done: 528 elements before JS, TBT 0 ms throttled |
 | PERF-02 | done: GSAP deleted, 0 loops, 0 blur layers |
 | LIVE-01 | **open**: QA-01 (owner switch) |
-| LIVE-02 | done; re-check the headers in the live pass after the merge |
+| LIVE-02 | done; the live pass found `/next/css/*` served `immutable` |
 | LIVE-03 | done: `www` answers 301 to the apex; the style guide is deleted |
 | Not testable here 1–10 | addressed in code; 1, 2 and 6 still need the §13 device check |
