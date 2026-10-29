@@ -71,7 +71,7 @@ see it:
 
 - **A trap tied to some files:** a line in `.claude/rules/<area>.md`; rules
   load only when matching files are opened. Areas: `cache-and-headers`,
-  `shared-hand`, `next`.
+  `shared-hand`, `next`, `hooks`.
 - **Mechanically detectable:** a check in `scripts/check-site.py` (with a test)
   or a hook, not prose.
 - **A procedure:** the matching file in `.claude/commands/` or
