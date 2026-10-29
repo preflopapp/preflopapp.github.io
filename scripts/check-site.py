@@ -158,11 +158,12 @@ def check_facts(root, pages):
         values["practiceSpotsShown"] = f"{shown:,}"
         if shown > facts.get("practiceSpots", shown):
             errors.append(f"ERROR facts.json: practiceSpotsShown {shown} is more than practiceSpots {facts['practiceSpots']}")
-    # The same count by stack depth: exact figures a page may show in a marker.
+    # The same count by stack depth, shown rounded down to thousands ("6K+";
+    # Stan wanted figures that read at a glance, not 6,431).
     by_depth = facts.get("spotsByDepth")
     if by_depth:
         for depth, n in by_depth.items():
-            values[f"spots{depth}"] = f"{n:,}"
+            values[f"spots{depth}"] = f"{n // 1000}K+"
         if "practiceSpots" in facts and sum(by_depth.values()) != facts["practiceSpots"]:
             errors.append(f"ERROR facts.json: spotsByDepth adds up to {sum(by_depth.values()):,}, practiceSpots is {facts['practiceSpots']:,}")
     # The plan prices, and annual as a monthly figure ("about $3.33 a month").

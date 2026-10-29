@@ -173,6 +173,9 @@ pass it records height, section tops, CLS, LCP, TBT, requests, bytes, console
 errors, infinite animations and blur layers, and checks them against
 `scroll-pass.budgets.json` (SPEC §4.3 and §4.9). Each budget has a `from`
 phase; before it, a miss is reported as "due Phase N" instead of failing.
+One check has no budget and always fails: a `.section` in `main` that lost
+its padding (bottom, or top unless it is `.section--flush`), which a rule
+for another element on the same class name can do.
 
 ```sh
 NODE_PATH=$(npm root -g) node scripts/scroll-pass.js --out "$TMPDIR/sp"                       # the phase plan (SPEC §10.3)
