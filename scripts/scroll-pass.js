@@ -335,15 +335,23 @@ function textBoxes() {
 
 /* ---- scrolling ------------------------------------------------------------ */
 
-async function scrollStep(page, cdp, touch, dy, vp) {
-  if (touch) {
-    await cdp.send("Input.synthesizeScrollGesture", {
-      x: Math.round(vp.w / 2), y: Math.round(vp.h * 0.7), yDistance: -Math.round(dy),
-      speed: 1600, gestureSourceType: "touch", preventFling: true,
-    });
-  } else {
-    await page.mouse.wheel(0, Math.round(dy));
+/* A finger drag up by dy: real touch events, held still before lifting so
+   nothing flings. (Input.synthesizeScrollGesture with gestureSourceType
+   "touch" scrolled nothing in this Chromium, with or without throttling.)
+   The first ~15 px are touch slop, so a step scrolls a little less than dy. */
+async function swipe(cdp, page, x, y, dy) {
+  const n = 12;
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+  for (let i = 1; i <= n + 2; i++) {
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y: Math.round(y - dy * Math.min(i, n) / n) }] });
+    await page.waitForTimeout(16);
   }
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+}
+
+async function scrollStep(page, cdp, touch, dy, vp) {
+  if (touch) await swipe(cdp, page, Math.round(vp.w / 2), Math.round(vp.h * 0.8), Math.round(dy));
+  else await page.mouse.wheel(0, Math.round(dy));
 }
 
 async function wait(page, ms) { await page.waitForTimeout(ms); }
@@ -459,7 +467,7 @@ async function pass(browser, run, o, B, out) {
 
 function metrics(res) {
   const sp = res.stats && res.stats.sp;
-  if (!sp) return null;
+  if (!sp || res.mode === "nojs") return null; // no observer callback runs with JS off
   const start = sp.scrollStart == null ? Infinity : sp.scrollStart;
   const sum = (xs) => xs.reduce((a, b) => a + b, 0);
   const lcps = sp.lcp.filter((e) => e.t < start);
@@ -717,7 +725,7 @@ const PROBES = {
       if (how === "button") {
         const cdp = await page.context().newCDPSession(page);
         const yb = await k.y(page);
-        await cdp.send("Input.synthesizeScrollGesture", { x: Math.round(vp.w / 2), y: Math.round(vp.h * 0.7), yDistance: -300, gestureSourceType: "touch" });
+        await swipe(cdp, page, Math.round(vp.w / 2), Math.round(vp.h * 0.7), 300);
         await page.waitForTimeout(300);
         const ya = await k.y(page);
         k.check("a swipe on the open menu doesn't scroll the page", Math.abs(ya - yb) <= 2, `${yb} → ${ya}`);
