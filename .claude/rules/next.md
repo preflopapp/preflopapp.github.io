@@ -6,21 +6,20 @@ paths:
 # The /next/ system and the homepage
 
 Since the Phase 5 cutover the homepage is `index.html` at the root, built on
-the `next/` CSS/JS; `next/` keeps the assets and the style guide. `/landing/`
+the `next/` CSS/JS; `next/` keeps only those assets (the style guide was
+deleted in redesign Phase 6). `/landing/`
 and `/next/` redirect to `/` (`_redirects`). The checker treats a root
 `index.html` with no `shared:head` as a /next/-system page that must be
 indexable, and takes the shared blocks from the first other page (Phase 5).
 
 - **Nav width rules are container queries, not viewport media queries.** The
-  bar collapses by its own width so the style guide can show the narrow form in
-  a narrow box. A container is the containing block for
+  bar collapses by its own width, not the window's. A container is the containing block for
   `position: fixed` children, so the menu's scrim is `absolute` (Phase 1).
 - **Menu state is `[data-open]` on `.nav`, never the `hidden` attribute on the
   panel.** `hidden` would also hide the links in the wide layout once JS has
   run. JS may set styles through the CSSOM (CSP only blocks `style=` markup).
-- **A script `inert`s every sibling up to `<body>`, not `main`.** The style
-  guide's demo navs live inside `main`, so inerting `main` would freeze the page
-  that holds them.
+- **A script `inert`s every sibling up to `<body>`, not `main`.** A nav placed
+  inside `main` (as the old style guide's were) would otherwise freeze itself.
 - **Only pictures enter, and only from below the screen.** `[data-enter]` is for
   images and drawn visuals, never text, prices or buttons (a CTA focused
   mid-fade was FOCUS-01). site.js hides one only when it can reveal it and
@@ -28,7 +27,7 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   picture sat visible in the bottom tenth, which the harness's pending probe
   fails; redesign Phase 1).
 - **Ids are unique and `aria-controls` must name one:** the checker fails both
-  (the style guide shows several navs, each needs its own menu id).
+  (two navs on one page each need their own menu id).
 - **No `style=` in anything JS writes either.** The page CSP is `style-src
   'self'`, which blocks a `style` attribute inside an `innerHTML` string just
   like one in the HTML, and silently (Phase 2). Position with a `data-*` rule in

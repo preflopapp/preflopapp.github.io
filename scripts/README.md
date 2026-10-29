@@ -33,10 +33,9 @@ app. See `CLAUDE.md` at the root.
 
 ## The `/next/` preview (website overhaul)
 
-The redesign is built behind `/next/` (noindex, `X-Robots-Tag`, not in
-`sitemap.xml`) and replaces `/` only at the final cutover. Every component is
-shown on `/next/styleguide/` (dark and light) before a page uses it. Phase 0 is
-the foundation; Phase 1 is the shell, `/next/` itself:
+The redesign was built behind `/next/` and replaced `/` at the Phase 5
+cutover; `/next/` now redirects to `/`, and the style guide was deleted in
+redesign Phase 6. The homepage and text pages load these files:
 
 - `next/css/tokens.css`: colour (dark default, light via system or
   `data-theme`), type, shape, spacing and motion. Colour, spacing and motion
@@ -49,8 +48,7 @@ the foundation; Phase 1 is the shell, `/next/` itself:
 - `next/css/components.css`: button, TestFlight CTA and "Coming soon" badge,
   section header, card, playing card, FAQ item, entrance, nav, footer, CTA
   band, hero, proof strip, range chart (`.cgrid`, `.clegend`) and caption
-  (`.figcap`). The style guide's own rules and the old page scaffold are in
-  `next/css/styleguide.css`, loaded only on the style guide (redesign Phase 1).
+  (`.figcap`).
 - `next/js/config.js`: the one place the CTA is configured. Set `mode` to
   `"coming-soon"` to turn every `a[data-cta]` into the badge; change
   `testflightUrl` (then the checker lists the `data-cta` hrefs to update) when
@@ -68,8 +66,6 @@ the foundation; Phase 1 is the shell, `/next/` itself:
 - `next/js/demo.js`: the hero's playable demo (redesign SPEC §6.2): the three
   generated hands, the app's grading, the answer card, Chart view, the deal,
   the score, the nudge.
-- `assets/vendor/gsap/`: GSAP + ScrollTrigger 3.15.0, no longer loaded by any
-  page since redesign Phase 1; the files are deleted in Phase 6.
 
 ### Phase 1: the shell
 

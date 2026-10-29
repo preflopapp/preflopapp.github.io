@@ -9,7 +9,7 @@
 # The redesign's CSS and JS. Every page names them with ?v=<hash of the file>
 # (scripts/stamp-assets.py; check-site.py fails a missing or stale stamp), so
 # a changed file gets a new URL and the old one can be cached for good. Only
-# these two folders: /next/* would also freeze the style guide's HTML, and
+# these two folders: /next/* would also freeze any page put under /next/, and
 # /assets/* has URLs that JS builds, unstamped (ISSUES LIVE-02, SPEC §4.8).
 /next/css/*
   Cache-Control: public, max-age=31536000, immutable
@@ -77,8 +77,9 @@
   ! Content-Security-Policy
   X-Frame-Options: DENY
 
-# What is left under /next/: the style guide (not linked, not in the sitemap).
-# Like /landing and /s, each page enforces its own CSP in its <head>, here
+# No page is left under /next/ (the style guide went in redesign Phase 6;
+# /next/ redirects to /), only its CSS and JS. Kept so a page put there again
+# is noindex and, like /s, enforces its own CSP in its <head>, here
 # script-src 'self' for next/js; no inline scripts. The
 # header would otherwise add script-src 'none'. X-Robots-Tag keeps it out of
 # search results even if a page forgets its noindex meta.

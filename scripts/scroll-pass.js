@@ -1560,7 +1560,13 @@ async function serve(o) {
   const u = new URL(o.base);
   if (!["localhost", "127.0.0.1"].includes(u.hostname) || await answers(o.base)) return null;
   const root = path.resolve(o.root || REPO);
-  const child = spawn("python3", ["-m", "http.server", String(u.port || 80), "--bind", "127.0.0.1", "--directory", root], { stdio: "ignore" });
+  /* http.server's listen backlog is 5. On macOS a burst of Chromium
+     connections overflows it and some requests fail with
+     ERR_CONNECTION_RESET (seen in Phase 6), so the backlog is raised. */
+  const py = "import functools,http.server as h,sys\n" +
+    "class S(h.ThreadingHTTPServer): request_queue_size = 128\n" +
+    "S(('127.0.0.1', int(sys.argv[1])), functools.partial(h.SimpleHTTPRequestHandler, directory=sys.argv[2])).serve_forever()";
+  const child = spawn("python3", ["-c", py, String(u.port || 80), root], { stdio: "ignore" });
   for (let i = 0; i < 50 && !(await answers(o.base)); i++) await new Promise((r) => setTimeout(r, 100));
   console.log(`serving ${root} at ${o.base}`);
   return child;
