@@ -91,7 +91,7 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
 - **`next/js/app-data.js` is generated** from the app's own data in
   `docs/app-handoff/data/` by `scripts/gen-app-data.py`: the charts and the
   demo's three hands. Edit the source or the script, not the output. The badge
-  grid is no longer generated (redesign Phase 2; Phase 4 removes it). The real
+  grid is gone (no longer generated in redesign Phase 2, removed in Phase 4). The real
   screenshots in `assets/screens/app-*.webp` predate the app's Hanken refresh (Outfit type, old
   radii): they are illustrations of the layout, not pixel truth.
 - **Say when a picture is drawn, not captured.** The widgets and the bankroll
@@ -134,6 +134,12 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   Reduce Motion, `both` fill) failed the demo probe's "Reduce Motion: no
   animations". Run CSS animations only under `prefers-reduced-motion:
   no-preference`, with `backwards` fill (redesign Phase 2).
+- **A `data-theme` subtree needs its own ink, not just its own tokens.**
+  `color` inherits as a computed value, so text inside the forced-dark app
+  gallery that set no colour of its own (the h2) kept the light page's dark
+  ink. `tokens.css` sets `[data-theme] { color: var(--text) }`; the gallery
+  probe compares the band's pixels in both schemes, which is what caught it
+  (redesign Phase 4).
 - **A no-JS fallback has to fit the section's height budget too.** The harness
   measures section heights in the no-JS pass as well. The app's capture that
   stands in for How it teaches' drawn chart (a 280px phone shot, 609px tall)
