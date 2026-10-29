@@ -9,6 +9,7 @@
 #    so, because a merge deploys.
 #
 # Wired up in .claude/settings.json. Reads the hook payload on stdin.
+# Tested by scripts/test_guard_main.py.
 payload=$(cat)
 cmd=$(jq -r '.tool_input.command // empty' <<<"$payload")
 cwd=$(jq -r '.cwd // empty' <<<"$payload")
@@ -19,7 +20,12 @@ is() { grep -qE "(^|[;&|])[[:space:]]*$1" <<<"$cmd"; }
 
 if is "git push"; then
   branch=$(git -C "${cwd:-.}" branch --show-current 2>/dev/null)
-  if grep -qE '(^|[[:space:]:])(refs/heads/)?main([[:space:]]|$)' <<<"$cmd" || [ "$branch" = "main" ]; then
+  # Look for `main` only in the push itself: from `git push` to the next
+  # ; & | or line end. A commit message or heredoc in the same command can
+  # say "main" freely. Backslash-newlines are joined first, so a push
+  # continued onto the next line is still one segment.
+  push=$(grep -oE "(^|[;&|])[[:space:]]*git push[^;&|]*" <<<"${cmd//$'\\\n'/ }")
+  if grep -qE '(^|[[:space:]:])(refs/heads/)?main([[:space:]]|$)' <<<"$push" || [ "$branch" = "main" ]; then
     jq -n '{
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
