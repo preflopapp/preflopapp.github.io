@@ -54,6 +54,10 @@ a { color: var(--accent); }
   margin: 0; font-size: var(--fs-display); font-weight: var(--fw-display);
   letter-spacing: var(--track-display); line-height: var(--lh-display);
 }
+.t-headline {
+  margin: 0; font-size: var(--fs-headline); font-weight: var(--fw-display);
+  letter-spacing: var(--track-headline); line-height: var(--lh-headline); text-wrap: balance;
+}
 .t-title {
   margin: 0; font-size: var(--fs-title); font-weight: var(--fw-title);
   letter-spacing: var(--track-title); line-height: var(--lh-title);
@@ -66,13 +70,16 @@ a { color: var(--accent); }
 }
 
 /* ---- Button ---------------------------------------------------------------
-   Primary is the action: bright amber fill, its own ink. Secondary is a
-   hairline on the surface. Press dips to --press-scale on the app's press
-   spring. */
+   Primary is the action: bright amber fill, its own ink, and the app's slab
+   lip (accentFillEdge) as an inset line along the bottom; a flat fill, no
+   gradient. Secondary is a hairline on the surface. Sizes: --sm 44px, default
+   48px, --lg 52px (full width under 600px). Press dips to --press-scale on the
+   app's press spring; hover changes colour or opacity at once and never moves
+   the button under the pointer. */
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1);
-  min-height: var(--hit); padding: 0.75rem var(--space-3);
+  min-height: 3rem; padding: 0.75rem var(--space-3);
   border: var(--stroke) solid transparent; border-radius: var(--r-button);
   font: var(--fw-button) var(--fs-body)/1.2 var(--font);
   text-decoration: none; cursor: pointer;
@@ -80,14 +87,15 @@ a { color: var(--accent); }
 }
 .btn:active { transform: scale(var(--press-scale)); opacity: 0.85; }
 
-.btn--primary { background: var(--accent-fill); color: var(--accent-fill-ink); }
+.btn--primary { background: var(--accent-fill); color: var(--accent-fill-ink); box-shadow: inset 0 -3px 0 var(--accent-edge); }
 .btn--primary:hover { opacity: 0.92; }
 
 .btn--secondary { background: transparent; color: var(--text); border-color: var(--border); }
 .btn--secondary:hover { background: var(--well); }
 
-.btn--sm { padding: 0.5rem var(--space-2); }
+.btn--sm { min-height: var(--hit); padding: 0.5rem var(--space-2); }
 .btn--lg { min-height: 3.25rem; padding: 0.875rem var(--space-4); font-size: 1.125rem; }
+@media (max-width: 37.49rem) { .btn--lg { width: 100%; } }
 
 /* "Coming soon": the fallback for a CTA slot when the TestFlight link is off.
    Not a link, so no hover or press. */
@@ -104,7 +112,16 @@ a { color: var(--accent); }
 .section-header { max-width: var(--measure); }
 .section-header__eyebrow { margin: 0 0 var(--space-1); color: var(--accent); }
 .section-header__title { margin: 0; }
-.section-header__line { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-body); }
+.section-header__line { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-lede); line-height: 1.5; }
+
+/* ---- Tag: "Pro" -------------------------------------------------------------- */
+
+.tag {
+  display: inline-block; margin-left: var(--space-1); padding: 0.125rem 0.625rem; vertical-align: 0.15em;
+  border: var(--stroke) solid var(--accent); border-radius: var(--r-pill);
+  color: var(--accent); font-size: var(--fs-label); font-weight: var(--fw-label);
+  letter-spacing: var(--track-label); text-transform: uppercase;
+}
 
 /* ---- Card ----------------------------------------------------------------- */
 
@@ -113,6 +130,7 @@ a { color: var(--accent); }
   background: var(--panel); color: var(--text);
   border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
 }
+@media (min-width: 64rem) { .card { padding: var(--space-4); } }
 .card__title { margin: 0; }
 .card__body { margin: var(--space-1) 0 0; color: var(--text-2); }
 .card__stat {
@@ -120,8 +138,8 @@ a { color: var(--accent); }
   background: var(--well); border-radius: var(--r-card);
 }
 .card__figure {
-  display: block; font-size: var(--fs-title); font-weight: 700; letter-spacing: -0.04em;
-  font-variant-numeric: tabular-nums; line-height: 1.1;
+  display: block; font-size: var(--fs-figure); font-weight: 700; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums; line-height: 1.05;
 }
 .card__figure-label { display: block; margin-top: var(--space-half); color: var(--text-2); font-size: var(--fs-meta); }
 
@@ -164,20 +182,22 @@ a { color: var(--accent); }
 }
 .faq[open] > .faq__q::after { transform: rotate(-135deg); }
 .faq__a { margin: 0; padding: 0 0 var(--space-2); color: var(--text-2); max-width: var(--measure); }
-.faq[open] > .faq__a { animation: faq-in var(--dur-entrance) var(--ease-out) both; }
-@keyframes faq-in {
-  from { opacity: 0; transform: translateY(calc(var(--entrance-rise) * -0.5)); }
-  to { opacity: 1; transform: none; }
-}
+.faq[open] > .faq__a { animation: faq-in var(--dur-snappy) var(--ease-out) both; }
+@keyframes faq-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---- Reveal ----------------------------------------------------------------
-   Markup only: [data-reveal] on an element, [data-reveal-group] on a parent to
-   stagger its [data-reveal] children. There is no CSS hiding state: site.js
-   sets the start state itself, so with no JS (or Reduce Motion) the content is
-   simply there. Never put it on the headline or the primary CTA. */
+/* ---- Entrance ----------------------------------------------------------------
+   For pictures only: [data-enter] on an element, [data-enter-group] on a parent
+   to stagger its [data-enter] children. Text, prices and buttons never enter.
+   CSS hides nothing by itself: site.js sets data-enter="pending" only when it
+   can reveal the element (motion allowed, IntersectionObserver present, the
+   element still below the screen), then plays opacity and a 12px rise once,
+   when it scrolls in. With no JS or Reduce Motion it is simply there. */
+
+[data-enter="pending"] { opacity: 0; transform: translateY(var(--entrance-rise)); }
 
 /* ---- Nav ------------------------------------------------------------------
-   Sticky, translucent, one hairline underneath. The bar is a container, so it
+   Sticky, solid --bg, one hairline underneath (no blur: WebKit repaints a
+   backdrop-filtered sticky bar over moving content). The bar is a container, so it
    collapses by its own width (the style guide shows the narrow form in a
    narrow box). Without JS a wide bar shows its links inline and a narrow one just the brand
    and the button (the footer has the links); site.js sets
@@ -193,13 +213,6 @@ a { color: var(--accent); }
   background: var(--bg);
   border-bottom: var(--stroke) solid var(--border);
 }
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .nav {
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    backdrop-filter: blur(16px) saturate(1.4);
-  }
-}
 .nav--static { position: relative; }
 
 .nav__bar {
@@ -210,7 +223,7 @@ a { color: var(--accent); }
   display: inline-flex; align-items: center; gap: var(--space-1);
   min-height: var(--hit); margin-right: auto;
   color: var(--text); text-decoration: none;
-  font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em;
+  font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em;
 }
 .nav__mark { width: 1.5rem; height: 1.5rem; }
 
@@ -218,8 +231,7 @@ a { color: var(--accent); }
 .nav__links a {
   display: inline-flex; align-items: center; min-height: var(--hit);
   padding: 0 var(--space-2); border-radius: var(--r-button);
-  color: var(--text-2); text-decoration: none; font-weight: 500;
-  transition: color var(--dur-snappy) var(--ease-out);
+  color: var(--text-2); text-decoration: none; font-weight: 400;
 }
 .nav__links a:hover { color: var(--text); }
 /* The page you are on (site.js sets aria-current: the header is shared, so
@@ -262,7 +274,10 @@ a { color: var(--accent); }
      links are in the footer). A row of links here made the bar taller until JS
      collapsed it into the menu, shifting the whole page once on load. */
   .nav:not([data-enhanced]) .nav__panel { display: none; }
-  .nav[data-enhanced] .nav__toggle { display: block; }
+  /* The toggle's slot is kept (unseen) until site.js enhances the bar, so the
+     button beside it doesn't jump left when it appears (CLS 0.0015 on load). */
+  .nav .nav__toggle { display: block; }
+  .nav:not([data-enhanced]) .nav__toggle { visibility: hidden; }
   .nav[data-enhanced] .nav__panel {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 2;
     padding: var(--space-1) calc(var(--gutter) - var(--space-2)) var(--space-2);
@@ -284,6 +299,7 @@ a { color: var(--accent); }
 /* While the menu is open its bar and scrim fill the screen, so no touch can
    pan the page behind them; taps still work (see lock() in site.js). */
 .nav[data-open] .nav__bar, .nav[data-open] .nav__scrim { touch-action: none; }
+@media (max-width: 22.49rem) { .nav__bar > .btn--sm { padding-inline: 0.75rem; } }
 @keyframes nav-in {
   from { opacity: 0; transform: translateY(calc(var(--entrance-rise) * -1)); }
   to { opacity: 1; transform: none; }
@@ -300,7 +316,7 @@ a { color: var(--accent); }
 .footer__brand {
   display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--hit);
   color: var(--text); text-decoration: none;
-  font-size: var(--fs-section); font-weight: 700; letter-spacing: -0.02em;
+  font-size: var(--fs-section); font-weight: 600; letter-spacing: -0.02em;
 }
 .footer__line { margin: var(--space-1) 0 0; color: var(--text-2); }
 .footer__group { margin: 0; padding: 0; list-style: none; }
@@ -350,42 +366,24 @@ a { color: var(--accent); }
    Copy on the left (headline, one line, the one primary button, the QR beside
    it on a desktop), the playable demo on the right; stacked on a phone, in
    that order. The headline and the button are plain HTML: no reveal, nothing
-   waits on JS, so the headline is what paints first. The glow is a flat amber
-   disc, blurred, that swells slowly: transform and opacity only, still under
-   Reduce Motion. */
+   waits on JS, so the headline is what paints first. */
 
 .hero { position: relative; overflow: clip; padding-block: var(--space-5) var(--space-5); }
 .hero__grid { display: grid; gap: var(--space-5); }
 .hero__title { max-width: 11em; text-wrap: balance; }
 .hero__accent { color: var(--accent); }
-.hero__line { margin: var(--space-3) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-section); }
+.hero__line { margin: var(--space-3) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-lede); line-height: 1.5; }
 .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
 .hero__cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+@media (max-width: 37.49rem) { .hero__cta { width: 100%; } }
 .hero__note { margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
 
-.hero__demo { position: relative; isolation: isolate; justify-self: center; display: flex; flex-direction: column; align-items: center; }
-.hero__glow {
-  position: absolute; z-index: -1; left: 50%; top: 50%; pointer-events: none;
-  width: 24rem; height: 24rem; margin: -12rem 0 0 -12rem; border-radius: 50%;
-  --glow-lo: 0.07; --glow-hi: 0.14;
-  background: var(--accent); opacity: var(--glow-lo); filter: blur(64px);
-  animation: glow calc(var(--dur-breath) * 6) var(--ease-in-out) infinite alternate;
-}
-/* No glow on light: a faint amber over off-white bands into visible rings at
-   8 bits, and there is nothing to see through the panel anyway. */
-@media (prefers-color-scheme: light) { :root:not([data-theme]) .hero__glow { display: none; } }
-[data-theme="light"] .hero__glow { display: none; }
-@keyframes glow {
-  from { opacity: var(--glow-lo); transform: scale(0.9); }
-  to { opacity: var(--glow-hi); transform: scale(1.08); }
-}
-@media (prefers-reduced-motion: reduce) { .hero__glow { animation: none; } }
+.hero__demo { position: relative; justify-self: center; display: flex; flex-direction: column; align-items: center; }
 
 @media (min-width: 48rem) {
   .hero { padding-block: var(--space-6) var(--space-6); }
   .hero__grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-5); }
   .hero__demo { justify-self: end; }
-  .hero__glow { width: 32rem; height: 32rem; margin: -16rem 0 0 -16rem; filter: blur(80px); }
 }
 
 /* The QR sits beside the button on a desktop with a pointer and nowhere else:
@@ -399,7 +397,7 @@ a { color: var(--accent); }
 }
 .qr__img { width: 6.5rem; height: 6.5rem; border-radius: var(--r-card); }
 .qr__cap { max-width: 8rem; margin: 0; color: var(--text-2); font-size: var(--fs-meta); }
-@media (min-width: 60rem) and (hover: hover) { .qr { display: flex; } }
+@media (min-width: 60rem) and (hover: hover) and (pointer: fine) { .qr { display: flex; } }
 
 /* ---- Proof bar --------------------------------------------------------------
    Four facts straight under the hero, each a card with the figure on its own
@@ -417,96 +415,5 @@ a { color: var(--accent); }
   .proof__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .proof__item { padding: var(--space-3); }
 }
-
-/* ---- Page scaffold ---------------------------------------------------------
-   What /next/ is made of until the real sections land: a hero with its CTA, and
-   a section with a header and a "Placeholder" panel. The hero has no reveal:
-   the headline and button are in the HTML and never wait on JS. */
-
-.hero-stub { padding-block: var(--space-6) var(--space-5); }
-.hero-stub__title { max-width: 16ch; }
-.hero-stub__line { margin: var(--space-3) 0 0; max-width: var(--measure); color: var(--text-2); font-size: var(--fs-section); }
-.hero-stub__actions { margin: var(--space-4) 0 0; }
-
-.stub { padding-block: var(--space-5); }
-.stub__panel {
-  margin-top: var(--space-3); padding: var(--space-4) var(--space-3);
-  background: var(--panel); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
-}
-.stub__panel p { margin: 0; color: var(--text-2); }
-.stub__panel .t-label { display: block; margin-bottom: var(--space-half); color: var(--text-3); }
-
-/* ---- Style guide page ------------------------------------------------------ */
-
-.sg-bar {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
-  padding-block: var(--space-2);
-}
-.sg-bar__brand { font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
-.sg-intro { padding-block: var(--space-4) var(--space-3); }
-.sg-intro p { margin: var(--space-2) 0 0; color: var(--text-2); max-width: var(--measure); }
-
-.sg-row { padding-block: var(--space-5); border-top: var(--stroke) solid var(--border); }
-.sg-row__head { margin-bottom: var(--space-3); }
-.sg-row__head p { margin: var(--space-half) 0 0; color: var(--text-2); font-size: var(--fs-meta); max-width: var(--measure); }
-.sg-row__head code, .sg-note code { font-size: 0.9em; color: var(--text); }
-
-.sg-pair { display: grid; gap: var(--space-2); grid-template-columns: 1fr; }
-@media (min-width: 48rem) { .sg-pair { grid-template-columns: 1fr 1fr; } }
-.sg-pair > .scope {
-  padding: var(--space-3);
-  border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
-  min-width: 0;
-}
-.sg-pair.sg-pair--one { grid-template-columns: 1fr; }
-.sg-pair__tag { display: block; margin-bottom: var(--space-3); color: var(--text-3); }
-.sg-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
-.sg-stack--col { flex-direction: column; align-items: stretch; }
-.sg-note { margin: var(--space-2) 0 0; color: var(--text-2); font-size: var(--fs-meta); max-width: var(--measure); }
-
-.sg-swatches { display: grid; gap: var(--space-1); grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
-.sw { padding: var(--space-1); border: var(--stroke) solid var(--border); border-radius: var(--r-card); background: var(--bg); }
-.sw__chip { height: 2.5rem; border-radius: var(--r-card); border: var(--stroke) solid var(--border); }
-.sw__name { display: block; margin-top: var(--space-1); font-size: var(--fs-meta); color: var(--text); }
-.sw--bg { background: var(--bg); }
-.sw--panel { background: var(--panel); }
-.sw--well { background: var(--well); }
-.sw--accent { background: var(--accent); }
-.sw--accent-fill { background: var(--accent-fill); }
-.sw--celebration { background: var(--celebration); }
-.sw--good { background: var(--good); }
-.sw--bad { background: var(--bad); }
-.sw--raise { background: var(--act-raise); }
-.sw--call { background: var(--act-call); }
-.sw--fold { background: var(--act-fold); }
-.sw--text { background: var(--text); }
-.sw--text-2 { background: var(--text-2); }
-
-.sg-type > * + * { margin-top: var(--space-2); }
-
-.sg-shapes { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.sg-shape {
-  display: grid; place-items: center; width: 6rem; height: 4.5rem;
-  background: var(--panel); border: var(--stroke) solid var(--border);
-  font-size: var(--fs-meta); color: var(--text-2);
-}
-.sg-shape--panel { border-radius: var(--r-panel); }
-.sg-shape--button { border-radius: var(--r-button); }
-.sg-shape--card { border-radius: var(--r-card); }
-
-.sg-motion { width: 100%; border-collapse: collapse; font-size: var(--fs-meta); }
-.sg-motion th, .sg-motion td { padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; border-bottom: var(--stroke) solid var(--border); }
-.sg-motion th { color: var(--text-2); font-weight: 600; }
-.sg-motion td:first-child { color: var(--text); font-weight: 600; }
-.sg-table-wrap { overflow-x: auto; }
-
-.sg-demo { position: relative; overflow: hidden; border-radius: var(--r-panel); border: var(--stroke) solid var(--border); background: var(--bg); }
-.sg-demo--narrow { max-width: 22rem; min-height: 24rem; }
-.sg-demo .nav { border-radius: var(--r-panel) var(--r-panel) 0 0; }
-.sg-demo .wrap { padding-inline: var(--space-1); }
-@media (min-width: 48rem) { .sg-demo .wrap { padding-inline: var(--space-3); } }
-.sg-demo .footer { padding-block: var(--space-4) var(--space-3); }
-
-.sg-foot { padding-block: var(--space-5) var(--space-6); color: var(--text-3); font-size: var(--fs-meta); }
 
 [hidden] { display: none !important; }

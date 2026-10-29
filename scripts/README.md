@@ -45,21 +45,23 @@ the foundation; Phase 1 is the shell, `/next/` itself:
   the new brand-wide design language, decided 2026-10-28, and the app adopts
   them next. Suits are `assets/suits/*.svg` (two-colour deck only on the site).
 - `next/css/components.css`: button, TestFlight CTA and "Coming soon" badge,
-  section header, card, playing card, FAQ item, reveal, and (Phase 1) nav,
-  footer, CTA band and the page scaffold (hero stand-in, placeholder section).
+  section header, card, playing card, FAQ item, entrance, nav, footer and CTA
+  band. The style guide's own rules and the old page scaffold are in
+  `next/css/styleguide.css`, loaded only on the style guide (redesign Phase 1).
 - `next/js/config.js`: the one place the CTA is configured. Set `mode` to
   `"coming-soon"` to turn every `a[data-cta]` into the badge; change
   `testflightUrl` (then the checker lists the `data-cta` hrefs to update) when
   the link changes.
-- `next/js/site.js`: CTA slots, nav menu, theme toggle, scroll reveal.
-  Enhancement only.
-- `assets/vendor/gsap/`: GSAP + ScrollTrigger 3.15.0 with the licence text.
-  Self-hosted, no CDN, no build step. To upgrade, replace both files from one
-  npm version and re-read `LICENSE.txt`.
+- `next/js/site.js`: CTA slots, nav menu, theme toggle, and the motion
+  engine: `window.PreflopMotion` (the motion tokens in ms and CSS easings),
+  picture entrances (`[data-enter]`) and the count-up (`[data-count]`), on
+  IntersectionObserver and the Web Animations API. Enhancement only.
+- `assets/vendor/gsap/`: GSAP + ScrollTrigger 3.15.0, no longer loaded by any
+  page since redesign Phase 1; the files are deleted in Phase 6.
 
 ### Phase 1: the shell
 
-- **Nav** (`header.nav[data-nav]`): sticky, translucent, a container, so it
+- **Nav** (`header.nav[data-nav]`): sticky, solid, a container, so it
   collapses by its own width (under 640px), not the viewport. Logo, Features,
   Pricing, FAQ and the CTA, which stays in the bar at every width. Without JS
   the links are a row under the bar. `site.js` sets `[data-enhanced]` and runs
@@ -77,18 +79,19 @@ the foundation; Phase 1 is the shell, `/next/` itself:
 - To check by hand: serve the repo root (`python3 -m http.server`) and open
   `/next/` at 375, 768 and 1280 in both schemes, with Reduce Motion on, and
   with JS off. Open the menu with the keyboard (Tab, Shift+Tab, Escape). The
-  page `<meta>` CSP applies, so the console shows any blocked script. Scroll the
-  whole page before a full-page screenshot, since reveals wait for the scroll.
-  `_headers` and the Cloudflare zone settings only apply on Pages.
+  page `<meta>` CSP applies, so the console shows any blocked script.
+  `_headers` and the Cloudflare zone settings only apply on Pages. Since the
+  redesign, `scripts/scroll-pass.js` (below) is the way to check a change.
 
 Rules for `/next/` pages, enforced by `check-site.py`: `noindex`; a page CSP
 with `script-src 'self'` (the `_headers` rule drops the site-wide one, as for
 `/s`), so no inline script, style or event handlers; scripts
-use `defer`; no external asset URLs anywhere on the site; JS under 150 KB and
-CSS under 30 KB gzipped; every `img` has pixel `width` and `height`; ids are unique and every
+use `defer`; no external asset URLs anywhere on the site; JS under 40 KB and
+CSS under 26 KB gzipped; every `img` has pixel `width` and `height`; ids are unique and every
 `aria-controls` names one.
-Reveal rules: animate `transform` and `opacity` only, never put `data-reveal`
-on the headline or primary CTA, and nothing is hidden until JS runs.
+Motion rules (redesign SPEC §4.7): animate `transform` and `opacity` only;
+`[data-enter]` goes on pictures, never on text, prices or buttons; nothing
+loops, pins or scrubs; and nothing is hidden until JS runs.
 
 ## The text pages (Phase 6)
 

@@ -1,96 +1,22 @@
-/* The home page's sections, below the hero and the proof bar: the spot marquee,
-   the scroll-read statement, the story with a sticky phone, the bento, the
-   plans, the FAQ and the closing panel.
+/* The home page's sections, below the hero and the proof bar: the story, the
+   chart explorer, the badges, the bento, the plans, the FAQ and the closing
+   panel.
 
    Built from tokens.css and components.css; no colour literals. The rules the
    rest of /next/ keeps hold here too: transform and opacity are the only things
    that animate, no gradients, no dashed or dotted lines, and nothing is hidden
-   until JS has run (home.js sets every start state itself). Vertical rhythm is
-   one token, --section-y; a --panel band breaks it up once, around the story. */
+   until JS has run (site.js sets an entrance's start state itself, and only for
+   pictures, never text). Nothing pins, scrubs or loops (redesign SPEC §4.7).
+   Vertical rhythm is one token, --section-y. */
 
 .section { padding-block: var(--section-y); }
 .section--cta { padding-block: var(--space-5); }
 .section--flush { padding-top: 0; }
 .band { background: var(--panel); border-block: var(--stroke) solid var(--border); }
 
-.t-headline {
-  margin: 0; font-size: var(--fs-headline); font-weight: var(--fw-display);
-  letter-spacing: var(--track-title); line-height: 1.08; text-wrap: balance;
-}
 .section-header--center { margin-inline: auto; text-align: center; }
 .section-header--center .section-header__line { margin-inline: auto; }
 .lede { margin: var(--space-2) 0 0; max-width: var(--measure); color: var(--text-2); font-size: var(--fs-section); }
-.tag {
-  display: inline-block; margin-left: var(--space-1); padding: 0.125rem 0.625rem; vertical-align: 0.15em;
-  border: var(--stroke) solid var(--accent); border-radius: var(--r-pill);
-  color: var(--accent); font-size: var(--fs-label); font-weight: var(--fw-label);
-  letter-spacing: var(--track-label); text-transform: uppercase;
-}
-
-/* ---- Hero extras -----------------------------------------------------------
-   Decorative pieces floating at the demo's edge on a desktop. The outer
-   element is moved by scroll (home.js), the inner one bobs: two transforms,
-   so two elements. Hidden below 60rem, and the bob stops under Reduce Motion. */
-
-.float { display: none; position: absolute; z-index: 2; pointer-events: none; }
-.float__in { animation: bob calc(var(--dur-breath) * 3) var(--ease-in-out) infinite alternate; }
-.float--cards { left: -4.5rem; top: 4.5rem; }
-.float--cards .float__in { display: flex; transform-origin: 50% 100%; }
-.float--cards .pcard { width: 3.25rem; height: 4.5rem; font-size: 1.5rem; }
-.float--cards .pcard__suit { width: 1.25rem; height: 1.25rem; }
-.float--cards .pcard + .pcard { margin-left: -1.25rem; transform: rotate(9deg) translateY(0.5rem); }
-.float--cards .pcard:first-child { transform: rotate(-8deg); }
-.float--right { left: -6rem; bottom: 9rem; }
-.float--right .float__in { animation-duration: calc(var(--dur-breath) * 4); animation-direction: alternate-reverse; }
-.pill {
-  display: inline-flex; align-items: center; gap: var(--space-1); padding: 0.5rem var(--space-2);
-  background: var(--panel); color: var(--text); border: var(--stroke) solid var(--border);
-  border-radius: var(--r-pill); font-size: var(--fs-meta); font-weight: 600; white-space: nowrap;
-}
-.pill__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--good); }
-@keyframes bob { from { transform: translateY(-0.4rem); } to { transform: translateY(0.4rem); } }
-@media (min-width: 60rem) { .float { display: block; } }
-@media (prefers-reduced-motion: reduce) { .float__in { animation: none; } }
-
-/* ---- Marquee ----------------------------------------------------------------
-   Two rows of spot names drifting in opposite directions, the way the app
-   names them. Pure CSS, so it runs with no JS; hover pauses it. Each row holds
-   its list twice (the copy is aria-hidden) so the loop has no seam. Reduce
-   Motion: one wrapped row, no movement. */
-
-.marquee { display: grid; gap: var(--space-1); padding-block: var(--space-4); overflow: clip; }
-.marquee__row { display: flex; overflow: hidden; user-select: none; }
-.marquee__track {
-  display: flex; flex: none; align-items: center; justify-content: space-around; gap: var(--space-1);
-  min-width: 100%; margin: 0; padding: 0 var(--space-half) 0 0; list-style: none;
-  animation: marquee 55s linear infinite;
-}
-.marquee__row--rev .marquee__track { animation-direction: reverse; }
-.marquee:hover .marquee__track { animation-play-state: paused; }
-@keyframes marquee { to { transform: translateX(-100%); } }
-.spot {
-  display: inline-flex; align-items: baseline; gap: 0.4em; padding: 0.5rem var(--space-2);
-  background: var(--panel); color: var(--text-2);
-  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
-  font-size: var(--fs-meta); white-space: nowrap;
-}
-.spot b { color: var(--text); font-weight: 600; }
-@media (prefers-reduced-motion: reduce) {
-  .marquee__row { overflow: visible; }
-  .marquee__track { animation: none; flex-wrap: wrap; justify-content: center; padding-inline: var(--gutter); }
-  .marquee__track[aria-hidden] { display: none; }
-}
-
-/* ---- Statement ---------------------------------------------------------------
-   One sentence, large. home.js dims its words and lights them as it scrolls
-   through; without it (or with Reduce Motion) it is just text. */
-
-.statement { padding-block: var(--space-5) var(--section-y); }
-.statement__text {
-  margin: 0 auto; max-width: 18em; text-align: center; text-wrap: balance;
-  font-size: var(--fs-statement); font-weight: var(--fw-display);
-  letter-spacing: var(--track-title); line-height: 1.12;
-}
 
 /* ---- Shot: an app screenshot in a phone frame ----------------------------------
    The same slim bezel as the demo. Screenshots are 600 x 1304. */
@@ -103,10 +29,9 @@
 .shot img { width: 100%; height: auto; }
 
 /* ---- Story --------------------------------------------------------------------
-   Four chapters, each with its screenshot beside it; stacked on a phone. On a
-   desktop with motion, home.js sets [data-pin]: the screenshots move into one
-   sticky phone and the chapters scroll past it, each lighting the right
-   screen. Reduce Motion or no JS keeps the stacked layout, no pin. */
+   Six chapters, each with its screenshot beside it; stacked on a phone, side by
+   side (alternating) from 48rem. Nothing pins: until the teaching section
+   replaces it (redesign Phase 3) it is plain, stacked content. */
 
 .story { --shot-w: 16rem; }
 .story__chapters { display: grid; gap: var(--space-6); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
@@ -115,54 +40,22 @@
 .story__title { margin: 0; font-size: var(--fs-title); font-weight: var(--fw-title); letter-spacing: var(--track-title); line-height: var(--lh-title); }
 .story__body { margin: var(--space-2) 0 0; max-width: 28rem; color: var(--text-2); font-size: var(--fs-section); }
 .story__inline { justify-self: center; }
-.story__stage { display: none; }
 @media (min-width: 48rem) {
   .story__chapter { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-6); }
   .story__chapter:nth-child(even) { grid-template-columns: auto minmax(0, 1fr); }
   .story__chapter:nth-child(even) .story__inline { order: -1; }
 }
 
-.story[data-pin] { --shot-w: min(17.5rem, calc((100svh - var(--nav-h) - 6rem) * 0.44)); }
-.story[data-pin] .story__chapters { margin-top: 0; gap: 0; }
-.story[data-pin] .story__grid {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-5);
-}
-.story[data-pin] .story__chapter {
-  display: flex; align-items: center; min-height: 72svh;
-  opacity: 0.5; transition: opacity var(--dur-reveal) var(--ease-out);
-}
-.story[data-pin] .story__chapter.is-active { opacity: 1; }
-.story[data-pin] .story__inline { display: none; }
-.story[data-pin] .story__stage {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3);
-  position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h));
-}
-.story__screens { display: grid; }
-.story__screens img { grid-area: 1 / 1; }
-.story__img {
-  opacity: 0; transform: translateY(var(--entrance-rise)) scale(0.985);
-  transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
-}
-.story__img.is-active { opacity: 1; transform: none; }
-.story__dots { display: flex; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
-.story__dots li { width: 1.75rem; height: 4px; border-radius: var(--r-pill); background: var(--border); }
-.story__dots li.is-active { background: var(--accent); }
-@media (prefers-reduced-motion: reduce) {
-  .story[data-pin] .story__chapter, .story__img { transition: none; }
-}
-
 /* ---- Bento ---------------------------------------------------------------------
-   Seven cards of different sizes, each with its own small picture that plays
-   once as it scrolls in. One column on a phone, two from 48rem, a 12-column
-   grid from 64rem. A card lifts on hover. */
+   Seven cards of different sizes, each with its own small, static picture. One
+   column on a phone, two from 48rem, a 12-column grid from 64rem. Nothing moves
+   under the pointer. */
 
 .bento { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
 .bento__card {
   display: flex; flex-direction: column; gap: var(--space-3); min-width: 0;
   padding: var(--space-3); overflow: hidden;
-  transition: transform var(--dur-press) var(--ease-press);
 }
-.bento__card:hover { transform: translateY(-4px); }
 .bento__title { margin: 0; }
 .bento__text p { margin: var(--space-1) 0 0; color: var(--text-2); }
 .bento__visual { margin-top: auto; }
@@ -175,7 +68,6 @@
   .bento__card--4 { grid-column: span 4; }
   .bento__card--6 { grid-column: span 6; }
 }
-@media (prefers-reduced-motion: reduce) { .bento__card:hover { transform: none; } }
 
 /* The mix: how often the chart takes each action with a hand. Three real
    hands from the demo's spots. */
@@ -247,7 +139,6 @@
 .trend { width: 100%; height: auto; }
 .trend__base { fill: var(--border); }
 .trend__line { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.trend__cover { fill: var(--panel); }
 
 /* ---- Plans ---------------------------------------------------------------------- */
 
@@ -281,12 +172,12 @@
 .faqs__aside p { margin: var(--space-2) 0 0; color: var(--text-2); }
 @media (min-width: 64rem) {
   .faqs { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-7); }
-  .faqs__aside { align-self: start; position: sticky; top: calc(var(--nav-h) + var(--space-3)); }
+  .faqs__aside { align-self: start; }
 }
 
 /* ---- Closing ------------------------------------------------------------------------
    One big panel: the line, the button, the QR on a desktop, and the phone coming
-   up from the bottom edge (it drifts as the page scrolls). */
+   up from the bottom edge. */
 
 .closing {
   position: relative; display: grid; gap: var(--space-4); overflow: hidden;
@@ -304,89 +195,11 @@
   .closing__phone { --shot-w: 17rem; height: 26rem; align-self: end; }
 }
 
-/* ---- Page progress ----------------------------------------------------------
-   A 3px amber line along the top of the viewport, scaled by home.js as the
-   page scrolls. Nothing until JS has drawn it. */
-.progress {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: 3px;
-  background: var(--accent); transform: scaleX(0); transform-origin: left; pointer-events: none;
-}
-
-/* ---- Story pieces ----------------------------------------------------------------
-   Small cards that pop out of the phone: the verdict, the mix, the reason, the
-   leak. Each is drawn from what the real screen shows (the numbers are the
-   app's own or marked Sample profile), so the picture and the piece agree.
-   They sit around the phone, partly over its edge. Stacked, they are always
-   shown; pinned, the stage swaps in the chapter's set and they rise in one by
-   one. Enhancement only: home.js sets [data-fx] before anything is hidden. */
-
-.shot-wrap {
-  position: relative; width: var(--shot-w);
-  --out: min(34%, max(0.25rem, calc((100vw - var(--shot-w) - 2 * var(--gutter)) / 2)));
-}
+/* The screenshot wrapper the story uses, and the mix widths that the teaching
+   section's no-JS card will use (redesign Phase 3). */
+.shot-wrap { position: relative; width: var(--shot-w); }
 .shot-wrap .shot { width: 100%; }
-@media (min-width: 48rem) { .story__chapter .shot-wrap { --out: 1.25rem; } }
-.story[data-pin] .story__stage .shot-wrap { --out: 34%; }
-
-.pieces { position: absolute; inset: 0; pointer-events: none; }
-.piece {
-  position: absolute; z-index: 3; width: max-content; max-width: 11.5rem;
-  background: var(--bg); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
-  box-shadow: 0 14px 32px -14px color-mix(in srgb, var(--text) 38%, transparent);
-  font-size: 0.8125rem; line-height: 1.35;
-}
-.piece__in { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.65rem 0.8rem; animation: bob calc(var(--dur-breath) * 3.4) var(--ease-in-out) infinite alternate; }
-.piece[data-i="1"] .piece__in { animation-duration: calc(var(--dur-breath) * 4.1); animation-delay: -1.1s; }
-.piece[data-i="2"] .piece__in { animation-duration: calc(var(--dur-breath) * 3.7); animation-delay: -2.3s; }
-.piece--tl { left: calc(var(--out) * -1); top: 8%; }
-.piece--tr { right: calc(var(--out) * -1); top: 5%; }
-.piece--ml { left: calc(var(--out) * -1); top: 38%; }
-.piece--mr { right: calc(var(--out) * -1); top: 42%; }
-.piece--bl { left: calc(var(--out) * -1); bottom: 9%; }
-.piece--br { right: calc(var(--out) * -1); bottom: 6%; }
-.piece__label { margin: 0; color: var(--accent); }
-.piece__big { font-size: 1.0625rem; font-weight: 600; letter-spacing: var(--track-title); line-height: 1.15; }
-.piece__sub { color: var(--text-2); }
-.piece__fig { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
-.piece__fig span { font-size: 1.125rem; color: var(--text-2); }
-.piece__spark { width: 100%; height: 1.75rem; overflow: visible; }
-.piece__spark polyline { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.piece--verdict .piece__in { flex-direction: row; align-items: center; gap: 0.6rem; }
-.piece__tick { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--good); }
-.piece__tick svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: var(--accent-fill-ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.piece--quote { max-width: 12.5rem; color: var(--text-2); }
-.piece--mix { width: 12.5rem; }
-.piece--mix .mix__row { grid-template-columns: 2.75rem minmax(0, 1fr) 2.25rem; gap: var(--space-1); }
-.piece--acts .piece__in { flex-direction: row; gap: 0.35rem; padding: 0.5rem; }
-.pbtn { display: inline-block; padding: 0.4rem 0.7rem; border-radius: var(--r-button); font-weight: 600; background: var(--well); }
-.pbtn--fold { background: var(--act-fold); color: var(--act-ink); }
-.pbtn--call { background: var(--act-call); color: var(--act-ink); }
-.pbtn--raise { background: var(--act-raise); color: var(--act-ink); }
-.pbtn--accent { margin-top: 0.35rem; text-align: center; background: var(--accent-fill); color: var(--accent-fill-ink); }
-.piece--hand .piece__in { flex-direction: row; align-items: center; gap: 0.4rem; }
-.piece--hand .pcard { width: 2.25rem; height: 3.1rem; font-size: 1.0625rem; }
-.piece--hand .pcard__suit { width: 0.95rem; height: 0.95rem; }
-.piece__col { display: flex; flex-direction: column; margin-left: 0.3rem; }
-.piece--legend .piece__in { gap: 0.35rem; }
-.lg { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--text-2); }
-.lg i { width: 0.75rem; height: 0.75rem; border-radius: 2px; background: var(--well); }
-.lg i.lg-fold { background: var(--act-fold); } .lg i.lg-call { background: var(--act-call); } .lg i.lg-raise { background: var(--act-raise); }
-.piece--verdicts .piece__in { gap: 0.4rem; }
-.pverd { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; }
-.pverd__dot { width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--text-3); }
-.pverd__dot--good { background: var(--good); } .pverd__dot--mid { background: var(--mid); }
-.piece--stacks .piece__in { flex-direction: row; gap: 0.35rem; padding: 0.5rem; }
-.pstack { padding: 0.3rem 0.65rem; border-radius: var(--r-pill); border: var(--stroke) solid var(--border); font-weight: 600; color: var(--text-2); }
-.pstack--on { border-color: var(--accent); color: var(--accent); }
 .mix__bar--v0 { --f: 0; } .mix__bar--v33 { --f: 0.33; } .mix__bar--v35 { --f: 0.35; } .mix__bar--v65 { --f: 0.65; } .mix__bar--v67 { --f: 0.67; }
-
-/* The stage's sets: only the active chapter's pieces show. */
-.pieceset { position: absolute; inset: 0; pointer-events: none; }
-.story[data-fx] .piece { opacity: 0; transform: translateY(var(--entrance-rise)) scale(0.96); transition: opacity var(--dur-entrance) var(--ease-out), transform var(--dur-entrance) var(--ease-out); transition-delay: calc(var(--i, 0) * 120ms + 180ms); }
-.story[data-fx] .piece.is-in { opacity: 1; transform: none; }
-.story[data-fx] .piece .mix__bar { transform: scaleX(0); transition: transform calc(var(--dur-settle) * 2) var(--ease-out); transition-delay: calc(var(--i, 0) * 120ms + 420ms); }
-.story[data-fx] .piece.is-in .mix__bar { transform: scaleX(var(--f, 0)); }
-@media (prefers-reduced-motion: reduce) { .piece__in { animation: none; } .story[data-fx] .piece, .story[data-fx] .piece .mix__bar { transition: none; } }
 
 /* ---- The chart explorer ------------------------------------------------------------
    The app's real range charts, drawn here from its own data (app-data.js). Each
@@ -434,13 +247,9 @@
   font-size: clamp(0.4rem, 2.5cqw, 0.75rem); font-weight: 600; letter-spacing: -0.02em; color: var(--accent-fill-ink);
 }
 .cell--empty .cell__t { color: var(--text-3); }
-/* Label ink per fill, as on the buttons: dark on the dark scheme's fills, and in
-   light white on fold and call (3.9 to 4.9:1 either way round). */
-.cgrid { --cell-ink: #150f02; --cell-ink-raise: #150f02; }
-@media (prefers-color-scheme: light) { :root:not([data-theme]) .cgrid { --cell-ink: #ffffff; } }
-[data-theme="light"] .cgrid { --cell-ink: #ffffff; }
-.cell--ink-f .cell__t, .cell--ink-c .cell__t { color: var(--cell-ink); }
-.cell--ink-r .cell__t { color: var(--cell-ink-raise); }
+/* Label ink on a fill is --act-ink, as on the buttons: near-black clears 4.5:1
+   on every fill in both schemes, where white on the light fold red was 3.7:1. */
+.cell--ink-f .cell__t, .cell--ink-c .cell__t, .cell--ink-r .cell__t { color: var(--act-ink); }
 .cell.is-hero::before { content: ""; position: absolute; inset: 0; z-index: 1; border: 2px solid var(--text); border-radius: 2px; pointer-events: none; }
 /* The picked hand gets a ring, not a bigger square: a scaled square would cover its
    neighbours and steal the pointer from them. */
@@ -455,26 +264,17 @@
 .badge {
   display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: var(--space-2) var(--space-1);
   background: var(--bg); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
-  transition: transform var(--dur-press) var(--ease-press);
 }
-@media (hover: hover) { .badge:hover { transform: translateY(-4px); } }
 .badge__discs { display: flex; gap: 0.35rem; }
 .badge__disc { position: relative; width: 1.375rem; height: 1.375rem; border-radius: 50%; background: var(--badge-unearned); }
 .badge__disc::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--tier); }
 .badge__disc--bronze { --tier: var(--badge-bronze); } .badge__disc--silver { --tier: var(--badge-silver); }
 .badge__disc--gold { --tier: var(--badge-gold); } .badge__disc--diamond { --tier: var(--badge-diamond); }
 .badge__name { color: var(--text-2); font-size: var(--fs-meta); font-weight: 600; text-align: center; }
-/* Enhanced: each badge starts unearned and its discs fill in tier by tier. */
-.badges[data-fx] .badge__disc::after { opacity: 0; transform: scale(0.3); transition: opacity var(--dur-entrance) var(--ease-out), transform var(--dur-settle) var(--ease-out); }
-.badges[data-fx] .badge.is-in .badge__disc::after { opacity: 1; transform: none; }
-.badges[data-fx] .badge.is-in .badge__disc:nth-child(2)::after { transition-delay: 160ms; }
-.badges[data-fx] .badge.is-in .badge__disc:nth-child(3)::after { transition-delay: 320ms; }
-.badges[data-fx] .badge.is-in .badge__disc:nth-child(4)::after { transition-delay: 480ms; }
 .unlocks { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1) var(--space-2); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
 .unlock { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.95rem; border-radius: var(--r-pill); border: var(--stroke) solid var(--border); background: var(--bg); font-weight: 600; }
 .unlock__lv { color: var(--accent); font-size: var(--fs-label); letter-spacing: var(--track-label); text-transform: uppercase; }
 .badges__foot { margin: var(--space-3) 0 0; text-align: center; color: var(--text-2); }
-@media (prefers-reduced-motion: reduce) { .badges[data-fx] .badge__disc::after { transition: none; } .badge { transition: none; } }
 
 /* Bento extras: the depth chips, the glossary line and the captions on drawn pictures. */
 .depths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); margin: var(--space-3) 0 0; padding: 0; list-style: none; }

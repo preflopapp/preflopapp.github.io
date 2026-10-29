@@ -10,14 +10,13 @@
 <meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0f14" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/assets/mark-v2.svg?v=3429e5d9" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2?v=58f23b7a" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2?v=787b3fdd" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/next/css/tokens.css?v=462dcb3d">
-<link rel="stylesheet" href="/next/css/components.css?v=f3beb520">
-<link rel="stylesheet" href="/next/css/sections.css?v=47ba0c44">
+<link rel="stylesheet" href="/next/css/tokens.css?v=7210b3b8">
+<link rel="stylesheet" href="/next/css/components.css?v=29f582be">
+<link rel="stylesheet" href="/next/css/styleguide.css?v=5f9040c0">
 <script defer src="/next/js/config.js?v=2357ec70"></script>
-<script defer src="/assets/vendor/gsap/gsap.min.js?v=92bb9a96"></script>
-<script defer src="/assets/vendor/gsap/ScrollTrigger.min.js?v=b0b14d67"></script>
-<script defer src="/next/js/site.js?v=43f34baa"></script>
+<script defer src="/next/js/site.js?v=78b06ad2"></script>
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to content</a>
@@ -616,7 +615,7 @@
 <p class="t-label section-header__eyebrow">Eyebrow</p>
 <h2 class="t-title section-header__title">Section title</h2>
 </div>
-<div class="stub__panel" data-reveal><span class="t-label">Placeholder</span><p>Built in a later phase.</p></div>
+<div class="stub__panel"><span class="t-label">Placeholder</span><p>Built in a later phase.</p></div>
 </div>
 </section>
 </div>
@@ -636,7 +635,7 @@
 <p class="t-label section-header__eyebrow">Eyebrow</p>
 <h2 class="t-title section-header__title">Section title</h2>
 </div>
-<div class="stub__panel" data-reveal><span class="t-label">Placeholder</span><p>Built in a later phase.</p></div>
+<div class="stub__panel"><span class="t-label">Placeholder</span><p>Built in a later phase.</p></div>
 </div>
 </section>
 </div>
@@ -644,35 +643,35 @@
 </div>
 </div>
 </section>
-<section class="sg-row" id="reveal">
+<section class="sg-row" id="entrance">
 <div class="wrap">
 <div class="sg-row__head">
-<h2 class="t-section">Scroll reveal</h2>
-<p>Rise 12px and fade in, 40ms stagger, capped. With Reduce Motion or no JS the cards are simply there. <button class="btn btn--secondary" type="button" data-reveal-replay="#reveal" hidden>Replay</button></p>
+<h2 class="t-section">Entrance</h2>
+<p>A picture that comes up from below the screen rises 12px and fades in; in a <code>data-enter-group</code> the pictures follow 40ms apart, at most 160ms late. Pictures only, never text, prices or buttons. With Reduce Motion or no JS they are simply there.</p>
 </div>
 <div class="sg-pair">
 <div class="scope" data-theme="dark">
 <span class="t-label sg-pair__tag">Dark</span>
-<div class="sg-stack sg-stack--col" id="reveal-dark-items" data-reveal-group>
-<article class="card" data-reveal><h3 class="t-section card__title">One</h3></article>
-<article class="card" data-reveal><h3 class="t-section card__title">Two</h3></article>
-<article class="card" data-reveal><h3 class="t-section card__title">Three</h3></article>
-<article class="card" data-reveal><h3 class="t-section card__title">Four</h3></article>
+<div class="sg-shapes" data-enter-group>
+<div class="sg-shape sg-shape--panel" data-enter></div>
+<div class="sg-shape sg-shape--panel" data-enter></div>
+<div class="sg-shape sg-shape--panel" data-enter></div>
+<div class="sg-shape sg-shape--panel" data-enter></div>
 </div>
 </div>
 <div class="scope" data-theme="light">
 <span class="t-label sg-pair__tag">Light</span>
-<div class="sg-stack sg-stack--col" id="reveal-light-items" data-reveal-group>
-<article class="card" data-reveal><h3 class="t-section card__title">One</h3></article>
-<article class="card" data-reveal><h3 class="t-section card__title">Two</h3></article>
-<article class="card" data-reveal><h3 class="t-section card__title">Three</h3></article>
-<article class="card" data-reveal><h3 class="t-section card__title">Four</h3></article>
+<div class="sg-shapes" data-enter-group>
+<div class="sg-shape sg-shape--panel" data-enter></div>
+<div class="sg-shape sg-shape--panel" data-enter></div>
+<div class="sg-shape sg-shape--panel" data-enter></div>
+<div class="sg-shape sg-shape--panel" data-enter></div>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section class="sg-row" id="motion"><div class="wrap"><div class="sg-row__head"><h2 class="t-section">Motion</h2><p>From <code>PreflopMotion.swift</code>, as <code>--dur-*</code> and <code>--ease-*</code> in <code>tokens.css</code>. Animate transform and opacity only. Reduce Motion: durations go to zero, GSAP does not run, content just appears.</p></div><div class="sg-table-wrap"><table class="sg-motion"><thead><tr><th>Token</th><th>Timing</th><th>For</th></tr></thead><tbody><tr><td>snappy</td><td>200ms ease-out</td><td>Selection, quick state</td></tr><tr><td>settle</td><td>300ms ease-out</td><td>Default state change</td></tr><tr><td>entrance</td><td>240ms ease-out</td><td>Staggered entrance, 12px rise, 40ms step, 160ms cap</td></tr><tr><td>reveal</td><td>550ms ease-out</td><td>Soft reveal</td></tr><tr><td>press</td><td>240ms spring .22 / .70</td><td>Press feedback, scale .97</td></tr><tr><td>emphasis</td><td>370ms spring .34 / .68</td><td>Something that earned attention</td></tr><tr><td>slide</td><td>330ms spring .33 / .86</td><td>Sliding between positions</td></tr><tr><td>count</td><td>900ms ease-out</td><td>Counting numbers</td></tr><tr><td>breath</td><td>1500ms ease-in-out</td><td>Idle swell</td></tr></tbody></table></div></div></section>
+<section class="sg-row" id="motion"><div class="wrap"><div class="sg-row__head"><h2 class="t-section">Motion</h2><p>From <code>PreflopMotion.swift</code>, as <code>--dur-*</code> and <code>--ease-*</code> in <code>tokens.css</code>. Animate transform and opacity only. Reduce Motion: durations go to zero, <code>site.js</code> plays no entrance or count, content just appears.</p></div><div class="sg-table-wrap"><table class="sg-motion"><thead><tr><th>Token</th><th>Timing</th><th>For</th></tr></thead><tbody><tr><td>snappy</td><td>200ms ease-out</td><td>Selection, quick state</td></tr><tr><td>settle</td><td>300ms ease-out</td><td>Default state change</td></tr><tr><td>entrance</td><td>240ms ease-out</td><td>Staggered entrance, 12px rise, 40ms step, 160ms cap</td></tr><tr><td>reveal</td><td>550ms ease-out</td><td>Soft reveal</td></tr><tr><td>press</td><td>240ms spring .22 / .70</td><td>Press feedback, scale .97</td></tr><tr><td>emphasis</td><td>370ms spring .34 / .68</td><td>Something that earned attention</td></tr><tr><td>slide</td><td>330ms spring .33 / .86</td><td>Sliding between positions</td></tr><tr><td>count</td><td>900ms ease-out</td><td>Counting numbers</td></tr><tr><td>breath</td><td>1500ms ease-in-out</td><td>Idle swell</td></tr></tbody></table></div></div></section>
 <section class="sg-row" id="rules"><div class="wrap">
 <div class="sg-row__head"><h2 class="t-section">Rules</h2></div>
 <ul class="sg-note">
