@@ -1494,7 +1494,7 @@ const PROBES = {
           rows: Object.keys(rows).length, gaps, small: shown,
           fits: m.left >= card.left && m.right <= card.right + 0.5 && m.width > 150 && (!shown || (R(sm).left >= m.right && R(sm).right <= card.right + 0.5)),
           smallRight: shown === (wb.width >= 448),
-          landed: document.querySelector("[data-pop]").getAttribute("data-pop") !== "pending",
+          landed: !Array.from(document.querySelectorAll('#progress [data-enter="pending"]')).some((e) => R(e).top < innerHeight),
         };
       });
       await page.evaluate(() => document.getElementById("bankroll").scrollIntoView());
@@ -1510,7 +1510,7 @@ const PROBES = {
       k.check(`${tag}: no empty grid cell (${r.rows} rows)`, !r.gaps, `${r.gaps} rows short`);
       k.check(`${tag}: the widgets fit their card`, r.fits, `small ${r.small ? "shown" : "hidden"}`);
       k.check(`${tag}: the small widget shows only where the card has room`, r.smallRight, `small ${r.small ? "shown" : "hidden"}`);
-      k.check(`${tag}: pop has landed in view`, r.landed, "");
+      k.check(`${tag}: the pictures on screen have entered`, r.landed, "");
       k.check(`${tag}: no captions under the shots; two Pro tabs, not clipped; four bankroll shots`, !g.caps && g.pros.length === 2 && g.pros.every(Boolean) && g.shots === 4, JSON.stringify(g));
       k.check(`${tag}: the Live Activity fits its panel`, g.live, "");
       await page.evaluate(() => document.getElementById("progress").scrollIntoView());
@@ -1521,7 +1521,7 @@ const PROBES = {
     /* Reduce Motion: nothing pending, no animations. */
     const { ctx, page } = await k.open({ w: 390, h: 844 }, "dark", "reduced");
     await k.load(page, "/");
-    const rm = await page.evaluate(() => ({ pending: document.querySelectorAll('[data-pop="pending"], [data-enter="pending"]').length, anims: document.getAnimations().length }));
+    const rm = await page.evaluate(() => ({ pending: document.querySelectorAll('[data-enter="pending"]').length, anims: document.getAnimations().length }));
     k.check("Reduce Motion: nothing pending, no animations", !rm.pending && !rm.anims, JSON.stringify(rm));
     await ctx.close();
   },

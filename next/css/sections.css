@@ -99,8 +99,8 @@
 @media (min-width: 120rem) { .gallery { --shot-w: 14.5rem; } }
 
 /* ---- Free for everyone (#progress, redesign SPEC §6.7) -------------------------------
-   Two cards: the streak and a badge's four tiers (drawn), and the Home Screen
-   widgets (captured). One column on a phone, two from 48rem, pictures on the
+   Two cards, each with captures from the app: badges, and the Home Screen
+   widgets. One column on a phone, two from 48rem, pictures on the
    cards' bottom edge. The bankroll tracker has its own section (#bankroll). */
 
 .perks__grid { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
@@ -114,21 +114,12 @@
 @media (min-width: 48rem) { .perks__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); } }
 @media (min-width: 64rem) { .perk { gap: var(--space-3); padding: var(--space-4); } }
 
-/* Card 1: a week of the streak (five days played, today ringed) and the
-   "Facing an open" badge in its four tiers. site.js's pop scales the filled
-   circles and the discs in once ([data-pop], each row [data-pop-step] ms apart). */
-.progress { display: grid; gap: 0.75rem; }
-.streak { display: grid; grid-template-columns: repeat(7, minmax(0, 2rem)); gap: var(--space-1); }
-.streak__day { aspect-ratio: 1; border-radius: 50%; background: var(--well); }
-.streak__day.is-on { background: var(--accent-fill); }
-.streak__day.is-today { outline: 2px solid var(--accent); outline-offset: 2px; }
-.tiers { display: flex; align-items: center; gap: var(--space-2); }
-.tiers__discs { display: flex; gap: 0.375rem; }
-.tier { width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--tier); }
-.tier--bronze { --tier: var(--badge-bronze); } .tier--silver { --tier: var(--badge-silver); }
-.tier--gold { --tier: var(--badge-gold); } .tier--diamond { --tier: var(--badge-diamond); }
-.tiers__name { color: var(--text-2); font-size: var(--fs-meta); font-weight: 600; }
-[data-pop="pending"] [data-pop-step] > .is-on { opacity: 0; transform: scale(0.6); }
+/* Card 1: two captures from the app: the "Badge earned" banner, and the
+   Badges screen's count with one seat's ladder in progress. */
+.bshots { display: grid; gap: var(--space-2); justify-items: start; }
+.bshots img { display: block; width: 100%; height: auto; }
+.bshots__banner { max-width: 20rem; }
+.bshots__list { max-width: 26rem; }
 
 /* Card 2: the medium and small widgets, captured from the app (dark; the
    corners are cut to the widget's shape, transparent). The small one shows
