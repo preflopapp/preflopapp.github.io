@@ -1091,7 +1091,7 @@ async function serve(o) {
 
 function report(all, o, phase, out) {
   const L = [];
-  const commit = (() => { try { return execFileSync("git", ["-C", o.root ? path.resolve(o.root) : REPO, "rev-parse", "--short", "HEAD"], { encoding: "utf8" }).trim(); } catch (e) { return "?"; } })();
+  const commit = (() => { try { return execFileSync("git", ["-C", o.root ? path.resolve(o.root) : REPO, "rev-parse", "--short", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); } catch (e) { return "?"; } })();
   L.push(`# scroll-pass${o.label ? ": " + o.label : ""}`, "");
   L.push(`- Base: ${o.base}${o.live ? " (live)" : ""}; commit ${o.live ? "(deployed)" : commit}; phase ${phase}; ${new Date().toISOString()}`);
   L.push(`- Chromium ${all.version}; ${all.runs.length} passes, ${all.probes.length} probes; output ${out}`);
@@ -1138,7 +1138,8 @@ function report(all, o, phase, out) {
     if (cons.length || fails.length) {
       L.push("### Console and failed requests", "");
       const uniq = new Map();
-      for (const c of cons) { const k2 = `${c.bucket}|${c.type}|${c.text.slice(0, 160)}`; uniq.set(k2, (uniq.get(k2) || 0) + 1); }
+      /* The zone's inline script differs per request, so its hash is folded. */
+      for (const c of cons) { const k2 = `${c.bucket}|${c.type}|${c.text.replace(/sha256-[\w+/=]+/g, "sha256-…").slice(0, 160)}`; uniq.set(k2, (uniq.get(k2) || 0) + 1); }
       for (const [k2, n] of uniq) { const [bucket, type, text] = k2.split("|"); L.push(`- ${bucket === "zone" ? "zone-injected (owner action)" : bucket} ${type} ×${n}: ${text}`); }
       const uf = new Map();
       for (const c of fails) { const k2 = `${c.bucket}|${c.url.slice(0, 120)}|${c.why}`; uf.set(k2, (uf.get(k2) || 0) + 1); }
