@@ -25,15 +25,15 @@
 <link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2?v=58f23b7a" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2?v=787b3fdd" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/next/css/tokens.css?v=7210b3b8">
-<link rel="stylesheet" href="/next/css/components.css?v=70bc9cbb">
+<link rel="stylesheet" href="/next/css/components.css?v=010d1298">
 <link rel="stylesheet" href="/next/css/demo.css?v=3898a329">
-<link rel="stylesheet" href="/next/css/sections.css?v=3654af81">
+<link rel="stylesheet" href="/next/css/sections.css?v=7bbc5508">
 <script defer src="/next/js/config.js?v=2357ec70"></script>
-<script defer src="/next/js/site.js?v=78b06ad2"></script>
-<script defer src="/next/js/app-data.js?v=38cb8073"></script>
-<script defer src="/next/js/chart.js?v=ef8fcd74"></script>
+<script defer src="/next/js/site.js?v=bd92d498"></script>
+<script defer src="/next/js/app-data.js?v=10ba747d"></script>
+<script defer src="/next/js/chart.js?v=09a6fc2a"></script>
 <script defer src="/next/js/demo.js?v=3b641b52"></script>
-<script defer src="/next/js/explorer.js?v=74bfc1ab"></script>
+<script defer src="/next/js/teach.js?v=d0a3cce1"></script>
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to content</a>
@@ -107,96 +107,69 @@
 </ul>
 </div>
 </section>
-<section class="section band story" id="features" aria-labelledby="story-title">
-<div class="wrap">
-<div class="section-header section-header--center">
-<p class="t-label section-header__eyebrow">How it works</p>
-<h2 class="t-headline" id="story-title">Play it. Understand it. Fix it.</h2>
+<section class="section band teach" id="features" aria-labelledby="teach-title">
+<div class="wrap teach__grid">
+<header class="section-header teach__head">
+<p class="t-label section-header__eyebrow">How it teaches</p>
+<h2 class="t-headline section-header__title" id="teach-title">Every answer, explained.</h2>
+<p class="section-header__line">After each hand you see how often the chart takes every action with your cards, the reason in plain words, and the whole chart for the spot.</p>
+</header>
+<div class="teach__tabs" role="tablist" aria-label="Choose a spot" hidden>
+<button class="teach__tab" type="button" role="tab" id="teach-tab-kts" aria-selected="true" aria-controls="teach-chart" data-chart="vsallin-6max-20bb-co-vs-bb-rejam"><span class="teach__tab-hand">KTs</span><span class="teach__tab-sit">20bb jam</span></button>
+<button class="teach__tab" type="button" role="tab" id="teach-tab-j8s" aria-selected="false" aria-controls="teach-chart" tabindex="-1" data-chart="vsopen-6max-bb-vs-btn"><span class="teach__tab-hand">J8s</span><span class="teach__tab-sit">vs an open</span></button>
+<button class="teach__tab" type="button" role="tab" id="teach-tab-a5s" aria-selected="false" aria-controls="teach-chart" tabindex="-1" data-chart="rfi-6max-btn"><span class="teach__tab-hand">A5s</span><span class="teach__tab-sit">opening</span></button>
 </div>
-<div class="story__grid" data-story>
-<ol class="story__chapters">
-<li class="story__chapter" data-chapter>
-<div class="story__copy">
-<p class="t-label story__num">01</p>
-<h3 class="story__title">A real spot, one hand at a time.</h3>
-<p class="story__body">Opening, facing an open, facing a 3-bet, blind vs blind and all-ins. From every seat, at 100, 30 and 20bb.</p>
+<figure class="teach__chart" id="teach-chart">
+<div class="teach__live" data-chart hidden></div>
+<div class="teach__key" hidden>
+<div class="teach__legend" data-legend></div>
+<p class="teach__note">s = suited, o = offsuit</p>
+<p class="teach__hint"><span class="teach__hint--hover">Hover or tap any hand to see its mix.</span><span class="teach__hint--touch">Tap any hand to see its mix.</span></p>
 </div>
-<div class="story__inline"><div class="shot-wrap"><figure class="shot" data-enter><img src="/assets/screens/app-practice.webp?v=1e6769a0" alt="The practice screen: the button holds A of hearts and 5 of hearts facing a cutoff open, with Fold, Call and 3-Bet buttons." width="600" height="1304" loading="lazy" decoding="async"></figure></div></div>
-</li>
-<li class="story__chapter" data-chapter>
-<div class="story__copy">
-<p class="t-label story__num">02</p>
-<h3 class="story__title">Every answer comes with the reason.</h3>
-<p class="story__body">See how often the chart takes each action with your hand, and why it plays that way.</p>
+<div class="teach__static" data-theme="dark">
+<div class="shot"><img src="/assets/screens/app-jam-chart.webp?v=be87fb73" alt="The app’s range chart for the cutoff facing a big-blind re-jam at 20bb: red fold and blue call squares, the hands it never opens in grey, KTs outlined." width="600" height="1304" loading="lazy" decoding="async"></div>
+<p class="figcap">The same chart in the app.</p>
 </div>
-<div class="story__inline"><div class="shot-wrap"><figure class="shot" data-enter><img src="/assets/screens/app-answer.webp?v=28d54761" alt="The answer screen: Correct, with the explanation of why a suited ace is a good hand to 3-bet, and a bar under the buttons showing Fold 0%, Call 35%, 3-Bet 65%." width="600" height="1304" loading="lazy" decoding="async"></figure></div></div>
-</li>
-<li class="story__chapter" data-chapter>
-<div class="story__copy">
-<p class="t-label story__num">03</p>
-<h3 class="story__title">See the chart it came from.</h3>
-<p class="story__body">Open the full 13 by 13 range chart for the spot and see where your hand sits among all the others.</p>
-</div>
-<div class="story__inline"><div class="shot-wrap"><figure class="shot" data-enter><img src="/assets/screens/app-chart.webp?v=df22f9ab" alt="The range chart for the button against a cutoff open, 100bb 6-max, with the hand A5s ringed." width="600" height="1304" loading="lazy" decoding="async"></figure></div></div>
-</li>
-<li class="story__chapter" data-chapter>
-<div class="story__copy">
-<p class="t-label story__num">04</p>
-<h3 class="story__title">Know where your leaks are. <span class="tag">Pro</span></h3>
-<p class="story__body">Your accuracy over your last 200 hands, and the one spot costing you most, named so you can drill it.</p>
-</div>
-<div class="story__inline"><div class="shot-wrap"><figure class="shot" data-enter><img src="/assets/screens/app-home.webp?v=15f925f9" alt="The Home screen: accuracy of 74 percent over the last 200 hands with a trend line, and a Fix next card for the cutoff facing a 3-bet, folding too much." width="600" height="1304" loading="lazy" decoding="async"></figure></div></div>
-</li>
-<li class="story__chapter" data-chapter>
-<div class="story__copy">
-<p class="t-label story__num">05</p>
-<h3 class="story__title">Go back to any hand. <span class="tag">Pro</span></h3>
-<p class="story__body">Your full history, filterable, with every explanation. Put the ones you got wrong back on the table.</p>
-</div>
-<div class="story__inline"><div class="shot-wrap"><figure class="shot" data-enter><img src="/assets/screens/app-history.webp?v=9d25f974" alt="The Hand History screen: 560 hands, each row graded Correct, Mixed or Wrong." width="600" height="1304" loading="lazy" decoding="async"></figure></div></div>
-</li>
-<li class="story__chapter" data-chapter>
-<div class="story__copy">
-<p class="t-label story__num">06</p>
-<h3 class="story__title">Short stacks too.</h3>
-<p class="story__body">Facing an all-in and blind vs blind at 20 and 30bb, the tournament depths, next to the 100bb cash game.</p>
-</div>
-<div class="story__inline"><div class="shot-wrap"><figure class="shot" data-enter><img src="/assets/screens/app-jam-answer.webp?v=e535f644" alt="A 20bb spot: the cutoff holds K of spades and T of spades facing a big-blind re-jam, with the chart calling 67 percent of the time and folding 33 percent." width="600" height="1304" loading="lazy" decoding="async"></figure></div></div>
-</li>
-</ol>
-</div>
-</div>
-</section>
-<section class="section section--cta" aria-labelledby="cta-play">
-<div class="wrap">
-<div class="cta-band">
-<div class="cta-band__copy">
-<h2 class="t-title cta-band__title" id="cta-play">Play your first hand in a minute.</h2>
-<p class="cta-band__line">Join the beta on TestFlight. No account needed.</p>
-</div>
-<div class="cta-band__actions">
-<a class="btn btn--primary btn--lg" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
-<figure class="qr" data-cta-qr>
-<img class="qr__img" src="/assets/qr/testflight.svg?v=95fbe51f" alt="QR code that opens the Preflop beta on TestFlight" width="104" height="104" loading="lazy">
-<figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption>
+<figcaption class="figcap teach__cap" hidden>Drawn from the app’s chart data.</figcaption>
 </figure>
+<div class="teach__card" id="teach-card">
+<p class="teach__hand">KTs</p>
+<p class="teach__where">Cutoff facing a big-blind re-jam · 20bb · 6-max · re-jam</p>
+<div class="mix teach__mix">
+<div class="mix__row"><span class="mix__name">Fold</span><span class="mix__track"><span class="mix__bar mix__bar--fold mix__bar--v33"></span></span><span class="mix__pct">33%</span></div>
+<div class="mix__row"><span class="mix__name">Call</span><span class="mix__track"><span class="mix__bar mix__bar--call mix__bar--v67"></span></span><span class="mix__pct">67%</span></div>
 </div>
+<p class="t-label teach__why-label">Why</p>
+<p class="teach__why">Against BB's re-jam over your open, the chart mostly plays this broadway hand as a call, and as a fold some of the time. A call is the line to lean on, but folding is part of the strategy too, not a mistake.</p>
 </div>
+<p class="sr-only" id="teach-announce" aria-live="polite"></p>
 </div>
 </section>
-<section class="section explorer" id="chart" aria-labelledby="explorer-title">
-<div class="wrap explorer__grid">
-<div class="explorer__copy">
-<p class="t-label section-header__eyebrow">The charts</p>
-<h2 class="t-headline" id="explorer-title">Every hand, every answer.</h2>
-<p class="explorer__lede">These are the app&rsquo;s own range charts. Each square is a hand; the bar inside it is how often the chart takes each action. Pick a hand to see the mix.</p>
+<section class="section spots" id="spots" aria-labelledby="spots-title">
+<div class="wrap spots__grid">
+<header class="section-header spots__head">
+<p class="t-label section-header__eyebrow">What you’ll practise</p>
+<h2 class="t-headline section-header__title" id="spots-title">Every seat. Every depth.</h2>
+<p class="section-header__line">Five situations at 6-max and 8-max tables, 100bb deep and at the 30bb and 20bb tournament depths. New situations open as you level up.</p>
+</header>
+<div class="spots__bars">
+<h3 class="spots__bars-title">Practice spots by stack depth</h3>
+<ul class="dbars" data-fill>
+<li class="dbar"><span class="dbar__name">100bb</span><span class="dbar__n"><!-- fact:spots100 -->6,431<!-- /fact --></span><span class="dbar__track"><span class="dbar__bar dbar__bar--100"></span></span></li>
+<li class="dbar"><span class="dbar__name">30bb</span><span class="dbar__n"><!-- fact:spots30 -->9,552<!-- /fact --></span><span class="dbar__track"><span class="dbar__bar dbar__bar--30"></span></span></li>
+<li class="dbar"><span class="dbar__name">20bb</span><span class="dbar__n"><!-- fact:spots20 -->9,496<!-- /fact --></span><span class="dbar__track"><span class="dbar__bar dbar__bar--20"></span></span></li>
+</ul>
 </div>
-<div class="explorer__tabs" role="tablist" aria-label="Choose a chart" data-tabs hidden></div>
-<div class="explorer__chart">
-<div class="explorer__live" data-chart hidden></div>
-<figure class="explorer__static"><div class="shot"><img src="/assets/screens/app-chart.webp?v=df22f9ab" alt="The app's range chart for the button against a cutoff open: green, blue and red squares, one per hand, with A5s ringed." width="600" height="1304" loading="lazy" decoding="async"></div></figure>
+<div class="spots__list">
+<ul class="spots">
+<li class="spot"><span class="spot__name">Opening</span><span class="spot__who">First in, from UTG to the button</span><span class="spot__depths"><span class="chip">100</span><span class="chip">30</span><span class="chip">20</span></span><span class="spot__level">Level 1</span></li>
+<li class="spot"><span class="spot__name">Facing an open</span><span class="spot__who">Every seat that can face one, against every opener</span><span class="spot__depths"><span class="chip">100</span><span class="chip">30</span><span class="chip">20</span></span><span class="spot__level">Level 3</span></li>
+<li class="spot"><span class="spot__name">Blind vs blind</span><span class="spot__who">Small blind first in; big blind facing a limp</span><span class="spot__depths"><span class="chip">100</span><span class="chip">30</span><span class="chip">20</span></span><span class="spot__level">Level 3</span></li>
+<li class="spot"><span class="spot__name">Facing a 3-bet</span><span class="spot__who">After you open, from UTG to the small blind</span><span class="spot__depths"><span class="chip">100</span><span class="chip">30</span><span class="chip">20</span></span><span class="spot__level">Level 5</span></li>
+<li class="spot"><span class="spot__name">Facing an all-in</span><span class="spot__who">Jams and re-jams</span><span class="spot__depths"><span class="chip">30</span><span class="chip">20</span></span><span class="spot__level">Level 6</span></li>
+</ul>
+<p class="spots__seats">Seats: UTG, UTG+1, LJ, HJ, CO, BTN, SB, BB (UTG+1 and LJ at 8-max).</p>
 </div>
-<div class="explorer__inspector card" data-inspector aria-live="polite" hidden></div>
 </div>
 </section>
 <section class="section band badges" id="progress" aria-labelledby="badges-title">

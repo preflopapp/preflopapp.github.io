@@ -1,6 +1,6 @@
 /* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle, the
-   motion tokens (window.PreflopMotion), picture entrances and the proof
-   figures' count-up. No library: IntersectionObserver, the Web Animations API
+   motion tokens (window.PreflopMotion), picture entrances, the proof
+   figures' count-up and the coverage bars' fill. No library: IntersectionObserver, the Web Animations API
    and requestAnimationFrame.
    Everything here is enhancement. With no JS, or with Reduce Motion, the page
    is complete and nothing is hidden. Animates transform and opacity only, with
@@ -228,9 +228,9 @@
     bezier: bezier
   });
 
-  /* ---- Motion: entrance and count ------------------------------------------
+  /* ---- Motion: entrance, count and fill -----------------------------------
      Nothing on the page waits for these, and CSS hides nothing by itself. An
-     element gets a start state (data-enter="pending", or a count's 0) only
+     element gets a start state (data-enter or data-fill "pending", or a count's 0) only
      when all of these hold (redesign SPEC §4.7, rule 5): motion is allowed,
      IntersectionObserver exists, the element is still below the screen now,
      and the observer that reveals it is registered here, in the same task.
@@ -298,6 +298,17 @@
         if (p < 1) requestAnimationFrame(tick);
       })(t0);
     });
+    observer.observe(el);
+  });
+
+  /* Fill: a group of bars ([data-fill], each scaleX(var(--f)) in CSS) grows
+     from zero once, 60ms apart (the delays are in CSS). JS only switches the
+     group between data-fill="pending" (zero) and "done" (the CSS lengths), so
+     without JS, or with Reduce Motion, the bars simply have their length. */
+  doc.querySelectorAll("[data-fill]").forEach(function (el) {
+    if (!below(el)) return;
+    el.setAttribute("data-fill", "pending");
+    waiting.set(el, function () { el.setAttribute("data-fill", "done"); });
     observer.observe(el);
   });
 

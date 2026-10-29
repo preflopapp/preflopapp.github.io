@@ -470,6 +470,7 @@ a { color: var(--accent); }
 .clegend li { display: inline-flex; align-items: center; gap: 0.4em; }
 .clegend__sw { width: 0.75em; height: 0.75em; border-radius: 2px; }
 .clegend__sw--f { background: var(--act-fold); } .clegend__sw--c { background: var(--act-call); } .clegend__sw--r { background: var(--act-raise); }
+.clegend__sw--none { background: var(--well); box-shadow: inset 0 0 0 var(--stroke) var(--border); }
 
 /* ---- Caption ----------------------------------------------------------------------
    Under a picture that could be taken for a capture, saying what it is

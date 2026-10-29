@@ -60,8 +60,11 @@ the foundation; Phase 1 is the shell, `/next/` itself:
   picture entrances (`[data-enter]`) and the count-up (`[data-count]`), on
   IntersectionObserver and the Web Animations API. Enhancement only.
 - `next/js/chart.js`: draws a range chart from `app-data.js` the way the app
-  does (`window.PreflopChart`: grid, legend, the live-region summary). The
-  demo's Chart view uses it; How it teaches moves onto it in redesign Phase 3.
+  does (`window.PreflopChart`: grid, legend, mix, the live-region summary).
+  The demo's Chart view and How it teaches use it.
+- `next/js/teach.js`: How it teaches (redesign SPEC §6.4): the tabs, the chart,
+  the answer card, the wash. Without JS the section shows the KTs card and the
+  app's capture of that chart.
 - `next/js/demo.js`: the hero's playable demo (redesign SPEC §6.2): the three
   generated hands, the app's grading, the answer card, Chart view, the deal,
   the score, the nudge.
@@ -125,13 +128,14 @@ markup for the root `index.html` (see its header): paste it into
 `docs/app-handoff/` holds what a session in the app repo exported: the facts
 audit (`FACTS.md`), the app's tokens and motion (`motion-and-design.md`) and
 real spots, range charts, badges and widget text (`data/`). `gen-app-data.py`
-turns it into `next/js/app-data.js`: the three charts (the explorer and the
-demo's Chart view draw them) and the demo's three hands (A5s, J8s, KTs, with
-the app's mix and the first sentence of its explanations; redesign Phase 2).
-It asserts that each hand's mix matches its chart's cell. It no longer writes
-the badge grid, which redesign Phase 4 removes. Re-run it when the data changes. The stats and
-home numbers in that folder are MOCK (a dev sample profile) and are labelled
-Sample profile wherever the page shows them.
+turns it into `next/js/app-data.js`: the three charts with each one's full
+explanation (How it teaches and the demo's Chart view draw them) and the demo's
+three hands (A5s, J8s, KTs, with the app's mix and the first sentence of its
+explanations; redesign Phase 2). It asserts that each hand's mix matches its
+chart's cell. It no longer writes the badge grid, which redesign Phase 4
+removes. Re-run it when the data changes. The stats and home numbers in that
+folder are MOCK (a dev sample profile) and are labelled Sample profile wherever
+the page shows them.
 
 `facts.json` gained `practiceSpots` (what the app bundles), `practiceSpotsShown`
 (rounded down, written as "25,000+") and `stackDepths`. `check-site.py` fails
@@ -186,8 +190,11 @@ NODE_PATH=$(npm root -g) node scripts/scroll-pass.js --live --viewports 390x844,
   `fastjump`, `axe`, `live` and `demo` (every hand x every slab grades as the
   app does, the answer card names the hand and fits, text floors at 320, 390
   and 1440, Chart's 169 cells and one ring, the score CTA, Reduce Motion with
-  no animations, and the hero's first-screen numbers); `explorer` arrives with
-  Phase 3. `axe` needs axe-core outside the repo:
+  no animations, and the hero's first-screen numbers) and `explorer` (How it
+  teaches: hovering 20 cells adds no CLS and no card height, a wheel under a
+  still pointer keeps the selection, the tab and grid keyboard patterns, the
+  1440 columns end within 120 px, the two rings differ, and no coverage row
+  passes three lines at 320). `axe` needs axe-core outside the repo:
   `npm install --prefix "$TMPDIR/scroll-pass-axe" axe-core`.
 - Output goes to `--out` (default `$TMPDIR/scroll-pass/<stamp>`; it refuses a
   folder inside the repo): `report.md`, `report.json`, every frame, and a

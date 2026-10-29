@@ -395,7 +395,7 @@ at 1440). Below 1024 px layouts are 1 or 2 columns.
 | **fill** | demo decision slabs; mix rows (§6.4); depth bars (§6.5) | `transform: scaleX(0 → var(--f))`, `transform-origin: left` | slabs: `--dur-emphasis` 370 ms `--ease-emphasis` (the app's answer transition), all together; rows/bars: `--dur-settle` 300 ms `--ease-out`, 60 ms apart | — | the answer; a selection change; enter (bars) | final widths at once | final widths in CSS (`--f` set by class) |
 | **deal** | demo hands 2 and 3; closing cards | demo: each seat's cards from translate(towards the pot), scale 0.5, opacity 0; then the hero cards flip `rotateY(90deg)`→0. Closing: two cards from translateY(24px), opacity 0, to their fan angle | seats `--dur-emphasis` 370 ms `--ease-emphasis`; flip `--dur-slide` 330 ms `--ease-slide` | demo timeline = the app's at ×0.6 (`MD:` practice loop): seats 66 ms apart, 150 ms pause, each prior action 300 ms apart, 210 ms before the decision. Closing: 80 ms apart. | Next hand (demo); enter (closing) | final state; demo prints the hand at once | demo shows hand 1 static; closing cards static |
 | **reveal** | the demo answer | t=0: the picked slab gets a 2 px ring in the grade colour (`--good`, `--mid`, or `--text-3` for Wrong), held 250 ms, then a pseudo-element fades it over 300 ms to the `--text` ring under it; the slabs *fill*; the answer card rises translateY(16px)→0 + opacity. t=240 ms: grade line (opacity, 8 px rise). t=280 ms: explanation. Correct only: tick scale 0.6→1.12→1 | card `--dur-emphasis` `--ease-emphasis`; lines `--dur-entrance`; tick `--dur-emphasis` then `--dur-settle` | **no particle burst** (fewer effects) | tap or Enter on a slab | everything lands at once | — (demo needs JS) |
-| **wash** | the §6.4 chart's first paint | cells opacity 0.25→1. **No scale.** It is never blank. | 240 ms `--ease-out`, delay (row+col) × 8 ms, total ≤ 432 ms | — | IO at 30% visible, once, *only if below the fold at script start* | none | static |
+| **wash** | the §6.4 chart's first paint | cells opacity 0.25→1. **No scale.** It is never blank. | 240 ms `--ease-out`, delay (row+col) × 8 ms, total ≤ 432 ms | — | IO, any part visible, once, *only if below the fold at script start*. *Phase 3: not 30%, for the reason the enter row gives: a chart still at 0.25 in the bottom of the screen is the half-faded state §10 fails.* | none | static |
 | **swap** | tab change (§6.4), Chart/Back toggle (demo) | the new content replaces the old instantly; the container goes opacity 0.6→1 | 200 ms `--ease-out` | — | click | instant | — |
 | **disclosure** | FAQ answers, the nav menu | FAQ: answer opacity 0→1 (no travel) and the chevron rotates. Menu: the existing `nav-in` (opacity, −12 px) | 200 ms / `--dur-entrance` | — | toggle | instant | native `<details>` |
 | **nudge** | the demo's decision slabs | translateY(−4px) and back | 2 × 200 ms `--ease-in-out`, 60 ms apart | once per page view | the demo ≥ 60% visible and no scroll, wheel, pointer, touch or key input for 3 s after load | never | — |
@@ -778,6 +778,17 @@ the no-JS fallback matches what JS shows.
 and "s = suited, o = offsuit". Hint: "Hover or tap any hand to see its mix."
 (`hover: hover`) or "Tap any hand to see its mix." Caption: "Drawn from the
 app's chart data."
+
+**Empty cells** (*Phase 3*): the KTs re-jam chart has 101 hands the cutoff
+never opens, so the spot never arises with them. The app's legend calls them
+"Not opened" (`app-jam-chart.webp`); the legend here adds that swatch for
+any chart with empty cells (the demo's Chart view too), and picking one shows
+"T8o · Not opened" with "The cutoff doesn’t open this hand, so this spot never
+comes up with it."
+
+**ARIA** (*Phase 3*): the tabs control the chart (`role=tabpanel` on its
+figure, labelled by the selected tab); the card describes the hand picked in
+it, and the hand and mix are announced from a separate polite live region.
 
 **Interaction** (`ISSUES:EXPL-02`):
 - Mouse: `pointermove` selects a *preview*, only when `clientX`/`clientY` differ

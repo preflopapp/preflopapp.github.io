@@ -81,7 +81,7 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   (private windows throw). It applies when the deferred script runs, so a
   visitor who overrode their system scheme may see one frame of it first
   (Phase 8).
-- **A hover UI must not move under its own pointer.** The chart explorer froze
+- **A hover UI must not move under its own pointer.** The old chart explorer froze
   twice in a test: the picked square scaled up and covered its neighbours, then
   the inspector's text changed height and the vertically centred chart shifted,
   so the pointer landed on another square, flip-flopping forever. Mark the pick
