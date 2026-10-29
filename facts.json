@@ -20,7 +20,7 @@
     30,
     20
   ],
-  "_spots": "practiceSpots is how many practice spots the app bundles (counted from its content files; 6,431 at 100bb, 19,048 at 20/30bb). The site rounds DOWN to practiceSpotsShown and writes it as '25,000+'; check-site.py fails any 'N,NNN+' on the site that is not that figure. The app's check_site_facts.py ignores these keys. spotsByDepth is the same count split by stack depth (from the app's spot-counts.json); the pages show those exact figures, and check-site.py fails if they do not add up to practiceSpots.",
+  "_spots": "practiceSpots is how many practice spots the app bundles (counted from its content files; 6,431 at 100bb, 19,048 at 20/30bb). The site rounds DOWN to practiceSpotsShown and writes it as '25,000+'; check-site.py fails any 'N,NNN+' on the site that is not that figure. The app's check_site_facts.py ignores these keys. spotsByDepth is the same count split by stack depth (from the app's spot-counts.json); the pages show them rounded down to thousands ('6K+', in fact:spots100/30/20 markers), and check-site.py fails if they do not add up to practiceSpots.",
   "spotsByDepth": {
     "100": 6431,
     "30": 9552,

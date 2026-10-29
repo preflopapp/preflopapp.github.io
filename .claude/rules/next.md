@@ -108,7 +108,9 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   (Phase 8).
 - **The per-depth spot counts are `fact:spots100/30/20` markers.** They come from
   `facts.json` `spotsByDepth` (the app's `spot-counts.json`) and must add up to
-  `practiceSpots`; show them as exact figures, never with a "+" (Phase 8).
+  `practiceSpots`. The pages show them rounded down to thousands ("6K+"):
+  Stan wanted figures that read at a glance, not 6,431. `check-site.py`
+  derives the marker values (Phase 8; rounded after redesign Phase 4).
 - **Lock the page behind the open menu with `overflow: hidden` on html only,
   plus `touch-action: none` on the open bar and scrim.** Hidden on body as
   well makes body the sticky nav's scroll container, and the open nav leaves
@@ -140,6 +142,13 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   ink. `tokens.css` sets `[data-theme] { color: var(--text) }`; the gallery
   probe compares the band's pixels in both schemes, which is what caught it
   (redesign Phase 4).
+- **Never give a child element its section's block name.** `#spots` was
+  `section.spots` and its list was `ul.spots`; the list's rule (`padding: 0`,
+  a top hairline) also hit the section, which lost its `--section-y` padding
+  and drew a line across its top. The height budget was then set against the
+  broken layout, so nothing failed. The list is `.spots__rows`. The harness
+  now fails any `.section` with no padding ("sections without their padding")
+  (after redesign Phase 4).
 - **A no-JS fallback has to fit the section's height budget too.** The harness
   measures section heights in the no-JS pass as well. The app's capture that
   stands in for How it teaches' drawn chart (a 280px phone shot, 609px tall)

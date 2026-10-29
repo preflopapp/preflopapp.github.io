@@ -387,15 +387,19 @@ class SpotCountTests(unittest.TestCase):
 
 
 class SpotsByDepthTests(SpotCountTests):
-    """The per-depth split is exact figures in markers, and must add up to the total."""
+    """The per-depth split is shown rounded down to thousands in markers, and must add up to the total."""
     F = SpotCountTests.F.replace('"practiceSpotsShown": 25000}', '"practiceSpotsShown": 25000, "spotsByDepth": {"100": 6431, "30": 9552, "20": 9496}}')
 
     def test_a_matching_depth_figure_passes(self):
-        self.assertEqual(cs.check_site(self.site("<h1>T</h1><!-- fact:spots30 -->9,552<!-- /fact -->")), [])
+        self.assertEqual(cs.check_site(self.site("<h1>T</h1><!-- fact:spots30 -->9K+<!-- /fact -->")), [])
 
     def test_a_wrong_depth_figure_fails(self):
-        errs = cs.check_site(self.site("<h1>T</h1><!-- fact:spots30 -->9,500<!-- /fact -->"))
-        self.assertTrue(any("fact spots30 says 9,500" in e for e in errs), errs)
+        errs = cs.check_site(self.site("<h1>T</h1><!-- fact:spots30 -->10K+<!-- /fact -->"))
+        self.assertTrue(any("fact spots30 says 10K+" in e for e in errs), errs)
+
+    def test_the_exact_depth_figure_fails(self):
+        errs = cs.check_site(self.site("<h1>T</h1><!-- fact:spots100 -->6,431<!-- /fact -->"))
+        self.assertTrue(any("fact spots100 says 6,431, facts.json says 6K+" in e for e in errs), errs)
 
     def test_depths_must_add_up(self):
         bad = self.F.replace('"20": 9496', '"20": 9000')

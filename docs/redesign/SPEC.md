@@ -861,13 +861,15 @@ Under the list: "Seats: UTG, UTG+1, LJ, HJ, CO, BTN, SB, BB (UTG+1 and LJ at
 `<!-- fact:spots100 -->6,431<!-- /fact -->`, 30bb
 `<!-- fact:spots30 -->9,552<!-- /fact -->`, 20bb
 `<!-- fact:spots20 -->9,496<!-- /fact -->`. Exact figures, never a "+" (rule
-in `next.md`). Bar lengths are proportional to the largest (0.673 / 1 / 0.994),
+in `next.md`). **Changed after Phase 4 (Stan, 2026-10-29): the labels are
+rounded down to thousands, "6K+ · 9K+ · 9K+", figures that read at a glance;
+`check-site.py` derives the marker values from `spotsByDepth`.** Bar lengths are proportional to the largest (0.673 / 1 / 0.994),
 drawn as `scaleX(var(--f))` on a `--well` track in `--accent`.
 
 | | 320 / 390 | 820 | 1440 / 1920+ |
 |---|---|---|---|
 | List | each row: name (16/600) + Level pill on one line, "who" (14 `--text-2`) beneath, depth chips beside the Level pill; rows split by hairlines; ≈ 56–64 px per row | a 4-column table-like grid: situation · who · depths · level | 2 cols: left (1–5) header + depth bars; right (6–12) the list as a 4-column grid |
-| Bars | full width, stacked, 3 rows | 3 columns | left column, stacked |
+| Bars | full width, stacked, 3 rows (**3 columns since the post-Phase-4 fix**, which the short labels allow) | 3 columns | left column, stacked |
 
 **Motion:** *fill* on the three bars (once, enter-triggered, 60 ms apart). The
 rows are text and do not animate.

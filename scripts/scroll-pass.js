@@ -317,9 +317,16 @@ function pageStats(sections) {
     var s = getComputedStyle(el), f = s.filter, b = s.getPropertyValue("backdrop-filter") || s.getPropertyValue("-webkit-backdrop-filter");
     if ((f && f !== "none") || (b && b !== "none")) blur.push(el.tagName.toLowerCase() + (el.className ? "." + String(el.className).split(" ")[0] : "") + " (" + (f !== "none" ? f : b) + ")");
   });
+  // A .section that lost its --section-y padding (a rule for something else
+  // matched its class: Phase 3's .spots list rule did this to #spots).
+  var unpadded = [];
+  document.querySelectorAll("main .section").forEach(function (el) {
+    var s = getComputedStyle(el);
+    if (parseFloat(s.paddingBottom) === 0 || (parseFloat(s.paddingTop) === 0 && !el.classList.contains("section--flush"))) unpadded.push(name(el));
+  });
   var anims = document.getAnimations ? document.getAnimations() : [];
   return {
-    height: root.scrollHeight, vh: innerHeight, tops: tops, heights: heights,
+    height: root.scrollHeight, vh: innerHeight, tops: tops, heights: heights, unpadded: unpadded,
     elements: document.getElementsByTagName("*").length, blur: blur,
     media: document.querySelectorAll("video, canvas").length,
     infinite: anims.filter(function (an) { return an.playState === "running" && an.effect && an.effect.getComputedTiming().iterations === Infinity; }).length,
@@ -529,6 +536,8 @@ function budgets(res, B, phase, o) {
       if (t) add(`${sel} top (screens)`, +(t.top / s.vh).toFixed(2), lim, B.sectionTops.from[sel], le);
     }
   }
+  if (s.unpadded) out.push({ id: "sections without their padding", value: s.unpadded.length ? s.unpadded.join(" ") : 0, limit: 0, from: 0,
+    status: s.unpadded.length ? "fail" : "pass" });
   if (B.sectionHeights && res.page === B.sectionHeights.page) {
     for (const sec of B.sectionHeights.sections) {
       const h = s.heights.find((x) => x.name === sec.name);
