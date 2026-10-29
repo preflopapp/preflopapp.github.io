@@ -1117,6 +1117,8 @@ The budget is 400 at 390 until Stan says otherwise. At 1440 it is 314 px
   - **Old shots:** `play`, `explain`, `leaks` and `history` are no longer used
     by any page. `scripts/og-card.html` still uses `explain.png`. Phase 6
     deletes them.
+    *Phase 6:* deleted, except `explain.png`, which the social card's source
+    (`scripts/og-card.html`) still draws.
 - **Privacy**: **no edits** to its markup or text without Stan. CSS in
   `pages.css` may change, and must be checked on this page at 390 and 1440 in
   both schemes. A table of contents is §12.
@@ -1135,6 +1137,7 @@ the zone's.
 `next/css/styleguide.css`, loaded only there (≈ 5 KB off every page,
 `METRICS` asset table). Phase 6 rebuilds it on the new components, or deletes
 it if Stan says so (§12).
+*Phase 6:* deleted, with `next/css/styleguide.css`. `/next/` redirects to `/`.
 
 ---
 
@@ -1477,6 +1480,11 @@ design is still in place, so only that phase's own probes must pass. Then
     `docs/redesign/QA.md`, structured like `audit/ISSUES.md` (severity,
     confidence, repro, cause), listing every remaining defect honestly, with
     §8's table marked done or open.
+- *Done in Phase 6:* GSAP, the style guide, `app-jam.webp` and
+  `app-jam-answer.webp`, and the old `play`, `history`, `leaks` and
+  `explain.webp` shots are deleted. **Kept:** `Outfit-Medium.woff2` and
+  `explain.png`, because `scripts/og-card.html` (the social card's source) uses
+  both; deleting them would break the next `og-v3.png` render.
 - **Stop**: final report with the §13 checklist for Stan.
 
 ---

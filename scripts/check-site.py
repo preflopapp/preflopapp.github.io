@@ -36,8 +36,8 @@ NEXT_PREFIX = "next/"  # the /next/ preview: independent layout, see check_next
 # shared blocks, its own CSP. It gets check_next's rules, but is public (no
 # noindex, canonical, in the sitemap). Told apart by having no shared head.
 HOME = "index.html"
-# Gzipped bytes, summed over the files the /next/ pages load (the homepage and
-# the style guide). The redesign's budgets (SPEC §4.9): no GSAP, so 40 KB of JS;
+# Gzipped bytes, summed over the files the /next/ pages load (the homepage;
+# the style guide was deleted in redesign Phase 6). The redesign's budgets (SPEC §4.9): no GSAP, so 40 KB of JS;
 # 26 KB of CSS.
 JS_BUDGET = 40 * 1024
 CSS_BUDGET = 26 * 1024

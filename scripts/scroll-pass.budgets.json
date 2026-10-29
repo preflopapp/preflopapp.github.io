@@ -1,6 +1,6 @@
 {
-  "_about": "Budgets for scripts/scroll-pass.js: the numbers of docs/redesign/SPEC.md §4.3 (length, section heights) and §4.9 (performance). Each block has 'from', the phase in which it becomes a contract: before that phase the harness reports it as 'due Phase N' instead of failing, because the old design is still being replaced (SPEC §11). 'phase' is the phase being built; pass --phase to override. Px and byte values are maxima. Section heights add up the heights of the elements their selectors match and are skipped while a selector matches nothing. Phase 6 tightens these to the measured values plus 10%.",
-  "phase": 5,
+  "_about": "Budgets for scripts/scroll-pass.js: the numbers of docs/redesign/SPEC.md §4.3 (length, section heights) and §4.9 (performance). Each block has 'from', the phase in which it becomes a contract: before that phase the harness reports it as 'due Phase N' instead of failing, because the old design is still being replaced (SPEC §11). 'phase' is the phase being built; pass --phase to override. Px and byte values are maxima. Section heights add up the heights of the elements their selectors match and are skipped while a selector matches nothing. Phase 6 (2026-10-29) tightened each to the measured maximum plus 10% where that was lower; design targets stay, and local timings (desktop LCP, TBT, CLS) keep the SPEC's limits because a busy machine moves them.",
+  "phase": 6,
   "positionAllowed": ".nav, .skip-link",
   "nojs": {
     "fallbacks": [".teach__static img", "#app .gallery__item:first-child img"],
@@ -10,11 +10,11 @@
     "from": 5,
     "page": "/",
     "screens": {
-      "390x844": { "target": 10.5, "ceiling": 11.5 },
-      "1440x900": { "target": 8.0, "ceiling": 9.0 },
+      "390x844": { "target": 10.5, "ceiling": 11.4 },
+      "1440x900": { "target": 8.0, "ceiling": 8.2 },
       "320x568": { "target": 16, "ceiling": 17 },
-      "820x1180": { "target": 7.0, "ceiling": 8.0 },
-      "1920x1080": { "target": 7.5, "ceiling": 8.5 }
+      "820x1180": { "target": 6.6, "ceiling": 6.7 },
+      "1920x1080": { "target": 7.5, "ceiling": 7.8 }
     }
   },
   "sectionTops": {
@@ -22,29 +22,29 @@
     "from": { "#features": 2, "#pricing": 5 },
     "screens": {
       "390x844": { "#features": 1.7, "#pricing": 7.0 },
-      "1440x900": { "#features": 1.3, "#pricing": 5.4 }
+      "1440x900": { "#features": 1.3, "#pricing": 5.3 }
     }
   },
   "sectionHeights": {
     "page": "/",
     "sections": [
       { "name": "Nav + hero", "select": ["header.nav", "#top"], "from": 2, "px": { "390x844": 1120, "1440x900": 900 } },
-      { "name": "Proof strip", "select": ["[aria-label='Preflop in numbers']"], "from": 2, "px": { "390x844": 260, "1440x900": 280 } },
+      { "name": "Proof strip", "select": ["[aria-label='Preflop in numbers']"], "from": 2, "px": { "390x844": 260, "1440x900": 230 } },
       { "name": "How it teaches", "select": ["#features"], "from": 3, "px": { "390x844": 1250, "1440x900": 860 } },
       { "name": "Coverage", "select": ["#spots"], "from": 3, "px": { "390x844": 820, "1440x900": 680 } },
       { "name": "The app + CTA C", "select": ["#app"], "from": 4, "px": { "390x844": 1120, "1440x900": 1080 } },
       { "name": "Free for everyone", "select": ["#progress"], "from": 4, "px": { "390x844": 1280, "1440x900": 820 } },
       { "name": "Pricing", "select": ["#pricing"], "from": 5, "px": { "390x844": 1400, "1440x900": 1040 } },
       { "name": "FAQ", "select": ["#faq"], "from": 5, "px": { "390x844": 680, "1440x900": 600 } },
-      { "name": "Closing", "select": ["[aria-labelledby='closing-title']"], "from": 5, "px": { "390x844": 560, "1440x900": 560 } },
-      { "name": "Footer", "select": ["footer.footer"], "from": 5, "px": { "390x844": 400, "1440x900": 320 }, "_note": "SPEC said 360 at 390. Three link groups of 44px links (the SPEC's own floor) plus the brand row, the address and toggle row and the fine print measure 396 (Phase 5); 400 pending Stan's OK." }
+      { "name": "Closing", "select": ["[aria-labelledby='closing-title']"], "from": 5, "px": { "390x844": 560, "1440x900": 545 } },
+      { "name": "Footer", "select": ["footer.footer"], "from": 5, "px": { "390x844": 400, "1440x900": 320 }, "_note": "SPEC said 360 at 390. Three link groups of 44px links (the SPEC's own floor) plus the brand row, the address and toggle row and the fine print measure 396 (Phase 5); Stan accepted 400 by merging Phase 5." }
     ]
   },
-  "lcp": { "from": 0, "page": "/", "element": "h1#hero-title", "desktopMs": 1000, "iphoneMs": 2000, "_note": "times apply to a local base only; through the sandbox proxy a live TTFB alone is about 0.7 s" },
+  "lcp": { "from": 0, "page": "/", "element": "h1#hero-title", "desktopMs": 1000, "iphoneMs": 1400, "_note": "times apply to a local base only; through the sandbox proxy a live TTFB alone is about 0.7 s" },
   "cls": { "from": 0, "load": 0.01, "scroll": 0.01 },
   "tbt": { "from": 6, "iphoneMs": 400 },
-  "html": { "from": 6, "page": "/", "rawBytes": 40960, "gzipBytes": 9216, "elementsBeforeJs": 900 },
-  "images": { "from": 4, "page": "/", "bytes": { "390x844": 307200, "1440x900": 327680 } },
+  "html": { "from": 6, "page": "/", "rawBytes": 33280, "gzipBytes": 8600, "elementsBeforeJs": 590 },
+  "images": { "from": 4, "page": "/", "bytes": { "390x844": 260000, "1440x900": 260000 } },
   "fonts": { "from": 1, "files": 3 },
   "requestsBeforeLoad": { "from": 3, "viewport": "1440x900", "max": 20, "_note": "From Phase 3: until then the old story's five screenshots sit within Chromium's lazy-load distance at 1440 and load before the load event (22 in Phase 1). From Phase 4 the runs give Chromium a network estimate (1 ms emulated latency): without one its lazy-load distance doubles and the gallery's five shots load before load (23)." },
   "infiniteAnimations": { "from": 1, "max": 0 },

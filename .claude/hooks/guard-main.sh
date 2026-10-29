@@ -23,8 +23,10 @@ if is "git push"; then
   # Look for `main` only in the push itself: from `git push` to the next
   # ; & | or line end. A commit message or heredoc in the same command can
   # say "main" freely. Backslash-newlines are joined first, so a push
-  # continued onto the next line is still one segment.
-  push=$(grep -oE "(^|[;&|])[[:space:]]*git push[^;&|]*" <<<"${cmd//$'\\\n'/ }")
+  # continued onto the next line is still one segment. The pattern is a
+  # quoted variable: macOS bash 3.2 ignores an unquoted $'\\\n' here.
+  bsnl=$'\\\n'
+  push=$(grep -oE "(^|[;&|])[[:space:]]*git push[^;&|]*" <<<"${cmd//"$bsnl"/ }")
   if grep -qE '(^|[[:space:]:])(refs/heads/)?main([[:space:]]|$)' <<<"$push" || [ "$branch" = "main" ]; then
     jq -n '{
       hookSpecificOutput: {
