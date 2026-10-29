@@ -1051,7 +1051,190 @@ const PROBES = {
     await ctx.close();
   },
 
-  async demo(k) { k.skip = "written with the new demo (Phase 2, SPEC §6.2)"; },
+  /* The hero demo (SPEC §6.2, §10.2): every hand x every slab grades as the
+     app does, the answer card names the hand and fits, text keeps its floors,
+     Chart draws 169 cells with one hero ring, the score's CTA is config's, and
+     Reduce Motion runs nothing. Plus the hero's own layout numbers. */
+  async demo(k, o) {
+    const TITLES = ["A5s from the button", "J8s from the big blind", "KTs from the cutoff"];
+    const EXPECT = [{ Fold: "Wrong", Raise: "Correct" }, { Fold: "Wrong", Call: "Mixed", "3-Bet": "Correct" }, { Fold: "Mixed", Call: "Correct" }];
+    const ready = (page) => page.waitForFunction(() => { const b = document.querySelector("#demo-decisions .dbtn"); return b && !b.disabled; }, null, { timeout: 15000 });
+    const labels = (page) => page.$$eval("#demo-decisions .dbtn .dbtn__label", (els) => els.map((e) => e.textContent));
+    /* Answer the hands before `hand` with the first slab, skipping each deal. */
+    async function reach(page, hand) {
+      await ready(page);
+      for (let h = 0; h < hand; h++) {
+        await page.click("#demo-decisions .dbtn >> nth=0");
+        await page.click(".answer__next");
+        await page.click("#demo-stage");
+        await ready(page);
+      }
+    }
+    const inspect = () => {
+      const phone = document.getElementById("demo"), card = phone.querySelector(".answer");
+      const head = phone.querySelector(".phone__head").getBoundingClientRect();
+      const small = [];
+      phone.querySelectorAll("*").forEach((el) => {
+        const own = Array.prototype.some.call(el.childNodes, (n) => n.nodeType === 3 && n.textContent.trim());
+        if (!own || !el.checkVisibility || !el.checkVisibility({ visibilityProperty: true })) return;
+        const fs = parseFloat(getComputedStyle(el).fontSize), floor = el.closest(".pod__detail, .pot__meta") ? 10 : 11;
+        if (fs < floor - 0.01) small.push(`${el.className || el.tagName} "${el.textContent.trim().slice(0, 20)}" ${fs.toFixed(1)}px`);
+      });
+      const r = card && card.getBoundingClientRect();
+      return {
+        title: card ? card.querySelector(".answer__title").textContent : null,
+        grade: card ? card.querySelector(".answer__grade").textContent : null,
+        why: card ? card.querySelector(".answer__why").textContent : "",
+        fits: card ? card.scrollHeight <= card.clientHeight + 1 && r.top >= head.bottom - 1 : false,
+        cardBox: r ? `${Math.round(r.top)}-${Math.round(r.bottom)}, head ${Math.round(head.bottom)}, scroll ${card.scrollHeight}/${card.clientHeight}` : "",
+        focus: document.activeElement && document.activeElement.className,
+        pcts: Array.prototype.map.call(phone.querySelectorAll(".dbtn__pc"), (e) => e.textContent).join(" "),
+        small,
+      };
+    };
+
+    /* 1. Every hand x every slab at 390, a fresh load each. */
+    const { ctx, page, w } = await k.open({ w: 390, h: 844 }, "dark", "default");
+    for (let h = 0; h < 3; h++) {
+      await k.load(page, "/");
+      await reach(page, h);
+      const names = await labels(page);
+      for (let s = 0; s < names.length; s++) {
+        if (s) { await k.load(page, "/"); await reach(page, h); }
+        await page.click(`#demo-decisions .dbtn >> nth=${s}`);
+        await page.waitForTimeout(900);
+        const r = await page.evaluate(inspect);
+        const want = EXPECT[h][names[s]];
+        k.check(`hand ${h + 1} ${names[s]}: ${want}`, r.grade && r.grade.startsWith(want), `${r.grade} · ${r.pcts}`);
+        k.check(`hand ${h + 1} ${names[s]}: the card names the hand, explains, and fits`, r.title === TITLES[h] && r.why.length > 20 && r.fits, `${r.title}; ${r.cardBox}`);
+        k.check(`hand ${h + 1} ${names[s]}: focus moves to Next`, /answer__next/.test(r.focus || ""), r.focus);
+        if (s === names.length - 1) await k.shot(page, `answer-${h + 1}-390`);
+      }
+    }
+    /* 2. Chart view, then the deal's length and the score. */
+    await k.load(page, "/");
+    await ready(page);
+    await page.click("#demo-decisions .dbtn >> nth=1");
+    await page.click(".answer__chart");
+    await page.waitForTimeout(500);
+    const ch = await page.evaluate(() => {
+      const d = document.querySelector(".dchart"), cells = d ? d.querySelectorAll(".cell") : [], hero = d ? d.querySelectorAll(".cell.is-hero") : [];
+      const lg = d && d.querySelector(".clegend").getBoundingClientRect(), act = document.querySelector(".answer__actions").getBoundingClientRect();
+      const grid = d && d.querySelector(".cgrid").getBoundingClientRect(), ph = document.getElementById("demo").getBoundingClientRect();
+      return { cells: cells.length, hero: hero.length, btn: document.querySelector(".answer__chart").textContent, clear: lg && lg.bottom <= act.top + 1,
+        inside: grid && grid.left >= ph.left && grid.right <= ph.right && grid.top >= ph.top, live: document.getElementById("demo-announce").textContent };
+    });
+    k.check("Chart: 169 cells, one hero ring", ch.cells === 169 && ch.hero === 1, `${ch.cells} cells, ${ch.hero} ring`);
+    k.check("Chart: the button reads Back to answer; the legend clears it; the grid is inside the phone", ch.btn === "Back to answer" && ch.clear && ch.inside, `${ch.btn}; legend clear ${ch.clear}; inside ${ch.inside}`);
+    k.check("Chart: the live region reads the summary", /^Chart: Opening from the button, 100bb\. A5s: Raise 100%\.$/.test(ch.live), ch.live);
+    await k.shot(page, "chart-390");
+    await page.click(".answer__chart");
+    await page.waitForTimeout(300);
+    k.check("Back to answer brings the card back", await page.evaluate(() => getComputedStyle(document.querySelector(".answer__why")).display !== "none"), "");
+    for (let h = 1; h < 3; h++) {
+      await page.click(".answer__next");
+      const t0 = Date.now();
+      await ready(page);
+      const ms = Date.now() - t0;
+      const after = await page.evaluate(() => ({
+        hidden: Array.prototype.filter.call(document.querySelectorAll("#demo-stage .fan, #demo-stage .hero-cards"), (e) => getComputedStyle(e).opacity !== "1").length,
+        line: document.getElementById("demo-line").textContent,
+      }));
+      k.check(`hand ${h + 1} deals in under 3.5 s and leaves every hand showing`, ms < 3500 && !after.hidden, `${ms} ms; ${after.hidden} hidden; "${after.line}"`);
+      if (h === 1) await k.shot(page, "dealt-2-390");
+      await page.click("#demo-decisions .dbtn >> nth=1");
+      await page.waitForTimeout(700);
+    }
+    await page.click(".answer__next");
+    await page.waitForTimeout(600);
+    const sc = await page.evaluate(() => {
+      const s = document.querySelector(".score"), a = s && s.querySelector("a[data-cta]"), cfg = window.PreflopConfig && window.PreflopConfig.cta;
+      return { fig: s && s.querySelector(".score__figure").textContent, href: a && a.getAttribute("href"), want: cfg && cfg.testflightUrl, label: a && a.textContent, wantLabel: cfg && cfg.label };
+    });
+    k.check("score: the CTA's href and label are config's", sc.href && sc.href === sc.want && sc.label === sc.wantLabel, `${sc.fig}; ${sc.href} "${sc.label}"`);
+    await k.shot(page, "score-390");
+    await page.click(".score [data-again]");
+    await ready(page);
+    k.check("Play again deals hand 1 again", await page.evaluate(() => !document.querySelector(".score") && document.getElementById("demo-count").textContent === "1 / 3"), "");
+    const errs = w.console.filter((c) => c.type !== "warning");
+    k.check("no console errors while playing", !errs.length, errs.slice(0, 3).map((c) => c.text).join(" | "));
+    await ctx.close();
+
+    /* 3. Text floors and the card at 320, 390 and 1440, after each hand. */
+    for (const vp of [{ w: 320, h: 568 }, { w: 390, h: 844 }, { w: 1440, h: 900 }]) {
+      const o2 = await k.open(vp, "dark", "default");
+      await k.load(o2.page, "/");
+      const before = await o2.page.evaluate(inspect);
+      k.check(`${vp.w}: table text ≥ 11 px (pod details ≥ 10)`, !before.small.length, before.small.slice(0, 4).join("; "));
+      for (let h = 0; h < 3; h++) {
+        if (h) { await o2.page.click(".answer__next"); await o2.page.click("#demo-stage"); }
+        await ready(o2.page);
+        await o2.page.click("#demo-decisions .dbtn >> nth=0");
+        await o2.page.waitForTimeout(900);
+        const r = await o2.page.evaluate(inspect);
+        k.check(`${vp.w} hand ${h + 1}: the card names the hand and fits; text ≥ 11 px`, r.title === TITLES[h] && r.fits && !r.small.length, `${r.cardBox}${r.small.length ? "; small: " + r.small.slice(0, 3).join("; ") : ""}`);
+        if (vp.w === 320) await k.shot(o2.page, `answer-${h + 1}-320`);
+      }
+      await o2.ctx.close();
+    }
+
+    /* 4. Reduce Motion: nothing animates, during or after a hand. */
+    const rm = await k.open({ w: 390, h: 844 }, "dark", "reduced");
+    await k.load(rm.page, "/");
+    await ready(rm.page);
+    const counts = [];
+    const sample = async () => counts.push(await rm.page.evaluate(() => document.getAnimations().length));
+    await rm.page.click("#demo-decisions .dbtn >> nth=1"); await sample(); await rm.page.waitForTimeout(150); await sample();
+    await rm.page.click(".answer__chart"); await sample();
+    await rm.page.click(".answer__chart");
+    await rm.page.click(".answer__next"); await sample(); await rm.page.waitForTimeout(150); await sample();
+    const instant = await rm.page.evaluate(() => !document.querySelector("#demo-decisions .dbtn").disabled);
+    k.check("Reduce Motion: getAnimations() stays empty and the next hand is dealt at once", counts.every((n) => n === 0) && instant, `counts ${counts.join(",")}; dealt ${instant}`);
+    await rm.ctx.close();
+
+    /* 5. The hero's layout numbers (§6.2 Accept, copy positions). */
+    for (const vp of [{ w: 320, h: 568 }, { w: 390, h: 844 }, { w: 1280, h: 720 }, { w: 1440, h: 900 }, { w: 844, h: 390 }]) {
+      const o3 = await k.open(vp, "dark", "default");
+      await k.load(o3.page, "/");
+      const g = await o3.page.evaluate(() => {
+        const R = (s) => { const e = document.querySelector(s); return e ? e.getBoundingClientRect() : null; };
+        const h1 = R("#hero-title"), line = R(".hero__line"), cta = R(".hero__cta .btn"), note = R(".hero__note"), ph = R("#demo"), hero = R("#top"), slabs = R("#demo-decisions");
+        const demo = document.querySelector(".hero__demo"), hits = [];
+        for (let fx = 0.1; fx < 1; fx += 0.2) for (let fy = 0.05; fy < 1; fy += 0.15) {
+          const x = ph.left + ph.width * fx, y = ph.top + ph.height * fy;
+          if (y < 0 || y > innerHeight) continue;
+          const el = document.elementFromPoint(x, y);
+          if (el && !demo.contains(el) && !el.contains(demo) && !el.closest(".nav")) hits.push(el.tagName.toLowerCase() + "." + el.className);
+        }
+        return { vh: innerHeight, h1Top: Math.round(h1.top), copyBottom: Math.round(Math.max(line.bottom, note.bottom)), ctaBottom: Math.round(cta.bottom),
+          phoneTop: Math.round(ph.top), phoneW: Math.round(ph.width), heroBottom: Math.round(hero.bottom), slabsBottom: Math.round(slabs.bottom), hits };
+      });
+      const tag = `${vp.w}x${vp.h}`;
+      k.check(`${tag}: nothing outside the phone lies over it`, !g.hits.length, g.hits.slice(0, 3).join(", "));
+      if (vp.w <= 390) {
+        k.check(`${tag}: h1, line, CTA and note in the first screen, ≥ 120 px of the phone`, g.copyBottom <= g.vh && g.vh - g.phoneTop >= 120, `copy bottom ${g.copyBottom}, phone top ${g.phoneTop}, vh ${g.vh}`);
+        if (vp.w === 390) k.check("390: h1 at y≈88, CTA bottom ≤ 330, phone top ≤ 390", Math.abs(g.h1Top - 88) <= 4 && g.ctaBottom <= 330 && g.phoneTop <= 390, `h1 ${g.h1Top}, CTA ${g.ctaBottom}, phone ${g.phoneTop}`);
+      } else if (vp.h > 500) {
+        k.check(`${tag}: the hero and the slabs end inside the first screen`, g.heroBottom <= g.vh && g.slabsBottom <= g.vh, `hero ${g.heroBottom}, slabs ${g.slabsBottom}, vh ${g.vh}`);
+      } else {
+        k.check(`${tag}: landscape stacks the copy over a phone at --s 0.85`, g.phoneTop >= g.copyBottom && Math.abs(g.phoneW - Math.round(402 * 0.85)) <= 1, `copy bottom ${g.copyBottom}, phone top ${g.phoneTop}, width ${g.phoneW}`);
+      }
+      await o3.ctx.close();
+    }
+
+    /* 6. The proof figure keeps its number when it starts on screen (§6.3). */
+    const pf = await k.open({ w: 1440, h: 900 }, "dark", "default");
+    await pf.page.goto(o.base + "/", { waitUntil: "commit" });
+    const seen = new Set();
+    let below = null;
+    for (let i = 0; i < 30; i++) {
+      const s = await pf.page.evaluate(() => { const e = document.querySelector("[data-count='25000']"); return e ? [e.textContent.trim(), e.getBoundingClientRect().top > innerHeight] : null; }).catch(() => null);
+      if (s) { seen.add(s[0]); if (below === null) below = s[1]; }
+      await pf.page.waitForTimeout(50);
+    }
+    k.check("1440: the 25,000 figure never shows another value unless it began below the screen", below || [...seen].every((t) => t === "25,000"), `${below ? "below the screen" : "on screen"}; saw ${[...seen].join(", ")}`);
+    await pf.ctx.close();
+  },
   async explorer(k) { k.skip = "written with the new teaching section (Phase 3, SPEC §6.4)"; },
 };
 

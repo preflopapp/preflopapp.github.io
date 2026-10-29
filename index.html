@@ -25,13 +25,14 @@
 <link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2?v=58f23b7a" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2?v=787b3fdd" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/next/css/tokens.css?v=7210b3b8">
-<link rel="stylesheet" href="/next/css/components.css?v=29f582be">
-<link rel="stylesheet" href="/next/css/demo.css?v=e51980dd">
-<link rel="stylesheet" href="/next/css/sections.css?v=761b695a">
+<link rel="stylesheet" href="/next/css/components.css?v=70bc9cbb">
+<link rel="stylesheet" href="/next/css/demo.css?v=3898a329">
+<link rel="stylesheet" href="/next/css/sections.css?v=3654af81">
 <script defer src="/next/js/config.js?v=2357ec70"></script>
 <script defer src="/next/js/site.js?v=78b06ad2"></script>
-<script defer src="/next/js/demo.js?v=be99481b"></script>
-<script defer src="/next/js/app-data.js?v=45801f98"></script>
+<script defer src="/next/js/app-data.js?v=38cb8073"></script>
+<script defer src="/next/js/chart.js?v=ef8fcd74"></script>
+<script defer src="/next/js/demo.js?v=3b641b52"></script>
 <script defer src="/next/js/explorer.js?v=74bfc1ab"></script>
 </head>
 <body>
@@ -52,7 +53,7 @@
 <div class="nav__scrim"></div>
 </header>
 <main id="content">
-<section class="hero" aria-labelledby="hero-title">
+<section class="hero" id="top" aria-labelledby="hero-title">
 <div class="wrap hero__grid">
 <div class="hero__copy">
 <h1 class="t-display hero__title" id="hero-title">Know your play before the <span class="hero__accent">flop.</span></h1>
@@ -60,30 +61,29 @@
 <div class="hero__actions">
 <div class="hero__cta">
 <a class="btn btn--primary btn--lg" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
-<p class="hero__note">TestFlight beta for iPhone.</p>
+<p class="hero__note">Free on TestFlight · iPhone, iOS 17 or later</p>
 </div>
 <figure class="qr" data-cta-qr>
 <img class="qr__img" src="/assets/qr/testflight.svg?v=95fbe51f" alt="QR code that opens the Preflop beta on TestFlight" width="104" height="104" loading="lazy">
-<figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption>
+<figcaption class="qr__cap">On a computer? Scan with your iPhone’s camera.</figcaption>
 </figure>
 </div>
 </div>
-<div class="hero__demo">
+<div class="hero__demo" id="try">
 <div class="phone" id="demo" role="group" aria-label="Playable demo: three real hands">
 <div class="phone__screen">
 <div class="phone__head">
 <span class="phone__tag t-label">Try it</span>
-<span class="phone__title" id="demo-title">Raise first in</span>
+<span class="phone__title" id="demo-title">Opening</span>
 <span class="phone__count" id="demo-count">1 / 3</span>
 </div>
-<div class="phone__table"><div class="stage" id="demo-stage"><div class="rail"></div><div class="felt"></div><div class="bet-line"></div><div class="centre-mark t-label">Preflop</div><div class="pot"><div class="pot__label t-label">Pot</div><div class="pot__amount">1.5bb</div><div class="pot__bars"><i></i><i></i><i></i></div><div class="pot__meta">100bb effective · 6-max</div></div><div class="seat" data-seat="btn" data-i="0"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BTN</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="seat" data-seat="sb" data-i="1"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">SB</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>0.5bb</span></span></div></div><div class="seat" data-seat="bb" data-i="2"><div class="bet-slot bet-slot--above"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>1bb</span></span></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BB</div><div class="pod__detail">100bb</div></div></div></div><div class="seat seat--hero" data-seat="utg" data-i="3"><div class="bet-slot"></div><div class="hero-cards"><span class="pcard" role="img" aria-label="King of spades">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span><span class="pcard" role="img" aria-label="Five of spades">5<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div><div class="hero-badge">UTG</div></div><div class="seat" data-seat="hj" data-i="4"><div class="bet-slot bet-slot--above"></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">HJ</div><div class="pod__detail">100bb</div></div></div></div><div class="seat" data-seat="co" data-i="5"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">CO</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="dealer" data-i="0">D</div></div></div>
-<p class="phone__line" id="demo-line">You’re first to act. What’s your move?</p>
+<div class="phone__table" id="demo-area"><div class="stage" id="demo-stage"><div class="rail"></div><div class="felt"></div><div class="bet-line"></div><div class="centre-mark t-label">Preflop</div><div class="pot"><div class="pot__label t-label">Pot</div><div class="pot__amount">1.5bb</div><div class="pot__bars"><i></i><i></i><i></i></div><div class="pot__meta">100bb effective · 6-max</div></div><div class="seat folded" data-seat="utg" data-i="0"><div class="pod-wrap"><div class="pod"><div class="pod__name">UTG</div><div class="pod__detail">fold</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="seat folded" data-seat="hj" data-i="1"><div class="pod-wrap"><div class="pod"><div class="pod__name">HJ</div><div class="pod__detail">fold</div></div></div><div class="bet-slot bet-slot--below"></div></div><div class="seat folded" data-seat="co" data-i="2"><div class="bet-slot bet-slot--above"></div><div class="pod-wrap"><div class="pod"><div class="pod__name">CO</div><div class="pod__detail">fold</div></div></div></div><div class="seat seat--hero" data-seat="btn" data-i="3"><div class="bet-slot"></div><div class="hero-cards"><span class="pcard pcard--red" role="img" aria-label="Ace of hearts">A<img class="pcard__suit" src="/assets/suits/heart-v2.svg" alt="" width="26" height="26"></span><span class="pcard pcard--red" role="img" aria-label="Five of hearts">5<img class="pcard__suit" src="/assets/suits/heart-v2.svg" alt="" width="26" height="26"></span></div><div class="hero-badge">BTN</div></div><div class="seat" data-seat="sb" data-i="4"><div class="bet-slot bet-slot--above"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>0.5bb</span></span></div><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">SB</div><div class="pod__detail">100bb</div></div></div></div><div class="seat" data-seat="bb" data-i="5"><div class="pod-wrap"><div class="fan"><span class="fan__back"></span><span class="fan__back"></span></div><div class="pod"><div class="pod__name">BB</div><div class="pod__detail">100bb</div></div></div><div class="bet-slot bet-slot--below"><span class="bet"><svg class="chip chip--blind" viewBox="0 0 19 19" aria-hidden="true"><circle class="chip__body" cx="9.5" cy="9.5" r="9.5"></circle><circle class="chip__ring" cx="9.5" cy="9.5" r="6.4"></circle></svg><span>1bb</span></span></div></div><div class="dealer" data-i="3" data-hero="">D</div></div></div>
+<p class="phone__line" id="demo-line">UTG, HJ and CO fold. Your move.</p>
 <div class="phone__controls">
 <div class="decisions" id="demo-decisions" aria-label="Choose your action">
-<button class="dbtn dbtn--fold" type="button" data-d="fold" disabled><span class="dbtn__bar"></span><span class="dbtn__label">Fold</span></button>
-<button class="dbtn dbtn--raise" type="button" data-d="call" disabled><span class="dbtn__bar"></span><span class="dbtn__label">Raise</span></button>
+<button class="dbtn dbtn--fold" type="button" data-k="0" disabled><span class="dbtn__fill"></span><span class="dbtn__label">Fold</span></button>
+<button class="dbtn dbtn--raise" type="button" data-k="1" disabled><span class="dbtn__fill"></span><span class="dbtn__label">Raise</span></button>
 </div>
-<div id="demo-feedback"></div>
 <noscript><p class="phone__noscript">Turn on JavaScript to play this demo.</p></noscript>
 </div>
 </div>
@@ -91,6 +91,7 @@
 <div class="phone-foot">
 <div class="dots" id="demo-dots" aria-hidden="true"><i class="now"></i><i></i><i></i></div>
 <p class="phone-foot__status" id="demo-status">Hand 1 of 3 · 100bb · 6-max</p>
+<p class="figcap">Drawn from the app’s practice screen, with its real spots, grading and explanations.</p>
 </div>
 <p class="sr-only" id="demo-announce" role="status" aria-live="polite"></p>
 </div>
@@ -99,10 +100,10 @@
 <section class="proof" aria-label="Preflop in numbers">
 <div class="wrap">
 <ul class="proof__list">
-<li class="card proof__item"><span class="card__figure"><span data-count="25000"><!-- fact:practiceSpotsShown -->25,000<!-- /fact --></span>+</span><span class="card__figure-label">practice spots</span></li>
-<li class="card proof__item"><span class="card__figure"><span data-count="20"><!-- fact:dailyFreeHands -->20<!-- /fact --></span></span><span class="card__figure-label">free hands a day</span></li>
-<li class="card proof__item"><span class="card__figure">No ads</span><span class="card__figure-label">in the app</span></li>
-<li class="card proof__item"><span class="card__figure">No tracking</span><span class="card__figure-label">no accounts, no analytics</span></li>
+<li class="proof__item"><span class="proof__fig"><span data-count="25000"><!-- fact:practiceSpotsShown -->25,000<!-- /fact --></span>+</span><span class="proof__label">practice spots, from every seat</span></li>
+<li class="proof__item"><span class="proof__fig">100 · 30 · 20</span><span class="proof__label">bb stack depths, cash and tournament</span></li>
+<li class="proof__item"><span class="proof__fig"><span data-count="20"><!-- fact:dailyFreeHands -->20<!-- /fact --></span></span><span class="proof__label">free hands a day, every day</span></li>
+<li class="proof__item"><span class="proof__fig">No ads</span><span class="proof__label">no account and no tracking in the app</span></li>
 </ul>
 </div>
 </section>
@@ -275,8 +276,8 @@
 <div class="bento__text"><h3 class="t-section bento__title">On your Home Screen.</h3><p>A widget in three sizes shows your streak, and the larger two deal you a hand that opens straight into practice. Reminders only if you turn them on.</p></div>
 <div class="bento__visual"><div class="widgets" role="img" aria-label="Three Home Screen widgets showing a streak, and on the larger two, a hand to answer">
 <div class="widget widget--s"><span class="t-label widget__label">Streak</span><span class="widget__num">7</span></div>
-<div class="widget widget--m"><div class="widget__row"><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div></div>
-<div class="widget widget--l"><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade.svg" alt="" width="26" height="26"></span></div></div>
+<div class="widget widget--m"><div class="widget__row"><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart-v2.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade-v2.svg" alt="" width="26" height="26"></span></div></div></div>
+<div class="widget widget--l"><div><span class="t-label widget__label">Streak</span><br><span class="widget__num">7</span></div><div class="widget__row"><span class="pcard pcard--red">A<img class="pcard__suit" src="/assets/suits/heart-v2.svg" alt="" width="26" height="26"></span><span class="pcard">K<img class="pcard__suit" src="/assets/suits/spade-v2.svg" alt="" width="26" height="26"></span></div></div>
 </div><p class="bento__note">Drawn from the widget&rsquo;s layout, not a screenshot.</p></div>
 </article>
 <article class="card bento__card bento__card--6 bento__card--wide">

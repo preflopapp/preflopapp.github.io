@@ -1,61 +1,53 @@
-/* The playable demo for /next/: the practice screen from the app, in a phone
-   frame. Ported from /landing/, rebuilt on the /next/ tokens and components.
+/* The playable demo in the hero: the app's practice screen drawn in HTML from
+   the page's tokens, in a phone frame (redesign SPEC §6.2). Its layout follows
+   the app (a tall oval table, pods, the hero's seat badge, decision slabs, an
+   answer card that rises over the table); its colours are the page's.
 
-   Differences from the landing demo, all on purpose:
-   - No inline style="" anywhere. The page CSP is style-src 'self', so seat
-     positions are data-i rules below and JS sets only CSSOM values.
-   - No gradients (the felt is flat) and no dashed rings on the chips.
-   - Only transform and opacity animate. The mix bar is a scaleX, not a width.
-   - Correct is green; a miss stays neutral, never red.
-   - Cards are the shared .pcard; buttons the shared .btn.
+   - No inline style="" anywhere (the page CSP): seat positions are data-i
+     rules here, and JS sets only CSSOM values (a slab's share, --f).
+   - No gradients, no dashed rings. Only transform and opacity animate; the mix
+     is a scaleX, not a width.
+   - Correct is green, Mixed amber; Wrong stays neutral, never red (red is fold).
 
-   Every size is `calc(Npx * var(--s))`, N being the app's point value, so the
-   whole diagram shrinks together on a phone. --s steps down below; it has to
-   stay unitless. */
+   Sizes are `calc(Npx * var(--s))`, N being the app's point value, so the
+   drawing scales together. --s stays unitless. Text has floors: nothing in
+   #demo computes below 11px, pod details and the pot's meta below 10px. */
 
 /* The table is drawn from the page's own tokens, not the app's felt palette:
-   a --panel screen, a --well rail, a --bg felt, --panel pods. It sits in the
-   page the way a card does, in either scheme, with no colour of its own (the
-   app's tan felt and red card backs read as a foreign block, and red is spent
-   on "fold"). The action-button label is the --act-ink token. */
+   a --panel screen, a --well rail, a --bg felt, --panel pods. The app's tan
+   felt and red card backs read as a foreign block, and red is spent on fold. */
 .phone {
   --s: 1;
   --rail: var(--well);
   --felt: var(--bg);
   --table-edge: var(--border);
-  --centre-mark: var(--text-3);
   --chip-blind: var(--text-3);
   --chip-live: var(--text-2);
   --chip-rim: var(--panel);
-  --pot-bar: var(--text-3);
-  --bet-fill: var(--panel);
   --card-back: var(--well);
-  --dealer-fill: var(--text);
-  --dealer-ink: var(--bg);
 }
 
-/* Scale: the frame is 402 * s wide and has to fit the gutter. */
+/* ---- Scale and size ----------------------------------------------------------
+   Phones: the frame is the content box's width and fills the screen's height
+   up to 600px; --s sizes only type, pods, chips and cards, stepped by the
+   viewport's width. From 768px the frame is the app's 402 x 608 at --s, which
+   steps down on short screens so the slabs stay above the fold, and up on
+   large ones. A landscape phone stacks the copy and the phone, which keeps its
+   natural size: shrunk to fit, its text would be unreadable. */
 @media (max-width: 426px) { .phone { --s: 0.9; } }
 @media (max-width: 393px) { .phone { --s: 0.85; } }
 @media (max-width: 373px) { .phone { --s: 0.8; } }
 @media (max-width: 353px) { .phone { --s: 0.75; } }
-@media (max-width: 333px) { .phone { --s: 0.68; } }
-/* Beside the copy (tablet and up) the phone must also fit the screen's height,
-   or its bottom, the answer buttons, falls below the fold. */
 @media (min-width: 48rem) and (max-width: 63.99rem) { .phone { --s: 0.8; } }
-@media (min-width: 48rem) and (max-height: 820px) { .phone { --s: 0.9; } }
-@media (min-width: 48rem) and (max-height: 740px) { .phone { --s: 0.8; } }
-@media (min-width: 48rem) and (max-height: 660px) { .phone { --s: 0.7; } }
-@media (min-width: 48rem) and (max-height: 580px) { .phone { --s: 0.6; } }
-
-/* ---- Frame ----------------------------------------------------------------
-   Built like the page's cards: a --panel screen, a hairline, and a slim --well
-   bezel. Fixed height, so feedback and the score never move the page. */
+@media (min-width: 64rem) and (max-height: 820px) { .phone { --s: 0.9; } }
+@media (min-width: 64rem) and (max-height: 740px) { .phone { --s: 0.8; } }
+@media (min-width: 120rem) and (min-height: 1000px) { .phone { --s: 1.125; } }
+@media (min-width: 150rem) and (min-height: 1300px) { .phone { --s: 1.25; } }
+@media (orientation: landscape) and (max-height: 500px) { .phone { --s: 0.85; } }
 
 .phone {
   position: relative; flex: none;
-  width: calc(402px * var(--s));
-  height: calc(608px * var(--s));
+  width: calc(402px * var(--s)); height: calc(608px * var(--s));
   background: var(--panel);
   border: calc(6px * var(--s)) solid var(--well);
   border-radius: calc(38px * var(--s));
@@ -63,50 +55,57 @@
   overflow: hidden;
   color: var(--text);
 }
+@media (max-width: 47.99rem) {
+  .phone { width: 100%; height: clamp(27.5rem, calc(100svh - var(--nav-h) - 2rem), 37.5rem); }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .phone { width: calc(402px * var(--s)); height: calc(608px * var(--s)); }
+}
+
+/* ---- Screen ---------------------------------------------------------------------
+   Four rows: head, table, prompt line, slabs. The answer card, the chart and
+   the score are laid over rows 2-3 (or 2-4), so nothing below them moves. */
+
 .phone__screen {
-  display: flex; flex-direction: column; height: 100%;
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto auto;
+  height: 100%;
   padding: calc(14px * var(--s)) calc(18px * var(--s)) calc(16px * var(--s));
 }
+/* One column, always: an item auto-placed into a row the card covers would
+   otherwise open a second one beside it. */
+.phone__screen > * { grid-column: 1; }
 .phone__head {
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-1);
-  height: calc(34px * var(--s)); flex: none;
+  grid-row: 1; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-1);
+  height: calc(34px * var(--s));
 }
-.phone__tag { font-size: calc(10px * var(--s)); color: var(--accent); }
-.phone__title { font-size: calc(14.5px * var(--s)); font-weight: 600; text-align: center; }
+.phone__tag { font-size: max(11px, calc(10px * var(--s))); color: var(--accent); }
+.phone__title { font-size: max(11px, calc(14.5px * var(--s))); font-weight: 600; text-align: center; }
 .phone__count {
-  justify-self: end; font-size: calc(12px * var(--s)); font-weight: 700;
+  justify-self: end; font-size: max(11px, calc(12px * var(--s))); font-weight: 700;
   letter-spacing: -0.04em; color: var(--text-2);
 }
 .phone__table {
-  display: flex; justify-content: center; flex: none;
+  grid-row: 2; grid-column: 1; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
   margin-inline: calc(-10px * var(--s));
-  padding-block: calc(6px * var(--s));
 }
 .phone__line {
-  display: flex; align-items: center; flex: none; margin: 0;
-  min-height: calc(38px * var(--s)); padding-top: calc(8px * var(--s));
-  font-size: calc(12px * var(--s)); color: var(--text-2);
+  grid-row: 3; display: flex; align-items: center; margin: 0;
+  min-height: calc(38px * var(--s));
+  font-size: max(11px, calc(12px * var(--s))); color: var(--text-2);
 }
-.phone__controls { position: relative; flex: none; }
+.phone__controls { grid-row: 4; position: relative; }
 .phone__noscript { margin: 0; padding-top: var(--space-1); font-size: var(--fs-meta); color: var(--text-2); }
 
-/* Below 560px the felt is shorter so the first decision stays on the screen;
-   seats are percentages, so their positions hold. */
-@media (max-width: 560px) {
-  .phone { height: calc(486px * var(--s)); }
-  .phone__table { padding-block: calc(2px * var(--s)); }
-  .phone__line { min-height: calc(30px * var(--s)); padding-top: calc(4px * var(--s)); }
-}
+/* ---- Table --------------------------------------------------------------------
+   On a phone the stage fills the free height, a tall oval as in the app; from
+   768px it is the app's 374 x 435. Seats are percentages, so they hold. */
 
-/* ---- Table ----------------------------------------------------------------- */
-
-.stage {
-  position: relative; flex: none;
-  width: calc(374px * var(--s)); height: calc(435px * var(--s));
+.stage { position: relative; flex: none; width: 100%; height: 100%; }
+@media (min-width: 48rem), (orientation: landscape) and (max-height: 500px) {
+  .stage { width: calc(374px * var(--s)); height: calc(435px * var(--s)); }
 }
-.rail, .felt {
-  position: absolute; border-radius: var(--r-pill);
-}
+.rail, .felt { position: absolute; border-radius: var(--r-pill); }
 .rail { inset: 0; background: var(--rail); border: var(--stroke) solid var(--table-edge); }
 .felt { inset: calc(17px * var(--s)); background: var(--felt); border: var(--stroke) solid var(--table-edge); }
 .bet-line {
@@ -115,39 +114,30 @@
 }
 .centre-mark {
   position: absolute; left: 0; right: 0; top: 62%; transform: translateY(-50%);
-  text-align: center; padding-left: calc(4.62px * var(--s));
-  font-size: calc(11px * var(--s)); letter-spacing: 0.42em; color: var(--centre-mark);
+  text-align: center; padding-left: 0.42em;
+  font-size: max(11px, calc(11px * var(--s))); letter-spacing: 0.42em; color: var(--text-3);
   pointer-events: none; user-select: none;
 }
-
-@media (max-width: 560px) {
-  .stage { height: calc(320px * var(--s)); }
-  .centre-mark { display: none; }
-}
+@media (max-width: 35rem) { .centre-mark { display: none; } }
 
 .pot {
   position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);
   display: flex; flex-direction: column; align-items: center; text-align: center;
   pointer-events: none; white-space: nowrap;
 }
-.pot__label { font-size: calc(11px * var(--s)); color: var(--text-2); }
-.pot__amount {
-  margin-top: calc(6px * var(--s)); font-size: calc(22px * var(--s)); font-weight: 700;
-  letter-spacing: -0.04em;
-}
+.pot__label { font-size: max(11px, calc(11px * var(--s))); color: var(--text-2); }
+.pot__amount { margin-top: calc(6px * var(--s)); font-size: calc(22px * var(--s)); font-weight: 700; letter-spacing: -0.04em; }
 .pot__bars { display: flex; gap: calc(4px * var(--s)); margin-top: calc(8px * var(--s)); }
-.pot__bars i {
-  width: calc(13px * var(--s)); height: calc(4px * var(--s));
-  border-radius: var(--r-pill); background: var(--pot-bar);
-}
-.pot__meta { margin-top: calc(8px * var(--s)); font-size: calc(11px * var(--s)); color: var(--text-3); }
+.pot__bars i { width: calc(13px * var(--s)); height: calc(4px * var(--s)); border-radius: var(--r-pill); background: var(--text-3); }
+.pot__meta { margin-top: calc(8px * var(--s)); font-size: max(10px, calc(11px * var(--s))); color: var(--text-3); }
 
-/* Seats. Six anchors from TableLayoutMetrics.seatAnchors(.sixMax), clockwise
-   from the top; the hero is always the fourth. */
+/* Seats: six anchors from TableLayoutMetrics.seatAnchors(.sixMax), clockwise
+   from the top; the hero is always the fourth, at the bottom. A folded seat
+   loses its cards and greys its text, by colour, not opacity: an opacity dim
+   took its labels under 4.5:1. */
 .seat {
   position: absolute; transform: translate(-50%, -50%);
   display: flex; flex-direction: column; align-items: center;
-  transition: opacity var(--dur-settle) var(--ease-out);
 }
 .seat[data-i="0"] { left: 50%; top: 16%; }
 .seat[data-i="1"] { left: 86.48%; top: 34%; }
@@ -155,7 +145,6 @@
 .seat[data-i="3"] { left: 50%; top: 79%; }
 .seat[data-i="4"] { left: 12.84%; top: 63%; }
 .seat[data-i="5"] { left: 13.52%; top: 34%; }
-.seat.folded { opacity: 0.28; }
 
 .pod-wrap { position: relative; }
 .pod {
@@ -164,8 +153,10 @@
   border-radius: calc(var(--r-button) * var(--s));
   background: var(--panel); border: var(--stroke) solid var(--border);
 }
-.pod__name { font-size: calc(12px * var(--s)); font-weight: 600; letter-spacing: -0.02em; }
-.pod__detail { margin-top: calc(1px * var(--s)); font-size: calc(10px * var(--s)); color: var(--text-2); }
+.pod__name { font-size: max(11px, calc(12px * var(--s))); font-weight: 600; letter-spacing: -0.02em; }
+.pod__detail { margin-top: calc(1px * var(--s)); font-size: max(10px, calc(10px * var(--s))); color: var(--text-2); }
+.seat.folded .pod__name { color: var(--text-2); }
+.seat.folded .pod__detail { color: var(--text-3); }
 .seat.acting .pod { border: 2px solid var(--accent); }
 .seat.acting .pod__name { color: var(--accent); }
 
@@ -195,38 +186,38 @@
 .bet {
   display: flex; align-items: center; gap: calc(7px * var(--s));
   padding: calc(3px * var(--s)) calc(10px * var(--s)) calc(3px * var(--s)) calc(4px * var(--s));
-  border-radius: var(--r-pill); background: var(--bet-fill); border: var(--stroke) solid var(--border);
-  font-size: calc(11px * var(--s)); font-weight: 700; letter-spacing: -0.04em; color: var(--text);
+  border-radius: var(--r-pill); background: var(--panel); border: var(--stroke) solid var(--border);
+  font-size: max(11px, calc(11px * var(--s))); font-weight: 700; letter-spacing: -0.04em; color: var(--text);
 }
 .bet--acting { border-color: var(--accent); }
-
 .chip { width: calc(19px * var(--s)); height: calc(19px * var(--s)); flex: none; }
 .chip__body { fill: var(--chip-live); }
 .chip--blind .chip__body { fill: var(--chip-blind); }
 .chip--acting .chip__body { fill: var(--accent); }
 .chip__ring { fill: none; stroke: var(--chip-rim); stroke-width: 1.5; }
 
-/* Hero: cards on the anchor, badge beneath. The cards are the shared .pcard,
-   sized off the app's 56 x 80 card. */
+/* Hero: cards on the anchor, the seat badge beneath. The cards are the shared
+   .pcard, sized off the app's 56 x 80 card. While dealing they are face down. */
 .hero-cards { display: flex; gap: calc(9px * var(--s)); margin-bottom: calc(8px * var(--s)); }
 .phone .pcard {
   width: calc(56px * var(--s)); height: calc(80px * var(--s));
   gap: calc(5px * var(--s)); font-size: calc(25px * var(--s)); letter-spacing: -0.02em;
+  border-color: var(--text-3);
 }
-.phone .pcard { border-color: var(--text-3); }
 .phone .pcard__suit { width: calc(23px * var(--s)); height: calc(23px * var(--s)); }
+.stage.is-dealing .hero-cards .pcard { background: var(--card-back); color: transparent; }
+.stage.is-dealing .hero-cards .pcard__suit { visibility: hidden; }
 .hero-badge {
   padding: calc(5px * var(--s)) calc(15px * var(--s));
   border-radius: var(--r-pill); background: var(--accent-fill); color: var(--accent-fill-ink);
-  font-size: calc(12px * var(--s)); font-weight: 600; letter-spacing: 0.06em;
+  font-size: max(11px, calc(12px * var(--s))); font-weight: 600; letter-spacing: 0.06em;
 }
-
 .dealer {
   position: absolute; transform: translate(-50%, -50%);
   display: grid; place-items: center;
   width: calc(26px * var(--s)); height: calc(26px * var(--s));
-  border-radius: 50%; background: var(--dealer-fill); color: var(--dealer-ink);
-  font-size: calc(12px * var(--s)); font-weight: 600;
+  border-radius: 50%; background: var(--text); color: var(--bg);
+  font-size: max(11px, calc(12px * var(--s))); font-weight: 600;
 }
 .dealer[data-i="0"] { left: 62.30%; top: 14.62%; }
 .dealer[data-i="1"] { left: 74.18%; top: 32.62%; }
@@ -236,101 +227,137 @@
 .dealer[data-i="5"] { left: 25.82%; top: 32.62%; }
 .dealer[data-hero][data-i="3"] { left: 25.40%; top: 84.06%; }
 
-/* While dealing, the hero's cards are face down. */
-.stage.is-dealing .hero-cards .pcard { background: var(--card-back); color: transparent; }
-.stage.is-dealing .hero-cards .pcard__suit { visibility: hidden; }
-
-/* ---- Decision bar ----------------------------------------------------------
-   Before an answer: flat slabs in the action colours (green raise, blue call,
-   red fold), the label in ink that reads on them (dark on all three in dark;
-   in light, white on blue and red but dark on green, the one that clears 4.5:1). After: a well track with the
-   label in --text and the mix as a bar along the foot, scaled to its share. */
+/* ---- Decision slabs ----------------------------------------------------------
+   Before an answer: the action colour with --act-ink. After: a --well slab
+   with a full-height --act-tint layer scaled to the chart's share (the app's
+   answer fill), the label in --text and the share under it. The tint is 40%
+   of the action colour over --well, where --text keeps at least 5:1 in both
+   schemes (SPEC §4.6; at 45% the light fold tint drops to 4.73). The picked
+   slab gets a --text ring, with a grade-coloured ring over it that fades. */
 
 .decisions { display: flex; gap: calc(8px * var(--s)); padding-top: calc(8px * var(--s)); }
 .dbtn {
   --act: var(--act-call);
-  position: relative; flex: 1; overflow: hidden; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: calc(5px * var(--s));
+  --act-tint: color-mix(in srgb, var(--act) 40%, var(--well));
+  position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(3px * var(--s));
   height: calc(48px * var(--s)); padding: 0;
   background: var(--act); color: var(--act-ink);
   border: 0; border-radius: calc(var(--r-button) * var(--s));
   font: 600 calc(16px * var(--s))/1 var(--font); letter-spacing: -0.02em;
   transition: transform var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
 }
+@media (max-width: 47.99rem) { .dbtn { min-height: var(--hit); } }
 .dbtn--fold { --act: var(--act-fold); }
 .dbtn--call { --act: var(--act-call); }
 .dbtn--raise { --act: var(--act-raise); }
-.dbtn:not(:disabled):active { transform: scale(var(--press-scale)); }
+.dbtn:not(:disabled):active { transform: scale(var(--press-scale)); opacity: 0.85; }
 .dbtn:disabled { cursor: default; }
 .dbtn:disabled:not(.is-revealed) { opacity: 0.45; }
-.dbtn__label, .dbtn__pc { position: relative; }
-.dbtn__pc { font-size: calc(13px * var(--s)); font-weight: 700; letter-spacing: -0.04em; color: var(--text-2); }
-.dbtn__bar {
-  position: absolute; left: 0; right: 0; bottom: 0; height: calc(5px * var(--s));
-  background: var(--act); transform: scaleX(0); transform-origin: left;
-  transition: transform var(--dur-slide) var(--ease-slide);
+.dbtn__fill {
+  position: absolute; inset: 0; background: var(--act-tint);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-emphasis) var(--ease-emphasis);
 }
-.dbtn.is-revealed { background: var(--well); color: var(--text); opacity: 1; }
-.dbtn.is-revealed .dbtn__bar { transform: scaleX(var(--f, 0)); }
-.dbtn.is-picked { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--text); }
-
-@media (max-width: 560px) {
-  .dbtn { min-height: var(--hit); font-size: calc(15px * var(--s)); }
+.dbtn__label, .dbtn__pc { position: relative; z-index: 1; }
+.dbtn__pc { font-size: max(11px, calc(13px * var(--s))); font-weight: 700; letter-spacing: -0.04em; }
+.dbtn.is-revealed { background: var(--well); color: var(--text); }
+.dbtn.is-revealed .dbtn__fill { transform: scaleX(var(--f, 0)); }
+.dbtn.is-picked::before, .dbtn.is-picked::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none;
+  box-shadow: inset 0 0 0 2px var(--text);
 }
+.dbtn.is-picked::after { box-shadow: inset 0 0 0 2px var(--grade, var(--text-3)); animation: dbtn-flash var(--dur-settle) var(--ease-out) 250ms both; }
+.dbtn[data-grade="correct"] { --grade: var(--good); }
+.dbtn[data-grade="mixed"] { --grade: var(--mid); }
+@keyframes dbtn-flash { from { opacity: 1; } to { opacity: 0; } }
 
-/* ---- Feedback and score ------------------------------------------------------
-   The verdict floats over the foot of the table, panel-coloured with a rule in
-   the verdict colour. The score replaces the whole table. */
+/* ---- Answer card (DEMO-01) --------------------------------------------------
+   As in the app's answer screen: it rises over the table, anchored on the
+   slabs, and repeats your two cards and the hand in its header, so the verdict
+   never hides what was asked. It never scrolls: the explanation is one
+   sentence. Green edge for Correct, amber for Mixed, a hairline for Wrong. */
 
-.phone__result {
-  position: absolute; left: 0; right: 0; bottom: 100%; z-index: 5;
-  display: flex; align-items: center; justify-content: space-between; gap: var(--space-1);
-  min-height: calc(78px * var(--s)); padding: calc(12px * var(--s));
+.answer {
+  grid-row: 2 / 4; grid-column: 1; align-self: end; z-index: 5;
+  max-height: 100%; overflow: hidden;
+  display: flex; flex-direction: column; gap: calc(10px * var(--s));
+  margin-bottom: calc(6px * var(--s));
+  padding: calc(14px * var(--s));
   background: var(--panel); color: var(--text);
-  border: var(--stroke) solid var(--border); border-radius: var(--r-button);
-  animation: phone-in var(--dur-entrance) var(--ease-out) both;
+  border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
 }
-.phone__result.is-correct { --result: var(--good); }
-.phone__result.is-miss { --result: var(--text-3); }
-.phone__result-copy { min-width: 0; padding-left: calc(9px * var(--s)); border-left: 3px solid var(--result); }
-.phone__result-copy strong { display: block; font-size: calc(16px * var(--s)); font-weight: 600; letter-spacing: -0.02em; }
-.phone__result-copy p { margin: 3px 0 0; max-width: 24ch; font-size: calc(11px * var(--s)); line-height: 1.4; color: var(--text-2); }
-.phone__result .btn { flex: none; }
-@keyframes phone-in {
-  from { opacity: 0; transform: translateY(var(--entrance-rise)); }
-  to { opacity: 1; transform: none; }
+.answer--correct { border: 2px solid var(--good); }
+.answer--mixed { border: 2px solid var(--mid); }
+.answer__head { display: flex; align-items: center; gap: calc(10px * var(--s)); }
+.answer__cards { display: flex; gap: calc(4px * var(--s)); flex: none; }
+.phone .pcard--mini {
+  width: calc(28px * var(--s)); height: calc(40px * var(--s)); gap: calc(1px * var(--s));
+  font-size: max(11px, calc(14px * var(--s))); border-radius: calc(4px * var(--s));
 }
+.phone .pcard--mini .pcard__suit { width: calc(13px * var(--s)); height: calc(13px * var(--s)); }
+.answer__id { display: flex; flex-direction: column; gap: calc(2px * var(--s)); min-width: 0; }
+.answer__title { font-size: max(11px, calc(16px * var(--s))); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.answer__ctx { font-size: max(11px, calc(12px * var(--s))); color: var(--text-2); line-height: 1.3; }
+.answer__grade {
+  display: flex; align-items: center; gap: calc(8px * var(--s)); margin: 0;
+  font-size: max(11px, calc(20px * var(--s))); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2;
+}
+.answer__tick { width: calc(22px * var(--s)); height: calc(22px * var(--s)); flex: none; }
+.answer__tick circle { fill: var(--good); }
+.answer--mixed .answer__tick circle { fill: var(--mid); }
+.answer__tick path { fill: none; stroke: var(--panel); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.answer__why { margin: 0; font-size: max(11px, calc(13.5px * var(--s))); line-height: 1.45; text-wrap: pretty; }
+.answer__actions { display: flex; gap: calc(8px * var(--s)); }
+.answer__actions .btn { flex: 1 1 0; min-width: 0; padding-inline: var(--space-1); font-size: max(13px, calc(15px * var(--s))); white-space: nowrap; }
+.answer__chart { border-color: var(--accent); }
 
-.phone.is-scored .phone__table, .phone.is-scored .phone__line { visibility: hidden; }
-.phone.is-scored .phone__controls { position: absolute; inset: calc(48px * var(--s)) calc(24px * var(--s)) calc(24px * var(--s)); overflow: auto; }
-.phone.is-scored #demo-feedback { height: 100%; }
+/* ---- Chart view ----------------------------------------------------------------
+   Chart swaps the table for the spot's range chart (chart.js), the hero's hand
+   ringed in amber; the card keeps only its buttons, at the foot. */
 
+.phone.is-charting .phone__table, .phone.is-charting .phone__line { visibility: hidden; }
+.phone.is-charting .answer { padding: 0; background: none; border-color: transparent; }
+.phone.is-charting .answer > :not(.answer__actions) { display: none; }
+.dchart {
+  grid-row: 2 / 4; grid-column: 1; min-height: 0;
+  display: flex; flex-direction: column; gap: calc(8px * var(--s));
+  padding-bottom: calc(var(--hit) + 14px * var(--s));
+}
+.dchart__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 calc(8px * var(--s)); margin: 0; line-height: 1.3; }
+.dchart__title strong { font-size: max(11px, calc(15px * var(--s))); font-weight: 600; letter-spacing: -0.02em; }
+.dchart__title span { font-size: max(11px, calc(12px * var(--s))); color: var(--text-2); }
+.dchart__fit { flex: 1 1 0; min-height: 0; container-type: size; display: grid; place-items: center; }
+.dchart .cgrid { width: min(100cqw, 100cqh); }
+.dchart .clegend { font-size: max(11px, calc(12px * var(--s))); }
+
+/* ---- Score ------------------------------------------------------------------------ */
+
+.phone.is-scored .phone__table, .phone.is-scored .phone__line, .phone.is-scored .phone__controls { visibility: hidden; }
 .score {
-  display: flex; flex-direction: column; justify-content: center; min-height: 100%;
-  animation: phone-in var(--dur-entrance) var(--ease-out) both;
+  grid-row: 2 / 5; grid-column: 1; align-self: center;
+  display: flex; flex-direction: column; padding-inline: calc(6px * var(--s));
 }
 .score__head { display: flex; align-items: center; gap: calc(14px * var(--s)); margin-bottom: calc(12px * var(--s)); }
 .score__figure { font-size: calc(42px * var(--s)); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
 .score__figure span { font-size: calc(21px * var(--s)); color: var(--text-3); }
-.score__label { font-size: calc(12px * var(--s)); color: var(--accent); }
+.score__label { font-size: max(11px, calc(12px * var(--s))); color: var(--accent); }
 .score__title { margin: 0; font-size: calc(21px * var(--s)); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
-.score__copy { margin: calc(9px * var(--s)) 0 0; font-size: calc(13.5px * var(--s)); line-height: 1.5; color: var(--text-2); }
+.score__copy { margin: calc(9px * var(--s)) 0 0; font-size: max(11px, calc(13.5px * var(--s))); line-height: 1.5; color: var(--text-2); }
 .score__actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-1); margin-top: calc(18px * var(--s)); }
 
-/* ---- Under the frame: one dot per hand and a line of status ----------------- */
+/* ---- Under the frame: one dot per hand, a status line, the caption ------------ */
 
-.phone-foot { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); margin-top: var(--space-2); }
+.phone-foot { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); margin-top: var(--space-2); max-width: 100%; }
 .dots { display: flex; gap: 0.5rem; }
-.dots i {
-  width: 1.75rem; height: 4px; border-radius: var(--r-pill); background: var(--border);
-  transition: opacity var(--dur-settle) var(--ease-out);
-}
-.dots i.now { background: var(--accent); }
+.dots i { width: 1.75rem; height: 4px; border-radius: var(--r-pill); background: var(--border); }
+.dots i.now { background: var(--accent-fill); }
 .dots i.correct { background: var(--good); }
-.dots i.close { background: var(--text-2); }
+.dots i.mixed { background: var(--mid); }
 .dots i.miss { background: var(--text-3); }
 .phone-foot__status { margin: 0; font-size: var(--fs-meta); color: var(--text-2); text-align: center; }
+.phone-foot .figcap { max-width: 26rem; text-align: center; }
 
 @media (prefers-reduced-motion: reduce) {
-  .phone__result, .score { animation: none; }
+  .dbtn.is-picked::after { animation: none; opacity: 0; }
 }

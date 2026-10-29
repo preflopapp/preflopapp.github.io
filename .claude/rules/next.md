@@ -88,10 +88,11 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   with an outline (no transform), top-align what the pointer is on, and give the
   changing text a `min-height`. A Playwright `hover()` that never becomes
   "stable" is this bug, not a flaky test (Phase 7).
-- **`next/js/app-data.js` and the badge grid are generated.** They come from the
-  app's own data in `docs/app-handoff/data/` via `scripts/gen-app-data.py`; edit
-  the source or the script, not the output. The real screenshots in
-  `assets/screens/app-*.webp` predate the app's Hanken refresh (Outfit type, old
+- **`next/js/app-data.js` is generated** from the app's own data in
+  `docs/app-handoff/data/` by `scripts/gen-app-data.py`: the charts and the
+  demo's three hands. Edit the source or the script, not the output. The badge
+  grid is no longer generated (redesign Phase 2; Phase 4 removes it). The real
+  screenshots in `assets/screens/app-*.webp` predate the app's Hanken refresh (Outfit type, old
   radii): they are illustrations of the layout, not pixel truth.
 - **Say when a picture is drawn, not captured.** The widgets and the bankroll
   line are illustrations (no screenshot exists); each says so in a caption. The
@@ -118,3 +119,18 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   drops it when an ancestor's padding or margin changes (every breakpoint),
   and WebKit has none. Keep the keeper read-only on scroll and acting only on
   width changes (redesign Phase 1; the resize and rotate probes check it).
+- **An item laid over grid rows needs every sibling pinned to its column.** The
+  demo's answer card spans rows 2-3 of the phone's one-column grid; the prompt
+  line, auto-placed in row 3, found that cell taken and opened a second column,
+  which squeezed the card to half width. `.phone__screen > * { grid-column: 1 }`
+  (redesign Phase 2).
+- **Dim by colour, not opacity, wherever there is text.** The old demo dimmed a
+  folded seat to opacity 0.28, which takes its labels under 4.5:1 (SPEC §4.10
+  counts dimmed states); hand 1 had no folded seat, so nothing caught it until
+  A5s opened with three. Folded pods grey their text with `--text-2`/`--text-3`
+  instead (redesign Phase 2).
+- **A finished CSS animation with `forwards`/`both` fill stays in
+  `document.getAnimations()`.** The open FAQ answer's `faq-in` (0 ms under
+  Reduce Motion, `both` fill) failed the demo probe's "Reduce Motion: no
+  animations". Run CSS animations only under `prefers-reduced-motion:
+  no-preference`, with `backwards` fill (redesign Phase 2).

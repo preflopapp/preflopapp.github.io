@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Turns the app's own data (docs/app-handoff/data/) into what the homepage loads.
 
-Writes next/js/app-data.js (the range charts the explorer draws) and rewrites
-the badge grid in index.html between <!-- gen:badges --> and <!-- /gen:badges -->.
+Writes next/js/app-data.js: the range charts (the explorer and the demo's Chart
+view draw them) and the demo's three hands (redesign SPEC §6.2).
 
 The source JSON comes from the app repo (see docs/app-handoff/README.md); do not
 edit values here. Re-run after refreshing it:
 
     python3 scripts/gen-app-data.py
 """
-import json, pathlib, re, html
+import json, pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "docs/app-handoff/data"
@@ -68,42 +68,82 @@ def charts():
     return out
 
 
-def badges_html():
-    b = json.loads((DATA / "levels-and-badges.json").read_text())["badges"]
-    subjects = []
-    for x in b:
-        if x["subject"] not in [s for s, _ in subjects]:
-            subjects.append((x["subject"], x["family"]))
-    rows = []
-    for subject, family in subjects:
-        tiers = [x for x in b if x["subject"] == subject]
-        discs = "".join(
-            f'<i class="badge__disc badge__disc--{x["tier"]}" title="{html.escape(x["name"])}: {html.escape(x["detail"])}"></i>'
-            for x in tiers)
-        needs = " · ".join(f'{x["tier"].capitalize()} {x["correctAnswersNeeded"]}' for x in tiers)
-        rows.append(f'<li class="badge" data-family="{html.escape(family)}"><span class="badge__discs" role="img" '
-                    f'aria-label="{html.escape(subject)}: {html.escape(needs)} correct answers">{discs}</span>'
-                    f'<span class="badge__name">{html.escape(subject).replace("-", "&#8209;")}</span></li>')  # no break inside "all-in"
-    return rows, len(b)
+# The demo's three hands (SPEC §6.2): the app's spots that also have a chart.
+# The wording around them is the site's; the hand, the action, the mix and the
+# explanation are the app's.
+SPOTS = [
+    dict(id="gen-rfi-6max-btn-A5s", head="Opening", title="A5s from the button",
+         context="Folded to you · 100bb · 6-max", prompt="UTG, HJ and CO fold. Your move."),
+    dict(id="gen-vsopen-6max-bb-vs-btn-J8s", head="Facing an open", title="J8s from the big blind",
+         context="vs a 3bb BTN open · 100bb · 6-max", prompt="BTN raises to 3bb. SB folds. Your move."),
+    dict(id="gen-vsallin-6max-20bb-co-vs-bb-rejam-KTs", head="Facing an all-in", title="KTs from the cutoff",
+         context="vs a BB jam · 20bb · 6-max", prompt="You open to 2bb. BB moves all-in for 20bb. Your move."),
+]
+SEATS = ["utg", "hj", "co", "btn", "sb", "bb"]
+# Models/Spot.swift defaultDecisions, for a spot whose "buttons" is null.
+DEFAULT_BUTTONS = {"rfi": ["Fold", "Raise"], "facing_open": ["Fold", "Call", "3-Bet"], "facing_all_in": ["Fold", "Call"]}
+# A slab's colour: red folds, blue calls, green puts money in.
+COLOUR = {"Fold": "fold", "Call": "call", "Raise": "raise", "3-Bet": "raise", "4-Bet": "raise"}
+# The chart cell's segment each button reads (f/c/r, as in cell_code).
+SEGMENT = {"Fold": "f", "Call": "c", "Raise": "r", "3-Bet": "r", "4-Bet": "r"}
+
+
+def first_sentence(text):
+    """Up to and including the first ". " (SPEC §6.2: the card never scrolls)."""
+    cut = text.find(". ")
+    return text if cut < 0 else text[:cut + 1]
+
+
+def seat_order(hero):
+    """Clockwise from the top with the hero at the bottom (data-i 3), as in the
+    app's practice screen: for BTN, UTG on top, HJ and CO right, SB and BB left."""
+    h = SEATS.index(hero)
+    return [SEATS[(h + k) % 6] for k in (3, 4, 5, 0, 1, 2)]
+
+
+def spots(chart_list):
+    src = {x["id"]: x for x in json.loads((DATA / "spots.json").read_text())["spots"]}
+    index = {c["id"]: i for i, c in enumerate(chart_list)}
+    out = []
+    for meta in SPOTS:
+        sp = src[meta["id"]]
+        chart = chart_list[index[sp["chartId"]]]
+        hand = sp["heroHand"]
+        code = hand[0][0] + hand[1][0] + ("s" if hand[0][1] == hand[1][1] else "o")
+        assert code == chart["hero"], (meta["id"], code, chart["hero"])
+        buttons = sp["buttons"] or DEFAULT_BUTTONS[sp["situation"]]
+        options = [dict(label=b, colour=COLOUR[b], pct=sp["mixPercent"].get(b, 0)) for b in buttons]
+        # The spot's mix and its chart's cell for the same hand must agree.
+        cell = dict((k, 0) for k in "fcr")
+        hero_cell = chart["cells"][[hand_at(i) for i in range(169)].index(code)]
+        for seg, n in re.findall(r"([fcr])(\d+)", hero_cell):
+            cell[seg] = int(n)
+        for o in options:
+            assert cell[SEGMENT[o["label"]]] == o["pct"], (meta["id"], o, hero_cell)
+        ex = sp["explanation"]
+        out.append(dict(
+            id=meta["id"], chart=index[sp["chartId"]], head=meta["head"], title=meta["title"],
+            context=meta["context"], prompt=meta["prompt"], hero=sp["heroPosition"], depth=sp["stackDepthBB"],
+            hand=[[c[0], c[1]] for c in hand], seats=seat_order(sp["heroPosition"]),
+            blinds=sp["blindsBB"], actions=[[a["position"], a["action"], a["sizingBB"]] for a in sp["actionSequence"]],
+            options=options,
+            explain=dict(correct=first_sentence(ex["correctSummary"]),
+                         **{k: first_sentence(v) for k, v in ex["mistakeSummaries"].items()})))
+    return out
+
+
+def hand_at(i):
+    return hand(i // 13, i % 13)
 
 
 def main():
-    js = "window.PreflopApp = " + json.dumps({"charts": charts()}, separators=(",", ":")) + ";\n"
-    header = ("/* Generated by scripts/gen-app-data.py from the app's own range charts "
-              "(docs/app-handoff/data/ranges.json). Do not edit. Cells: f=fold c=call r=raise-coloured, then whole percent. */\n")
+    chart_list = charts()
+    js = "window.PreflopApp = " + json.dumps({"charts": chart_list, "spots": spots(chart_list)},
+                                             separators=(",", ":"), ensure_ascii=False) + ";\n"
+    header = ("/* Generated by scripts/gen-app-data.py from the app's own data (docs/app-handoff/data/: "
+              "ranges.json, spots.json). Do not edit. Cells: f=fold c=call r=raise-coloured, then whole percent. */\n")
     (ROOT / "next/js/app-data.js").write_text(header + js)
-    rows, total = badges_html()
-    seats = [r for r in rows if 'data-family="Positions"' in r]
-    others = [r for r in rows if 'data-family="Positions"' not in r]
-    groups = (f'<li class="badges__group"><h3 class="t-label badges__label">By seat</h3><ul class="badges__grid badges__grid--seats">\n' + "\n".join(seats) + "\n</ul></li>\n"
-              f'<li class="badges__group"><h3 class="t-label badges__label">By situation and hand type</h3><ul class="badges__grid badges__grid--situations">\n' + "\n".join(others) + "\n</ul></li>")
-    rows = groups
-    page = ROOT / "index.html"
-    text = page.read_text()
-    new = f"<!-- gen:badges -->\n{rows}\n<!-- /gen:badges -->"
-    text, n = re.subn(r"<!-- gen:badges -->.*?<!-- /gen:badges -->", lambda m: new, text, flags=re.S)
-    if n: page.write_text(text)
-    print(f"app-data.js: {len(charts())} charts; badges: {total} in {len(seats) + len(others)} cards; index.html updated: {bool(n)}")
+    print(f"app-data.js: {len(chart_list)} charts, {len(SPOTS)} demo hands")
 
 
 if __name__ == "__main__":
