@@ -150,6 +150,10 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   (after redesign Phase 4). The same goes for bare element selectors under a
   block: `.faqs__aside p` also greyed the FAQ's eyebrow, the only grey one on
   the page, until Phase 5 scoped it to `p:last-child`.
+  A block-plus-element rule also outranks a lone modifier class:
+  `.wshots img { display: block }` beat `.wshots__s { display: none }`, so
+  the small widget showed at every width. Write the hiding rule as
+  `.wshots .wshots__s` (2026-10-29).
 - **A no-JS fallback has to fit the section's height budget too.** The harness
   measures section heights in the no-JS pass as well. The app's capture that
   stands in for How it teaches' drawn chart (a 280px phone shot, 609px tall)
