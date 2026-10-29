@@ -34,7 +34,7 @@ check.
 
 | ID | Sev. | Conf. | What |
 |---|---|---|---|
-| [QA-01](#qa-01) | minor | high | The zone still injects the Bot Fight Mode "JS Detections" script, which our CSP blocks: one console error per live page |
+| [QA-01](#qa-01) | minor | high | Accepted: the zone still injects the Bot Fight Mode "JS Detections" script, which our CSP blocks: one console error per live page |
 | [QA-02](#qa-02) | polish | high | At 320 the homepage is 16.5 screens against a target of 16 (ceiling 17 met) |
 | [QA-03](#qa-03) | polish | medium | The footer is 396 px at 390 against the SPEC's 360 (budget 400, accepted with Phase 5) |
 | [QA-04](#qa-04) | polish | medium | Under a throttled CPU an entrance can still be running at the harness's 600 ms check |
@@ -47,9 +47,12 @@ check.
 - **What.** `curl` of `https://preflopapp.com/` on 2026-10-29 still finds
   `/cdn-cgi/challenge-platform/scripts/jsd/main.js`. Our CSP blocks it, so each
   page logs one console error. Visitors see nothing.
-- **Cause.** Bot Fight Mode is off, but "JavaScript detections" is its own
-  switch (Cloudflare → Security → Bots).
-- **Fix.** Stan switches it off. No code change.
+- **Cause.** On the Free plan, JavaScript detections come with Bot Fight Mode
+  and have no switch of their own; the toggle is for Pro plans and up. Stan
+  found no such setting (2026-10-29).
+- **Fix.** Accepted. Visitors see nothing, and our CSP keeps the script from
+  running. The only other route is to check that Bot Fight Mode is really off
+  (Security → Settings → Bot traffic).
 
 ### QA-02
 **polish · high** · `/` at 320×568, every scheme and mode
@@ -155,7 +158,7 @@ check.
 | TEXT-01 | done; TEXT-02 accepted |
 | PERF-01 | done: 528 elements before JS, TBT 0 ms throttled |
 | PERF-02 | done: GSAP deleted, 0 loops, 0 blur layers |
-| LIVE-01 | **open**: QA-01 (owner switch) |
+| LIVE-01 | accepted: QA-01 (no switch on the Free plan) |
 | LIVE-02 | done; the live pass found `/next/css/*` served `immutable` |
 | LIVE-03 | done: `www` answers 301 to the apex; the style guide is deleted |
 | Not testable here 1–10 | addressed in code; 1, 2 and 6 still need the §13 device check |

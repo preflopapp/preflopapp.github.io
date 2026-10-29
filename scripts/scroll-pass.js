@@ -1473,50 +1473,56 @@ const PROBES = {
     await ctx.close();
   },
 
-  /* §6.7 Free for everyone: the grid fills its rows, the widget's cards
-     overlap, the captions show, the pictures fit and the motion lands. */
+  /* §6.7 Free for everyone and #bankroll: the grid fills its rows, the
+     captured widgets fit their card (the small one only beside the medium
+     one), the gallery shots have no captions and the Pro tabs aren't
+     clipped, the Live Activity fits its panel, and the motion lands. */
   async perks(k) {
     for (const vp of [{ w: 390, h: 844 }, { w: 600, h: 960 }, { w: 768, h: 1024 }, { w: 820, h: 1180 }, { w: 1024, h: 768 }, { w: 1440, h: 900 }]) {
       const { ctx, page } = await k.open(vp, "dark", "default");
       await k.load(page, "/");
       await page.evaluate(() => document.getElementById("progress").scrollIntoView());
       await page.waitForTimeout(900);
-      await page.evaluate(() => document.querySelector(".trend").scrollIntoView({ block: "center" }));
-      await page.waitForTimeout(900);
       const r = await page.evaluate(() => {
         const R = (el) => el.getBoundingClientRect(), grid = R(document.querySelector(".perks__grid"));
         const rows = {};
         document.querySelectorAll(".perk").forEach((c) => { const b = R(c), key = Math.round(b.top / 4); (rows[key] = rows[key] || []).push(b); });
         const gaps = Object.values(rows).filter((row) => Math.abs(Math.min(...row.map((b) => b.left)) - grid.left) > 2 || Math.abs(Math.max(...row.map((b) => b.right)) - grid.right) > 2).length;
-        const cards = Array.from(document.querySelectorAll(".wcard"), R), m = R(document.querySelector(".widget--m")), ws = R(document.querySelector(".widgets"));
-        const small = document.querySelector(".widget--s"), line = document.querySelector(".widget__line");
-        const caps = Array.from(document.querySelectorAll(".perk__cap"), (c) => R(c).height > 0 && c.textContent.trim().length > 10);
+        const ws = document.querySelector(".wshots"), wb = R(ws), card = R(ws.closest(".perk"));
+        const m = R(ws.querySelector(".wshots__m")), sm = ws.querySelector(".wshots__s"), shown = getComputedStyle(sm).display !== "none";
         return {
-          rows: Object.keys(rows).length, gaps,
-          overlap: cards.length === 2 && cards[0].right - cards[1].left > 2 && cards.every((c) => c.left >= m.left && c.right <= m.right),
-          fits: (getComputedStyle(small).display === "none" || R(small).left >= ws.left - 1) && R(document.querySelector(".widget--m")).right <= ws.right + 1 && line.scrollWidth <= line.clientWidth + 1,
-          small: getComputedStyle(small).display !== "none", caps,
-          visuals: Array.from(document.querySelectorAll(".perk__visual > :first-child"), (v) => Math.round(R(v).height)),
-          landed: document.querySelector("[data-pop]").getAttribute("data-pop") !== "pending" && !document.querySelector(".trend__cover"),
+          rows: Object.keys(rows).length, gaps, small: shown,
+          fits: m.left >= card.left && m.right <= card.right + 0.5 && m.width > 150 && (!shown || (R(sm).left >= m.right && R(sm).right <= card.right + 0.5)),
+          smallRight: shown === (wb.width >= 448),
+          landed: document.querySelector("[data-pop]").getAttribute("data-pop") !== "pending",
         };
+      });
+      await page.evaluate(() => document.getElementById("bankroll").scrollIntoView());
+      await page.waitForTimeout(900);
+      const g = await page.evaluate(() => {
+        const R = (el) => el.getBoundingClientRect();
+        const pros = Array.from(document.querySelectorAll(".gshot__pro"), (t) => R(t).top >= R(t.closest(".gallery__track")).top - 0.5);
+        const live = R(document.querySelector(".live")), shot = R(document.querySelector(".live__shot"));
+        return { caps: document.querySelectorAll(".gshot figcaption, .gshot__cap").length, pros, shots: document.querySelectorAll("#bankroll .gshot").length,
+          live: shot.left >= live.left && shot.right <= live.right + 0.5 && shot.bottom <= live.bottom + 0.5 && shot.width > 200 };
       });
       const tag = `${vp.w}`;
       k.check(`${tag}: no empty grid cell (${r.rows} rows)`, !r.gaps, `${r.gaps} rows short`);
-      k.check(`${tag}: the widget's two cards overlap, inside the widget`, r.overlap, "");
-      k.check(`${tag}: the widgets fit their card, text included`, r.fits, `small ${r.small ? "shown" : "hidden"}`);
-      k.check(`${tag}: both captions show`, r.caps.length === 2 && r.caps.every(Boolean), JSON.stringify(r.caps));
-      if (vp.w === 390) k.check("390: every picture is at most 120 px tall", r.visuals.every((h) => h <= 120), r.visuals.join(", "));
-      k.check(`${tag}: pop and draw have landed in view`, r.landed, "");
+      k.check(`${tag}: the widgets fit their card`, r.fits, `small ${r.small ? "shown" : "hidden"}`);
+      k.check(`${tag}: the small widget shows only where the card has room`, r.smallRight, `small ${r.small ? "shown" : "hidden"}`);
+      k.check(`${tag}: pop has landed in view`, r.landed, "");
+      k.check(`${tag}: no captions under the shots; two Pro tabs, not clipped; four bankroll shots`, !g.caps && g.pros.length === 2 && g.pros.every(Boolean) && g.shots === 4, JSON.stringify(g));
+      k.check(`${tag}: the Live Activity fits its panel`, g.live, "");
       await page.evaluate(() => document.getElementById("progress").scrollIntoView());
       await page.waitForTimeout(300);
       await k.shot(page, `${vp.w}`);
       await ctx.close();
     }
-    /* Reduce Motion: no cover, nothing pending, no animations. */
+    /* Reduce Motion: nothing pending, no animations. */
     const { ctx, page } = await k.open({ w: 390, h: 844 }, "dark", "reduced");
     await k.load(page, "/");
-    const rm = await page.evaluate(() => ({ cover: !!document.querySelector(".trend__cover"), pending: document.querySelectorAll('[data-pop="pending"], [data-draw="pending"]').length, anims: document.getAnimations().length }));
-    k.check("Reduce Motion: no cover, nothing pending, no animations", !rm.cover && !rm.pending && !rm.anims, JSON.stringify(rm));
+    const rm = await page.evaluate(() => ({ pending: document.querySelectorAll('[data-pop="pending"], [data-enter="pending"]').length, anims: document.getAnimations().length }));
+    k.check("Reduce Motion: nothing pending, no animations", !rm.pending && !rm.anims, JSON.stringify(rm));
     await ctx.close();
   },
 };
