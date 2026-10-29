@@ -11,3 +11,6 @@ paths:
   in `${var//…}` was ignored on the Mac, and a two-line `git push … main`
   slipped past `guard-main.sh`. Put such patterns in a quoted variable, and
   run `test_guard_main.py` on the Mac after changing a hook (Phase 6, 2026-10-29).
+- **Create a branch in its own command before pushing it.** `guard-main.sh`
+  reads the current branch before the command runs, so `git checkout -b x &&
+  … && git push` typed on `main` is denied whole (2026-10-29).
