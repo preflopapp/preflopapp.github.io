@@ -49,26 +49,39 @@
     return g;
   }
 
-  /* One swatch per action the chart has, in the app's order. */
+  /* One swatch per action the chart has, in the app's order, and one for
+     hands the chart never reaches ("Not opened") when it has any. */
   function legend(chart) {
     var ul = el("ul", "clegend");
-    ["f", "c", "r"].forEach(function (k) {
-      if (!chart.labels[k]) return;
+    function item(cls, text) {
       var li = el("li");
-      li.appendChild(el("i", "clegend__sw clegend__sw--" + k));
-      li.appendChild(doc.createTextNode(chart.labels[k]));
+      li.appendChild(el("i", "clegend__sw " + cls));
+      li.appendChild(doc.createTextNode(text));
       ul.appendChild(li);
-    });
+    }
+    ["f", "c", "r"].forEach(function (k) { if (chart.labels[k]) item("clegend__sw--" + k, chart.labels[k]); });
+    if (chart.empty) item("clegend__sw--none", chart.empty);
     return ul;
+  }
+
+  /* Where a hand sits (0-168), and a cell's mix as [[f|c|r, percent], ...] in
+     the app's order: every action the chart has, 0 where it never takes it. */
+  function indexOf(h) {
+    for (var i = 0; i < 169; i++) if (hand(i) === h) return i;
+    return -1;
+  }
+  function mix(chart, i) {
+    var got = {};
+    parse(chart.cells[i]).forEach(function (p) { got[p[0]] = p[1]; });
+    return ["f", "c", "r"].filter(function (k) { return chart.labels[k]; }).map(function (k) { return [k, got[k] || 0]; });
   }
 
   /* What a screen reader hears: "Chart: Opening from the button, 100bb.
      A5s: Raise 100%." */
   function summary(chart) {
-    var code = chart.cells[chart.cells.map(function (_, i) { return hand(i); }).indexOf(chart.hero)];
-    var mix = parse(code).map(function (p) { return chart.labels[p[0]] + " " + p[1] + "%"; }).join(", ");
-    return "Chart: " + chart.title + ", " + chart.sub.split(" · ")[0] + ". " + chart.hero + ": " + mix + ".";
+    var shares = parse(chart.cells[indexOf(chart.hero)]).map(function (p) { return chart.labels[p[0]] + " " + p[1] + "%"; }).join(", ");
+    return "Chart: " + chart.title + ", " + chart.sub.split(" · ")[0] + ". " + chart.hero + ": " + shares + ".";
   }
 
-  window.PreflopChart = { hand: hand, parse: parse, grid: grid, legend: legend, summary: summary };
+  window.PreflopChart = { hand: hand, parse: parse, grid: grid, legend: legend, summary: summary, indexOf: indexOf, mix: mix };
 })();

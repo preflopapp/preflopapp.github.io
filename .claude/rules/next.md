@@ -81,7 +81,7 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   (private windows throw). It applies when the deferred script runs, so a
   visitor who overrode their system scheme may see one frame of it first
   (Phase 8).
-- **A hover UI must not move under its own pointer.** The chart explorer froze
+- **A hover UI must not move under its own pointer.** The old chart explorer froze
   twice in a test: the picked square scaled up and covered its neighbours, then
   the inspector's text changed height and the vertically centred chart shifted,
   so the pointer landed on another square, flip-flopping forever. Mark the pick
@@ -134,3 +134,9 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
   Reduce Motion, `both` fill) failed the demo probe's "Reduce Motion: no
   animations". Run CSS animations only under `prefers-reduced-motion:
   no-preference`, with `backwards` fill (redesign Phase 2).
+- **A no-JS fallback has to fit the section's height budget too.** The harness
+  measures section heights in the no-JS pass as well. The app's capture that
+  stands in for How it teaches' drawn chart (a 280px phone shot, 609px tall)
+  took the section to 1,386px at 390 against 1,250; on a phone it is now
+  `min(280px, 55vw)` wide. Check a fallback in the nojs pass, not just by eye
+  (redesign Phase 3).

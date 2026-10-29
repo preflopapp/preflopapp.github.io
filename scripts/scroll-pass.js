@@ -1235,7 +1235,127 @@ const PROBES = {
     k.check("1440: the 25,000 figure never shows another value unless it began below the screen", below || [...seen].every((t) => t === "25,000"), `${below ? "below the screen" : "on screen"}; saw ${[...seen].join(", ")}`);
     await pf.ctx.close();
   },
-  async explorer(k) { k.skip = "written with the new teaching section (Phase 3, SPEC §6.4)"; },
+  /* How it teaches (SPEC §6.4, EXPL-01..05) and Every seat (§6.5): hovering
+     never moves anything, a wheel under a still pointer changes nothing, the
+     tabs and the grid follow the keyboard pattern, the columns line up, the
+     two rings differ, and no coverage row runs past three lines at 320. */
+  async explorer(k) {
+    const { ctx, page, w } = await k.open({ w: 1440, h: 900 }, "dark", "default");
+    await k.load(page, "/");
+    await page.evaluate(() => document.getElementById("teach-chart").scrollIntoView({ block: "center" }));
+    await page.waitForTimeout(900);
+    const state = () => page.evaluate(() => {
+      const cells = Array.from(document.querySelectorAll("#teach-chart .cell")), sel = cells.findIndex((c) => c.classList.contains("is-sel"));
+      const tabs = Array.from(document.querySelectorAll('#features [role="tab"]'));
+      return {
+        sel, hero: cells.findIndex((c) => c.classList.contains("is-hero")), n: cells.length,
+        card: Math.round(document.getElementById("teach-card").getBoundingClientRect().height * 10) / 10,
+        hand: document.querySelector(".teach__hand").textContent, live: document.getElementById("teach-announce").textContent,
+        tabs: tabs.map((t) => [t.id, t.getAttribute("aria-selected"), t.tabIndex]),
+        panel: [document.getElementById("teach-chart").getAttribute("role"), document.getElementById("teach-chart").getAttribute("aria-labelledby")],
+        active: document.activeElement && (document.activeElement.id || document.activeElement.className),
+      };
+    });
+    /* Hover 20 random cells: no layout shift, the card keeps its height. */
+    await page.evaluate(() => { window.__sp_hover = 0; new PerformanceObserver((l) => l.getEntries().forEach((e) => { window.__sp_hover += e.value; })).observe({ type: "layout-shift" }); });
+    const s0 = await state(), boxes = await page.$$eval("#teach-chart .cell", (cs) => cs.map((c) => { const r = c.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }));
+    const heights = new Set([s0.card]);
+    let seed = 7;
+    for (let i = 0; i < 20; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const [x, y] = boxes[Math.floor(seed / 233280 * boxes.length)];
+      await page.mouse.move(x, y, { steps: 3 });
+      await page.waitForTimeout(60);
+      heights.add((await state()).card);
+    }
+    await page.waitForTimeout(400);
+    const cls = await page.evaluate(() => window.__sp_hover);
+    const s1 = await state();
+    k.check("1440: hovering 20 cells adds 0 to CLS", cls === 0, `CLS +${cls.toFixed(4)}`);
+    k.check("1440: the card's height never changes while hovering", heights.size === 1, [...heights].join(" / ") + " px");
+    k.check("hovering previews the hand under the pointer", s1.sel >= 0 && s1.sel !== s0.sel, `selected ${s0.sel} → ${s1.sel}, card "${s1.hand}"`);
+    await k.shot(page, "hover-1440");
+    /* A wheel under a still pointer: the page scrolls, the selection stays. */
+    const yb = await k.y(page), before = (await state()).sel;
+    await page.mouse.wheel(0, 240);
+    await page.waitForTimeout(600);
+    const ya = await k.y(page), after = (await state()).sel;
+    k.check("a wheel scroll with the pointer still leaves the selection unchanged", ya > yb && after === before, `scrollY ${yb} → ${ya}; selected ${before} → ${after}`);
+    /* Leaving the chart returns to the pinned hand (the spot's, by default). */
+    await page.mouse.move(5, 5);
+    await page.waitForTimeout(200);
+    const s2 = await state();
+    k.check("pointer out: back to the pinned hand", s2.sel === s2.hero, `selected ${s2.sel}, hero ${s2.hero}`);
+    /* The two rings: amber for the spot's hand, --text for the selection. */
+    const rings = await page.evaluate(() => {
+      const hero = document.querySelector("#teach-chart .cell.is-hero");
+      hero.classList.add("is-sel");
+      const a = getComputedStyle(hero, "::before").borderTopColor, b = getComputedStyle(hero).outlineColor;
+      const tok = (n) => { const d = document.createElement("i"); d.style.setProperty("color", `var(${n})`); document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; };
+      return { ring: a, sel: b, accent: tok("--accent"), text: tok("--text") };
+    });
+    k.check("the hero ring is amber and the selected ring is --text", rings.ring === rings.accent && rings.sel === rings.text && rings.ring !== rings.sel, `ring ${rings.ring}, selected ${rings.sel}`);
+    await page.evaluate(() => document.getElementById("teach-chart").scrollIntoView({ block: "center" }));
+    await page.waitForTimeout(300);
+    /* EXPL-01: the columns end together at 1440. */
+    const cols = await page.evaluate(() => {
+      const left = Math.max(...[".teach__head", ".teach__tabs", "#teach-card"].map((s) => document.querySelector(s).getBoundingClientRect().bottom));
+      const right = document.getElementById("teach-chart").getBoundingClientRect().bottom;
+      return { left: Math.round(left), right: Math.round(right) };
+    });
+    k.check("1440: the left and right columns end within 120 px (EXPL-01)", Math.abs(cols.left - cols.right) <= 120, `left ${cols.left}, right ${cols.right}`);
+    /* Tabs: click each; then the keyboard pattern. */
+    for (const [id, hand] of [["teach-tab-j8s", "J8s"], ["teach-tab-a5s", "A5s"], ["teach-tab-kts", "KTs"]]) {
+      await page.click("#" + id);
+      await page.waitForTimeout(300);
+      const s = await state();
+      const one = s.tabs.filter((t) => t[1] === "true");
+      k.check(`tab ${hand}: selected alone, roving tabindex, panel labelled by it, card on ${hand}`,
+        one.length === 1 && one[0][0] === id && s.tabs.every((t) => t[2] === (t[0] === id ? 0 : -1)) && s.panel[0] === "tabpanel" && s.panel[1] === id && s.hand === hand && s.sel === s.hero && s.n === 169,
+        `${JSON.stringify(s.tabs)} panel ${s.panel.join(" ")} card ${s.hand}`);
+      if (hand === "J8s") await k.shot(page, "tab-j8s-1440");
+    }
+    await page.focus("#teach-tab-kts");
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(250);
+    let s = await state();
+    k.check("tabs: ArrowRight selects and focuses the next tab", s.active === "teach-tab-j8s" && s.tabs[1][1] === "true", `focus ${s.active}`);
+    await page.keyboard.press("End");
+    await page.waitForTimeout(250);
+    s = await state();
+    k.check("tabs: End goes to the last tab", s.active === "teach-tab-a5s" && s.tabs[2][1] === "true", `focus ${s.active}`);
+    await page.keyboard.press("Home");
+    await page.waitForTimeout(250);
+    s = await state();
+    k.check("tabs: Home goes to the first tab", s.active === "teach-tab-kts" && s.tabs[0][1] === "true", `focus ${s.active}`);
+    /* The grid: one Tab stop, arrows move the pin, Home returns to the hand. */
+    await page.keyboard.press("Tab");
+    s = await state();
+    const inGrid = await page.evaluate(() => document.activeElement && document.activeElement.classList.contains("cgrid"));
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowDown");
+    await page.waitForTimeout(200);
+    const moved = await state();
+    await page.keyboard.press("Home");
+    await page.waitForTimeout(200);
+    const home = await state();
+    k.check("grid: one Tab stop after the tabs; arrows move the pin; Home returns to the spot's hand",
+      inGrid && moved.sel === s.hero + 12 && home.sel === home.hero && /^KTs: /.test(home.live), `in grid ${inGrid}; ${s.hero} → ${moved.sel} → ${home.sel}; live "${home.live}"`);
+    const errs = w.console.filter((c) => c.type !== "warning");
+    k.check("no console errors", !errs.length, errs.slice(0, 3).map((c) => c.text).join(" | "));
+    await ctx.close();
+
+    /* §6.5: no coverage row wraps past three lines at 320. */
+    const sm = await k.open({ w: 320, h: 568 }, "dark", "default");
+    await k.load(sm.page, "/");
+    /* A row's lines: the name's (the chips and Level pill share its first line) plus "who". */
+    const lines = await sm.page.evaluate(() => Array.from(document.querySelectorAll(".spot")).map((row) => {
+      const count = (el) => { const r = document.createRange(); r.selectNodeContents(el); return new Set(Array.from(r.getClientRects()).map((x) => Math.round(x.top))).size; };
+      return [row.querySelector(".spot__name").textContent, count(row.querySelector(".spot__name")) + count(row.querySelector(".spot__who"))];
+    }));
+    k.check("320: no coverage row runs past three lines", lines.every((l) => l[1] <= 3), lines.map((l) => `${l[0]} ${l[1]}`).join(", "));
+    await sm.ctx.close();
+  },
 };
 
 function B_probes(k, key) { return k.budgets && k.budgets.probes && k.budgets.probes[key] != null ? k.budgets.probes[key] : k.from; }

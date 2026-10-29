@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Turns the app's own data (docs/app-handoff/data/) into what the homepage loads.
 
-Writes next/js/app-data.js: the range charts (the explorer and the demo's Chart
-view draw them) and the demo's three hands (redesign SPEC §6.2).
+Writes next/js/app-data.js: the range charts with each one's explanation (How
+it teaches and the demo's Chart view draw them) and the demo's three hands
+(redesign SPEC §6.2).
 
 The source JSON comes from the app repo (see docs/app-handoff/README.md); do not
 edit values here. Re-run after refreshing it:
@@ -19,8 +20,12 @@ RANKS = "AKQJT98765432"
 CHARTS = {
     "rfi-6max-btn": dict(title="Opening from the button", hero="A5s", kind="rfi"),
     "vsopen-6max-bb-vs-btn": dict(title="Big blind facing a button open", hero="J8s", kind="vsopen"),
-    "vsallin-6max-20bb-co-vs-bb-rejam": dict(title="Cutoff facing a big-blind re-jam", hero="KTs", kind="jam"),
+    "vsallin-6max-20bb-co-vs-bb-rejam": dict(title="Cutoff facing a big-blind re-jam", hero="KTs", kind="jam",
+                                             empty="Not opened",
+                                             emptyNote="The cutoff doesn’t open this hand, so this spot never comes up with it."),
 }
+# A cell with no mix is a hand the chart never reaches; the app's legend names it
+# ("Not opened" on the re-jam chart, app-jam-chart.webp).
 # The app draws a cell as a bar split left to right: fold, call, then the
 # aggressive actions. In an opening chart the "call" cell is the open, drawn
 # in the raise colour (ranges.json note). f=fold c=call r=raise-coloured.
@@ -63,9 +68,18 @@ def charts():
         sub = f'{c["stackDepth"]}bb · {c["tableSize"].replace("max", "-max")}'
         if c["situation"] == "facing_all_in": sub += " · re-jam"
         elif c.get("openSizingBB"): sub += f' · {c["openSizingBB"]:g}bb open'
-        out.append(dict(id=cid, title=meta["title"], sub=sub, hero=meta["hero"], kind=meta["kind"],
-                        labels=LABELS[meta["kind"]], cells=cells))
+        chart = dict(id=cid, title=meta["title"], sub=sub, hero=meta["hero"], kind=meta["kind"],
+                     labels=LABELS[meta["kind"]], cells=cells, why=spot_for(cid)["explanation"]["correctSummary"])
+        if "" in cells:
+            chart.update(empty=meta["empty"], emptyNote=meta["emptyNote"])
+        out.append(chart)
     return out
+
+
+def spot_for(chart_id):
+    """The spot whose hand the chart rings: its explanation is the chart's "why"."""
+    src = json.loads((DATA / "spots.json").read_text())["spots"]
+    return next(x for x in src if x["chartId"] == chart_id and x["id"] in {m["id"] for m in SPOTS})
 
 
 # The demo's three hands (SPEC §6.2): the app's spots that also have a chart.

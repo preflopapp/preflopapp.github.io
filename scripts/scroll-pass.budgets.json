@@ -1,9 +1,9 @@
 {
   "_about": "Budgets for scripts/scroll-pass.js: the numbers of docs/redesign/SPEC.md §4.3 (length, section heights) and §4.9 (performance). Each block has 'from', the phase in which it becomes a contract: before that phase the harness reports it as 'due Phase N' instead of failing, because the old design is still being replaced (SPEC §11). 'phase' is the phase being built; pass --phase to override. Px and byte values are maxima. Section heights add up the heights of the elements their selectors match and are skipped while a selector matches nothing. Phase 6 tightens these to the measured values plus 10%.",
-  "phase": 2,
+  "phase": 3,
   "positionAllowed": ".nav, .skip-link",
   "nojs": {
-    "fallbacks": [".explorer__static img"],
+    "fallbacks": [".teach__static img"],
     "noscriptText": "Turn on JavaScript to play this demo."
   },
   "length": {
