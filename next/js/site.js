@@ -1,7 +1,7 @@
 /* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle, the
    motion tokens (window.PreflopMotion), picture entrances, the proof
-   figures' count-up, the coverage bars' fill, and Free for everyone's pop
-   and draw. No library: IntersectionObserver, the Web Animations API
+   figures' count-up, the coverage bars' fill, Free for everyone's pop and
+   draw, and the closing's deal. No library: IntersectionObserver, the Web Animations API
    and requestAnimationFrame.
    Everything here is enhancement. With no JS, or with Reduce Motion, the page
    is complete and nothing is hidden. Animates transform and opacity only, with
@@ -229,9 +229,9 @@
     bezier: bezier
   });
 
-  /* ---- Motion: entrance, count, fill, pop and draw ------------------------
+  /* ---- Motion: entrance, count, fill, pop, draw and deal ------------------
      Nothing on the page waits for these, and CSS hides nothing by itself. An
-     element gets a start state (data-enter, -fill, -pop or -draw "pending", or a count's 0) only
+     element gets a start state (data-enter, -fill, -pop, -draw or -deal "pending", or a count's 0) only
      when all of these hold (redesign SPEC §4.7, rule 5): motion is allowed,
      IntersectionObserver exists, the element is still below the screen now,
      and the observer that reveals it is registered here, in the same task.
@@ -346,6 +346,24 @@
       if (instant) { cover.remove(); return; }
       cover.animate([{ transform: "none" }, { transform: "translateX(101%)" }],
         { duration: M.dur.emphasis, easing: M.ease.inOut, fill: "forwards" }).onfinish = function () { cover.remove(); };
+    });
+    observer.observe(el);
+  });
+
+  /* Deal: the closing's two cards ([data-deal] > *) rise 24px into their fan
+     angle and fade in once, 80ms apart. The angle is the card's own CSS
+     transform, read here, so the cards end exactly where they sit without JS. */
+  doc.querySelectorAll("[data-deal]").forEach(function (el) {
+    if (!below(el)) return;
+    el.setAttribute("data-deal", "pending");
+    waiting.set(el, function (instant) {
+      el.setAttribute("data-deal", "done");
+      if (instant) return;
+      Array.prototype.forEach.call(el.children, function (card, i) {
+        var fan = getComputedStyle(card).transform, end = fan === "none" ? "" : fan;
+        card.animate([{ opacity: 0, transform: "translateY(24px) " + end }, { opacity: 1, transform: end || "none" }],
+          { duration: M.dur.emphasis, delay: i * 80, easing: M.ease.emphasis, fill: "backwards" });
+      });
     });
     observer.observe(el);
   });
