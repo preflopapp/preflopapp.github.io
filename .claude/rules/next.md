@@ -108,5 +108,5 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
 - **Lock the page behind the open menu with `overflow: hidden` on html only,
   plus `touch-action: none` on the open bar and scrim.** Hidden on body as
   well makes body the sticky nav's scroll container, and the open nav leaves
-  the screen (the spec asked for both; the harness's menu probe caught it,
+  the screen (the harness's menu probe caught it; SPEC §6.1 now says so,
   redesign Phase 0). The menu probe checks the nav stays on screen.
