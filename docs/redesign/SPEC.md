@@ -1082,7 +1082,7 @@ it if Stan says so (§12).
 | NAV-02 no current page | `aria-current` from `site.js` | 0 | DOM check on /faq/ |
 | FOCUS-01 CTAs focused mid-fade | CTAs and text never enter-animated | 1 | Tab probe: focused element opacity 1 |
 | THEME-01 Safari bar colour | `theme-color` metas updated | 0 | probe reads the meta after toggling |
-| RESIZE-01 scroll resets on resize | No `gsap.matchMedia`, no JS scroll writes | 1 | resize and rotate probes |
+| RESIZE-01 scroll resets on resize | No `gsap.matchMedia`. *Phase 1, pending Stan's OK:* with GSAP gone the page no longer jumps to the top, but the browser keeps the pixel offset, which after a reflow is another section: Chromium's scroll anchoring stands down when the anchor's ancestors change padding or margin (every breakpoint does) and WebKit has none. A small `site.js` keeper notes the first text block on screen once scrolling stops (read only) and, after a width change only, scrolls it back into place once, instantly. That is the only JS scroll write. | 1 | resize and rotate probes |
 | RELOAD-01, ANCHOR-01, SCROLLUP-01, RM-01, NOJS-01 (all pass) | Keep passing | every phase | regression probes |
 | TEXT-01 press tiles | Square tiles, wider minimum | 5 | 1440 light screenshot |
 | TEXT-02 plain text pages | Accepted; privacy TOC is §12 | — | — |

@@ -151,6 +151,39 @@
   openTarget();
   addEventListener("hashchange", openTarget);
 
+  /* ---- Keep the reader's place when the width changes --------------------
+     Rotating a phone or resizing a window reflows the page, and the browser
+     keeps the same scroll offset, which is now another part of the page.
+     Chromium's scroll anchoring stands down whenever the anchor's ancestors
+     change padding or margin (every breakpoint does) and WebKit has none. So
+     this remembers the first block of text on screen once scrolling stops
+     (reading only, no style writes) and, after a width change, puts it back
+     where it was: one instant scroll, never animated. A height-only change
+     (the iOS toolbar showing or hiding) is left alone. */
+  (function () {
+    var nav = doc.querySelector(".nav"), width = innerWidth, mark = null, timer = 0;
+    var BLOCKS = "main h2, main h3, main p, main li, main figure, main summary, body > footer";
+    function line() { return nav && getComputedStyle(nav).position === "sticky" ? nav.getBoundingClientRect().bottom : 0; }
+    function remember() {
+      if (innerWidth !== width) return;
+      var y = line(), list = doc.querySelectorAll(BLOCKS);
+      mark = null;
+      for (var i = 0; i < list.length; i++) {
+        var r = list[i].getBoundingClientRect();
+        if (r.height > 0 && r.bottom > y) { mark = { el: list[i], top: r.top }; return; }
+      }
+    }
+    addEventListener("scroll", function () { clearTimeout(timer); timer = setTimeout(remember, 120); }, { passive: true });
+    addEventListener("load", remember);
+    addEventListener("resize", function () {
+      if (innerWidth === width) return;
+      width = innerWidth;
+      if (!mark || !mark.el.isConnected || scrollY === 0) return;
+      var shift = mark.el.getBoundingClientRect().top - mark.top;
+      if (Math.abs(shift) > 1) window.scrollTo(0, scrollY + shift);
+    });
+  })();
+
   /* ---- Motion: the tokens -------------------------------------------------
      Durations and easings live once, in tokens.css. This reads them for the
      page's scripts: milliseconds and CSS easing strings, for the Web
