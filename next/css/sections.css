@@ -279,7 +279,6 @@
 
 .faqs { display: grid; gap: var(--space-5); }
 .faqs__aside p { margin: var(--space-2) 0 0; color: var(--text-2); }
-.faqs__list { border-top: var(--stroke) solid var(--border); }
 @media (min-width: 64rem) {
   .faqs { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-7); }
   .faqs__aside { align-self: start; position: sticky; top: calc(var(--nav-h) + var(--space-3)); }

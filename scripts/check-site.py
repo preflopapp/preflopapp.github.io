@@ -19,8 +19,12 @@ link in step with next/js/config.js, unique ids with aria-controls pointing at
 one (the nav menu toggle), JS/CSS byte budgets, no gradient or dashed/dotted
 line in its CSS/JS (a settled design call), no trial wording, and the QR code
 (assets/qr/*.svg) encoding the same URL as the CTA constant.
+
+Every page's a[data-cta] must carry next/js/config.js's link and label (see
+check_ctas). Every local asset URL must carry a current ?v= stamp (see
+check_stamps), and 404.html must have no <script> (see check_404).
 """
-import gzip, json, pathlib, re, sys
+import gzip, hashlib, json, pathlib, re, sys
 from html.parser import HTMLParser
 
 SHARED = ("head", "header", "footer")
@@ -39,6 +43,12 @@ JS_BUDGET = 150 * 1024
 CSS_BUDGET = 30 * 1024
 ASSET_RELS = {"stylesheet", "preload", "modulepreload", "prefetch", "icon",
               "shortcut", "apple-touch-icon", "manifest"}
+# The <link> rels whose href scripts/stamp-assets.py stamps (with src/srcset).
+STAMP_RELS = {"stylesheet", "preload", "icon", "apple-touch-icon"}
+# Files whose URLs JS builds (demo.js's suits): never stamped, or the HTML's
+# copy and the script's URL would download the same file twice. Renamed when
+# they change instead. Kept in step with stamp-assets.py's UNSTAMPED.
+UNSTAMPED = ("assets/suits/",)
 BANNED = ("Preflop Trainer",)
 SKIP_DIRS = {"scripts", "_site", "node_modules"}
 
@@ -48,11 +58,14 @@ class _Refs(HTMLParser):
         self.canonical = None; self.og = {}; self.h1 = 0; self.bad_imgs = []
         self.assets = []; self.scripts = []; self.stylesheets = []; self.inline = []
         self.robots = ""; self.csp = ""; self.ctas = []; self._script = None
-        self.ids = []; self.controls = []
+        self.ids = []; self.controls = []; self.stamped = []; self.cta_texts = []; self._cta = None
     def handle_endtag(self, tag):
         if tag == "script": self._script = None
+        if tag == "a" and self._cta is not None:
+            self.cta_texts.append(" ".join("".join(self._cta).split())); self._cta = None
     def handle_data(self, data):
         if self._script is not None and data.strip(): self.inline.append("inline <script>")
+        if self._cta is not None: self._cta.append(data)
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "script":
@@ -65,15 +78,17 @@ class _Refs(HTMLParser):
         if tag == "meta" and (a.get("http-equiv") or "").lower() == "content-security-policy": self.csp = a.get("content") or ""
         if a.get("id"): self.ids.append(a["id"])
         if a.get("aria-controls"): self.controls += a["aria-controls"].split()
-        if tag == "a" and "data-cta" in a: self.ctas.append(a.get("href") or "")
+        if tag == "a" and "data-cta" in a: self.ctas.append(a.get("href") or ""); self._cta = []
         if tag == "link":
             rels = set((a.get("rel") or "").lower().split())
             if rels & ASSET_RELS and a.get("href"):
                 self.assets.append(a["href"])
                 if "stylesheet" in rels: self.stylesheets.append(a["href"])
+            if rels & STAMP_RELS and a.get("href"): self.stamped.append(a["href"])
         for key in ("src", "srcset"):
             if a.get(key):
-                self.assets += [part.strip().split()[0] for part in a[key].split(",")] if key == "srcset" else [a[key]]
+                refs = [part.strip().split()[0] for part in a[key].split(",") if part.strip()] if key == "srcset" else [a[key]]
+                self.assets += refs; self.stamped += refs
         for key in ("href", "src"):
             if a.get(key): self.refs.append(a[key])
         if a.get("srcset"):
@@ -81,10 +96,11 @@ class _Refs(HTMLParser):
         if tag == "title": self.title = True
         if tag == "h1": self.h1 += 1
         if tag == "img":
+            src = (a.get("src") or "").split("?")[0] or a.get("src")
             missing = [k for k in ("alt", "width", "height") if k not in a]
-            if missing: self.bad_imgs.append(f"{a.get('src')} (no {'/'.join(missing)})")
+            if missing: self.bad_imgs.append(f"{src} (no {'/'.join(missing)})")
             bad = [k for k in ("width", "height") if k in a and not (a[k] or "").strip().isdigit()]
-            if bad: self.bad_imgs.append(f"{a.get('src')} ({'/'.join(bad)} is not a pixel count)")
+            if bad: self.bad_imgs.append(f"{src} ({'/'.join(bad)} is not a pixel count)")
         if tag == "meta" and (a.get("property") or "").startswith("og:"): self.og[a["property"]] = a.get("content") or ""
         if tag == "meta" and a.get("name") == "description" and a.get("content"): self.meta.add("description")
         if tag == "link" and a.get("rel") == "canonical" and a.get("href"):
@@ -248,8 +264,8 @@ def check_next_qr(root, next_pages, url):
     errors = []
     for page, rel, p in next_pages:
         for ref in p.refs:
-            if not re.match(r"^/assets/qr/[\w.-]+\.svg$", ref): continue
-            f = root / ref.lstrip("/")
+            if not re.match(r"^/assets/qr/[\w.-]+\.svg(?:\?v=[0-9a-f]+)?$", ref): continue
+            f = root / ref.split("?")[0].lstrip("/")
             if not f.is_file(): continue  # a broken link is reported elsewhere
             stamp = re.search(r"<!-- qr: (\S+) -->", f.read_text())
             if not stamp:
@@ -281,12 +297,11 @@ def check_next(root, next_pages):
             block = re.search(rf"(?m)^{rule}[ \t]*\n((?:[ \t]+.*\n?)+)", headers.read_text())
             if not block or not re.search(r"^\s*! Content-Security-Policy\s*$", block.group(1), re.M):
                 errors.append(f"ERROR _headers: {route} must detach the site-wide Content-Security-Policy")
-    config = root / "next/js/config.js"
-    url = re.search(r"testflightUrl:\s*[\"']([^\"']+)", config.read_text()) if config.is_file() else None
+    url, _ = _config(root)
     js_total = css_total = 0
     js_seen, css_seen = set(), set()
     errors += check_next_assets(root, next_pages)
-    errors += check_next_qr(root, next_pages, url.group(1) if url else None)
+    errors += check_next_qr(root, next_pages, url)
     for page, rel, p in next_pages:
         # The app's trial is annual-only and the preview does not sell it.
         if TRIAL.search(page.read_text()):
@@ -310,15 +325,89 @@ def check_next(root, next_pages):
         for ref in p.stylesheets:
             f = _local(root, page, ref)
             if f and f not in css_seen: css_seen.add(f); css_total += _gz(f)
-        if url:
-            for href in p.ctas:
-                if href != url.group(1):
-                    errors.append(f"ERROR {rel}: a[data-cta] links to {href}, next/js/config.js says {url.group(1)}")
-        elif p.ctas:
-            errors.append(f"ERROR {rel}: a[data-cta] on the page but next/js/config.js has no testflightUrl")
     if js_total > JS_BUDGET: errors.append(f"ERROR /next/ JavaScript is {js_total} bytes gzipped, budget {JS_BUDGET}")
     if css_total > CSS_BUDGET: errors.append(f"ERROR /next/ CSS is {css_total} bytes gzipped, budget {CSS_BUDGET}")
     return errors
+
+def _config(root):
+    """testflightUrl and label from next/js/config.js (None where missing)."""
+    config = root / "next/js/config.js"
+    text = config.read_text() if config.is_file() else ""
+    url = re.search(r"testflightUrl:\s*[\"']([^\"']+)", text)
+    label = re.search(r"label:\s*[\"']([^\"']+)", text)
+    return (url.group(1) if url else None), (label.group(1) if label else None)
+
+def check_ctas(root, pages):
+    """Every a[data-cta], on every page, links where config.js says and reads its label.
+
+    Without JS the HTML's href and text are what a visitor gets, and the
+    rebuild has one label everywhere (SPEC §4.4). The demo's score CTA is
+    built by demo.js from the same config, so it is not in any HTML.
+    """
+    url, label = _config(root)
+    errors = []
+    for page in pages:
+        rel = page.relative_to(root).as_posix()
+        if rel in INDEPENDENT_LAYOUTS: continue
+        p = _Refs(); p.feed(page.read_text())
+        if not p.ctas: continue
+        if not url: errors.append(f"ERROR {rel}: a[data-cta] on the page but next/js/config.js has no testflightUrl")
+        if not label: errors.append(f"ERROR {rel}: a[data-cta] on the page but next/js/config.js has no label")
+        for href in p.ctas:
+            if url and href != url:
+                errors.append(f"ERROR {rel}: a[data-cta] links to {href}, next/js/config.js says {url}")
+        for text in p.cta_texts:
+            if label and text != label:
+                errors.append(f"ERROR {rel}: a[data-cta] reads '{text}', next/js/config.js label is '{label}'")
+    return errors
+
+def check_stamps(root, pages):
+    """Every local asset URL carries ?v=<first 8 hex of its SHA-256>.
+
+    Live CSS and JS were cached for hours under fixed names, so a visitor could
+    get new HTML with old CSS and JS (ISSUES LIVE-02); now a URL changes when
+    its file does and _headers makes /next/css and /next/js immutable. Covers
+    what scripts/stamp-assets.py stamps: src, srcset and stylesheet/preload/
+    icon/apple-touch-icon hrefs on every page but /s/, and url() in
+    next/css/*.css. A missing or stale stamp means: run that script.
+    """
+    errors, digests = [], {}
+    def problem(where, base, ref):
+        f = _local(root, base, ref)
+        if not f: return
+        if f.resolve().relative_to(root.resolve()).as_posix().startswith(UNSTAMPED):
+            if "?v=" in ref: errors.append(f"ERROR {where}: {ref} is stamped, but JS builds this file's URL unstamped (it would download twice)")
+            return
+        if f not in digests: digests[f] = hashlib.sha256(f.read_bytes()).hexdigest()[:8]
+        m = re.search(r"\?v=([0-9a-f]+)$", ref.split("#")[0])
+        if not m:
+            errors.append(f"ERROR {where}: {ref} has no ?v= stamp; run scripts/stamp-assets.py")
+        elif m.group(1) != digests[f]:
+            errors.append(f"ERROR {where}: {ref} has a stale stamp (the file is {digests[f]}); run scripts/stamp-assets.py")
+    css_dir = root / "next/css"
+    for css in sorted(css_dir.glob("*.css")) if css_dir.is_dir() else []:
+        text = re.sub(r"/\*.*?\*/", "", css.read_text(), flags=re.S)
+        for ref in re.findall(r"url\(\s*['\"]?([^'\")]+)", text):
+            problem(css.relative_to(root).as_posix(), css, ref)
+    for page in pages:
+        rel = page.relative_to(root).as_posix()
+        if rel in INDEPENDENT_LAYOUTS: continue
+        p = _Refs(); p.feed(page.read_text())
+        for ref in p.stamped: problem(rel, page, ref)
+    return errors
+
+def check_404(root):
+    """404.html runs no script.
+
+    It is served from any path, under the site-wide script-src 'none' header,
+    so a script there is only blocked: seven console errors on every live 404
+    (ISSUES LIVE-01). The text pages load config.js and site.js just after
+    their shared head instead, and 404.html leaves them out.
+    """
+    page = root / "404.html"
+    if not page.is_file(): return []
+    text = re.sub(r"<!--.*?-->", "", page.read_text(), flags=re.S)
+    return ["ERROR 404.html: has a <script>; it runs under script-src 'none' (keep scripts out of the shared head)"] if re.search(r"<script\b", text, re.I) else []
 
 def _detached_routes(headers_text):
     """Routes in _headers that carry `! Content-Security-Policy`."""
@@ -432,6 +521,9 @@ def check_site(root):
     errors += check_js_claims(root)
     errors += check_css_assets(root, pages)
     errors += check_next(root, next_pages)
+    errors += check_ctas(root, pages)
+    errors += check_stamps(root, pages)
+    errors += check_404(root)
     sitemap = root / "sitemap.xml"
     if sitemap.is_file():
         for loc in re.findall(r"<loc>https://preflopapp\.com(/[^<]*)</loc>", sitemap.read_text()):

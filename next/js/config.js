@@ -6,13 +6,15 @@
                         if the beta closes or the link breaks, so the site
                         never ships a dead link.
 
-   Without JS a slot keeps the link written in its HTML. scripts/check-site.py
-   fails any /next/ page whose data-cta href differs from testflightUrl, so
-   after changing the URL, update those hrefs too (the checker lists them).
-   At launch the App Store URL replaces testflightUrl the same way. */
+   Without JS a slot keeps the link and text written in its HTML.
+   scripts/check-site.py fails any page whose a[data-cta] href differs from
+   testflightUrl or whose text differs from label, so after changing either,
+   update the HTML too (the checker lists every slot). At launch the App
+   Store URL replaces testflightUrl the same way. */
 window.PreflopConfig = Object.freeze({
   cta: Object.freeze({
     mode: "testflight",
-    testflightUrl: "https://testflight.apple.com/join/ayujQfvg"
+    testflightUrl: "https://testflight.apple.com/join/ayujQfvg",
+    label: "Join the beta"
   })
 });

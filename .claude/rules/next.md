@@ -105,3 +105,8 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
 - **The per-depth spot counts are `fact:spots100/30/20` markers.** They come from
   `facts.json` `spotsByDepth` (the app's `spot-counts.json`) and must add up to
   `practiceSpots`; show them as exact figures, never with a "+" (Phase 8).
+- **Lock the page behind the open menu with `overflow: hidden` on html only,
+  plus `touch-action: none` on the open bar and scrim.** Hidden on body as
+  well makes body the sticky nav's scroll container, and the open nav leaves
+  the screen (the harness's menu probe caught it; SPEC §6.1 now says so,
+  redesign Phase 0). The menu probe checks the nav stays on screen.

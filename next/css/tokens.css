@@ -22,10 +22,10 @@
      an --act-* fill: near-black in both schemes (white fails contrast on the
      light fills). */
 
-@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Regular.woff2") format("woff2"); }
-@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Medium.woff2") format("woff2"); }
-@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("/assets/fonts/HankenGrotesk-SemiBold.woff2") format("woff2"); }
-@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Regular.woff2?v=787b3fdd") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Medium.woff2?v=31f666af") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("/assets/fonts/HankenGrotesk-SemiBold.woff2?v=58f23b7a") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Bold.woff2?v=d85de6e2") format("woff2"); }
 
 /* ---- Colour -------------------------------------------------------------
    Dark is the default. Light follows the system when the page has no

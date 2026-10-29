@@ -424,6 +424,10 @@ when the file does:
    an asset. A font preload and its `@font-face url()` must carry the same `?v`,
    or the font downloads twice; the script guarantees this because both come
    from the same file.
+   **Except `/assets/suits/`** (Stan, 2026-10-29): `demo.js` builds those
+   URLs unstamped, so a stamped copy in the HTML (the no-JS hand) made the
+   browser download the same file twice. They are never stamped, and the
+   checker fails a stamp on one; they are renamed when they change.
 2. **`check-site.py`** must fail any such reference that has no stamp or a
    stale one (new check and test). Update `check_next_qr`'s regex to accept
    `?v=…`: as it stands, a stamped QR would silently skip the QR check.
@@ -561,10 +565,14 @@ at 2400 (existing rule), so every rem value scales with it.
   `scroll-margin-top: calc(var(--nav-h) + var(--space-2))` to
   `main [id], main a[href], main button, main summary, main [tabindex]`. Every
   scripted focus inside the nav uses `focus({ preventScroll: true })`.
-- **iOS menu**: while the menu is open, set `overflow: hidden` on *both* `html`
-  and `body`. The scrim's height becomes `100lvh`, so it covers the screen with
-  the toolbar collapsed too. The menu keeps inert, the focus trap and Escape
-  (all pass today).
+- **iOS menu**: while the menu is open, set `overflow: hidden` on `html`, and
+  `touch-action: none` on the open bar and the scrim, which together cover the
+  screen, so no swipe pans the page and taps still work. **Not on `body`**:
+  with `html` hidden too, `body` becomes the sticky nav's scroll container and
+  the open nav leaves the screen (found by the menu probe in Phase 0; Stan
+  approved the change, 2026-10-29). The scrim's height becomes `100lvh`, so it
+  covers the screen with the toolbar collapsed too. The menu keeps inert, the
+  focus trap and Escape (all pass today).
 - **`ISSUES:NAV-02`**: `site.js` sets `aria-current="page"` on the link whose
   path matches. Style it with `--text` plus a 2 px underline. It is done in JS
   because the shared header must stay identical across pages.
@@ -1083,7 +1091,7 @@ it if Stan says so (§12).
 | LIVE-01 zone scripts; 404 errors | 404 without scripts; owner switches the zone features off; harness allowlist on live | 0 + owner | live pass |
 | LIVE-02 stale CSS/JS after a deploy | Stamped URLs, immutable `/next/css` and `/next/js`, a checker | 0 | `check-site.py` + response headers on live after the merge |
 | LIVE-03 www duplicate, style guide public | Owner: www→apex redirect rule (§12); style guide per §7 | owner / 6 | live curl |
-| "Not testable here" 1 (iOS menu) | `overflow: hidden` on html and body; scrim `100lvh` | 0 | real device (§13) |
+| "Not testable here" 1 (iOS menu) | `overflow: hidden` on html, `touch-action: none` on the open bar and scrim (§6.1); scrim `100lvh` | 0 | menu probe + real device (§13) |
 | 2 (iPad rotation) | = RESIZE-01 | 1 | rotate probe + device |
 | 3 (blurred sticky nav) | Solid nav | 1 | — |
 | 4 (glow, bobbing) | Removed | 1 | — |
@@ -1390,22 +1398,26 @@ design is still in place, so only that phase's own probes must pass. Then
 
 ---
 
-## 12. Open decisions for Stan (each has a recommendation; the builder proceeds on the recommendation unless told otherwise)
+## 12. Decisions for Stan
 
-| # | Decision | Recommendation |
-|---|---|---|
-| 1 | CTA label: "Join the beta" everywhere, or "Join the TestFlight beta" on the large hero and closing buttons | **Keep "Join the beta"** everywhere. It fits the nav at 320, and the note under the big buttons says "TestFlight". |
-| 2 | Drop GSAP and ScrollTrigger (vendored, merged in Phase 0 of the last overhaul) | **Drop them**: no pattern here needs them, and they are 46 KB. Delete the files in Phase 6. |
-| 3 | The demo's hands become A5s, J8s and KTs (the app's spots that also have charts and explanations) instead of K5s, AQo and AJo | **Yes**: the app's own explanation text after every answer, and a matching chart. |
-| 4 | Nav: solid background instead of blurred glass | **Solid** (iOS robustness). |
-| 5 | **Owner actions in Cloudflare**: switch off Web Analytics and Bot Fight Mode "JS Detections" on the zone; add a `www` → apex redirect rule; optionally set Browser Cache TTL to "Respect existing headers" | **Do all three.** The site says "no tracking" for the app, and the zone injects a (blocked) beacon into the website. |
-| 6 | Remove "cancel any time" from the Pro price line (the app's voice note says no "cancel anytime" lines) | **Remove it.** |
-| 7 | Press kit: replace the older `play/explain/leaks/history` screenshots with the `app-*` set (PNG made from the lossless WebP) | **Yes**, in Phase 5. |
-| 8 | Privacy page: add a table of contents (markup change, needs your OK) | **Not now**: the policy was just approved. |
-| 9 | Style guide `/next/styleguide/`: rebuild it on the new components, or delete it | **Delete it** unless you use it. Keeping it current costs a phase. |
-| 10 | When light-mode screenshots exist: should the gallery follow the theme? | **Keep it dark.** Dark is the app's default look, and one dark band gives the page its rhythm. |
-| 11 | The stored theme applies one frame late; fix it with a tiny blocking `theme.js` (needs a checker exception) | **Accept the frame.** Only visitors who overrode their system scheme ever see it. |
-| 12 | 20bb and 30bb content rights (`FACTS` "Needs Stan"): the site already advertises them | **Keep**, unless your content-rights answer changes. |
+Each had a recommendation. **Stan's answer (2026-10-29, on the Phase 0 PR):
+go with every recommendation.** Where an answer needs him to act, the last
+column says where it stands.
+
+| # | Decision | Recommendation (accepted) | Status |
+|---|---|---|---|
+| 1 | CTA label: "Join the beta" everywhere, or "Join the TestFlight beta" on the large hero and closing buttons | **Keep "Join the beta"** everywhere. It fits the nav at 320, and the note under the big buttons says "TestFlight". | Accepted. |
+| 2 | Drop GSAP and ScrollTrigger (vendored, merged in Phase 0 of the last overhaul) | **Drop them**: no pattern here needs them, and they are 46 KB. Delete the files in Phase 6. | Accepted. Phase 1 stops loading them; Phase 6 deletes the files. |
+| 3 | The demo's hands become A5s, J8s and KTs (the app's spots that also have charts and explanations) instead of K5s, AQo and AJo | **Yes**: the app's own explanation text after every answer, and a matching chart. | Accepted (Phase 2). |
+| 4 | Nav: solid background instead of blurred glass | **Solid** (iOS robustness). | Accepted (Phase 1). |
+| 5 | **Owner actions in Cloudflare**: switch off Web Analytics and Bot Fight Mode "JS Detections" on the zone; add a `www` → apex redirect rule; optionally set Browser Cache TTL to "Respect existing headers" | **Do all three.** The site says "no tracking" for the app, and the zone injects a (blocked) beacon into the website. | Web Analytics: off (the beacon is gone from live pages, checked 2026-10-29). Bot Fight Mode: Stan switched it off, but its JS Detections script was still injected at 03:04 UTC; recheck at the start of Phase 1. `www` → apex redirect: not set yet (steps on the Phase 0 PR). Browser Cache TTL: optional. |
+| 6 | Remove "cancel any time" from the Pro price line (the app's voice note says no "cancel anytime" lines) | **Remove it.** | Accepted (Phase 5). |
+| 7 | Press kit: replace the older `play/explain/leaks/history` screenshots with the `app-*` set (PNG made from the lossless WebP) | **Yes**, in Phase 5. | Accepted (Phase 5). |
+| 8 | Privacy page: add a table of contents (markup change, needs your OK) | **Not now**: the policy was just approved. | Accepted: no table of contents for now. |
+| 9 | Style guide `/next/styleguide/`: rebuild it on the new components, or delete it | **Delete it** unless you use it. Keeping it current costs a phase. | Accepted: delete it in Phase 6. |
+| 10 | When light-mode screenshots exist: should the gallery follow the theme? | **Keep it dark.** Dark is the app's default look, and one dark band gives the page its rhythm. | Accepted. |
+| 11 | The stored theme applies one frame late; fix it with a tiny blocking `theme.js` (needs a checker exception) | **Accept the frame.** Only visitors who overrode their system scheme ever see it. | Accepted. |
+| 12 | 20bb and 30bb content rights (`FACTS` "Needs Stan"): the site already advertises them | **Keep**, unless your content-rights answer changes. | Accepted. |
 
 ---
 
