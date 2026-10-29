@@ -44,8 +44,10 @@
    section carries data-theme="dark", because the captures are dark-only. The
    track scrolls sideways and snaps; it bleeds to the screen's edges, with its
    first shot on the content's left edge (--edge) and only the gutter after the
-   last, so at 1440 all five fit and on a phone the next one peeks. Nothing is drawn over a shot, and a shot has
-   no hover effect. gallery.js shows the previous/next buttons only when the
+   last, so at 1440 all five fit and on a phone the next one peeks. Shots have
+   no captions (Stan, 2026-10-29); a Pro screen wears a "Pro" tab on its top
+   edge, which the track's top padding leaves room for. A shot has no hover
+   effect. The bankroll tracker (#bankroll) uses the same track. gallery.js shows the previous/next buttons only when the
    track overflows on a device that hovers; without it the track still scrolls,
    with a visible scrollbar where the pointer is fine. */
 
@@ -62,24 +64,29 @@
   cursor: pointer; transition: transform var(--dur-press) var(--ease-press);
 }
 .gallery__btn:hover:not(:disabled) { background: var(--well); }
-.gallery__btn:active:not(:disabled) { transform: scale(var(--press-scale)); }
+.gallery__btn { box-shadow: 0 3px 0 var(--border); transition: transform var(--dur-press) var(--ease-press), box-shadow var(--dur-press) var(--ease-press); }
+.gallery__btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--border); }
 .gallery__btn:disabled { color: var(--text-3); cursor: default; }
 .gallery__btn svg { width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .gallery__track {
-  display: flex; gap: var(--space-3); margin: var(--space-4) 0 0; padding: 0 var(--gutter) var(--space-2) var(--edge);
+  display: flex; gap: var(--space-3); margin: var(--space-3) 0 0; padding: var(--space-2) var(--gutter) var(--space-2) var(--edge);
   list-style: none; overflow-x: auto; overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory; scroll-padding-inline: var(--edge) var(--gutter);
 }
 .gallery__track:focus-visible { outline-offset: -2px; }
 .gallery__item { flex: none; scroll-snap-align: start; }
-.gshot { width: var(--shot-w); margin: 0; }
+.gshot { position: relative; width: var(--shot-w); margin: 0; }
+.gshot__pro {
+  position: absolute; z-index: 1; top: -0.625rem; left: 50%; transform: translateX(-50%);
+  padding: 0.25rem 0.75rem; border-radius: var(--r-pill);
+  background: var(--accent-fill); color: var(--accent-fill-ink); box-shadow: 0 0 0 3px var(--bg);
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.06em; line-height: 1.2; text-transform: uppercase;
+}
 .gshot__frame {
   padding: 5px; background: var(--well);
   border: var(--stroke) solid var(--border); border-radius: calc(var(--shot-w) * 0.1);
 }
 .gshot__frame img { display: block; width: 100%; height: auto; border-radius: calc(var(--shot-w) * 0.1 - 6px); }
-.gshot__cap { margin: var(--space-1) 0 0; color: var(--text-2); font-size: var(--fs-meta); line-height: 1.45; text-wrap: pretty; }
-.gshot__cap .tag { margin: 0 0.125rem 0 0; padding-block: 0; vertical-align: 0.08em; }
 .gallery__cta { margin-top: var(--space-3); background: var(--bg); }
 @media (pointer: coarse) {
   .gallery__track { scrollbar-width: none; }
@@ -92,11 +99,9 @@
 @media (min-width: 120rem) { .gallery { --shot-w: 14.5rem; } }
 
 /* ---- Free for everyone (#progress, redesign SPEC §6.7) -------------------------------
-   Three cards, each with a small drawn picture: the streak and a badge's four
-   tiers, two Home Screen widgets, the bankroll line. One column on a phone; two
-   from 48rem, with the first card across both (text left, picture right); three
-   from 75rem, pictures on the cards' bottom edge. A drawn picture that could be
-   taken for a capture says what it is. */
+   Two cards, each with captures from the app: badges, and the Home Screen
+   widgets. One column on a phone, two from 48rem, pictures on the
+   cards' bottom edge. The bankroll tracker has its own section (#bankroll). */
 
 .perks__grid { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
 .perk {
@@ -106,78 +111,41 @@
 .perk__title { margin: 0; text-wrap: balance; }
 .perk__text { margin: var(--space-1) 0 0; color: var(--text-2); text-wrap: pretty; }
 .perk__visual { margin: auto 0 0; }
-.perk__cap { margin: var(--space-1) 0 0; color: var(--text-3); font-size: var(--fs-meta); }
-@media (min-width: 48rem) {
-  .perks__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
-  .perk--wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-5); }
-  .perk--wide .perk__visual { margin: 0; }
-}
+@media (min-width: 48rem) { .perks__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); } }
 @media (min-width: 64rem) { .perk { gap: var(--space-3); padding: var(--space-4); } }
-@media (min-width: 75rem) {
-  .perks__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .perk--wide { grid-column: auto; display: flex; }
-  .perk--wide .perk__visual { margin-top: auto; }
+
+/* Card 1: two captures from the app: the "Badge earned" banner, and the
+   Badges screen's count with one seat's ladder in progress. */
+.bshots { display: grid; gap: var(--space-2); justify-items: start; }
+.bshots img { display: block; width: 100%; height: auto; }
+.bshots__banner { max-width: 20rem; }
+.bshots__list { max-width: 26rem; }
+
+/* Card 2: the medium and small widgets, captured from the app (dark; the
+   corners are cut to the widget's shape, transparent). The small one shows
+   beside the medium one when the card has room. */
+.wshots { display: flex; align-items: flex-end; gap: var(--space-1); container-type: inline-size; }
+.wshots img { display: block; height: auto; }
+.wshots__m { width: min(100%, 22rem); }
+.wshots .wshots__s { display: none; width: 7.25rem; }
+@container (min-width: 28rem) { .wshots .wshots__s { display: block; } }
+@container (min-width: 28rem) { .wshots__m { width: calc(100% - 7.25rem - var(--space-1)); max-width: 22rem; } }
+
+/* ---- Bankroll tracker (#bankroll) ------------------------------------------------
+   Dark in both schemes like #app, because the captures are dark. The four
+   tracker screens on the gallery's track, then the Live Activity: copy and the
+   Lock Screen capture, stacked on a phone, side by side from 64rem. */
+.bankroll { background: var(--bg); color: var(--text); }
+.live {
+  display: grid; gap: var(--space-3); align-items: center; margin-top: var(--space-3); padding: var(--space-3);
+  background: var(--panel); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
 }
-
-/* Card 1: a week of the streak (five days played, today ringed) and the
-   "Facing an open" badge in its four tiers. site.js's pop scales the filled
-   circles and the discs in once ([data-pop], each row [data-pop-step] ms apart). */
-.progress { display: grid; gap: 0.75rem; }
-.streak { display: grid; grid-template-columns: repeat(7, minmax(0, 2rem)); gap: var(--space-1); }
-.streak__day { aspect-ratio: 1; border-radius: 50%; background: var(--well); }
-.streak__day.is-on { background: var(--accent-fill); }
-.streak__day.is-today { outline: 2px solid var(--accent); outline-offset: 2px; }
-.tiers { display: flex; align-items: center; gap: var(--space-2); }
-.tiers__discs { display: flex; gap: 0.375rem; }
-.tier { width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--tier); }
-.tier--bronze { --tier: var(--badge-bronze); } .tier--silver { --tier: var(--badge-silver); }
-.tier--gold { --tier: var(--badge-gold); } .tier--diamond { --tier: var(--badge-diamond); }
-.tiers__name { color: var(--text-2); font-size: var(--fs-meta); font-weight: 600; }
-[data-pop="pending"] [data-pop-step] > .is-on { opacity: 0; transform: scale(0.6); }
-
-/* Card 2: the small and medium widgets from the app's widget layout
-   (docs/app-handoff/data/widget-layouts.json), at about half size: the system
-   font, as the widget has; the medium one's two cards overlap, the first
-   tilted -6deg. The small one needs 17.25rem of card, so the medium one shows
-   alone on a phone under about 360px. The hands-left line is left out: its wording is
-   the app's, per day and plan. */
-.widgets { display: flex; align-items: flex-end; gap: 0.5rem; container-type: inline-size; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-.widget { flex: none; height: 5.25rem; padding: 0.5rem 0.5625rem; background: var(--bg); color: var(--text); border: var(--stroke) solid var(--border); border-radius: 1.25rem; }
-.widget--s { display: none; width: 5.25rem; flex-direction: column; }
-.widget--m { display: flex; width: 11.5rem; flex-direction: column; }
-@container (min-width: 17.25rem) { .widget--s { display: flex; } }
-.widget__flame { width: 1rem; height: 1rem; flex: none; fill: var(--accent); }
-.widget__num { margin-top: auto; font-size: 1.875rem; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
-.widget__label { margin-top: 0.125rem; color: var(--text-2); font-size: 0.6875rem; font-weight: 600; }
-.widget__strip { display: flex; align-items: center; gap: 0.25rem; padding-bottom: 0.3125rem; border-bottom: var(--stroke) solid var(--border); font-size: 0.75rem; font-weight: 700; }
-.widget__strip .widget__flame { width: 0.8125rem; height: 0.8125rem; }
-.widget__spot { display: flex; align-items: center; gap: 0.5rem; margin-top: auto; }
-.widget__cards { display: flex; flex: none; padding-left: 0.125rem; }
-.wcard {
-  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.0625rem;
-  width: 1.625rem; height: 2.25rem; background: var(--card-face); color: var(--suit-red);
-  border: var(--stroke) solid var(--border); border-radius: 0.25rem;
-  font-size: 0.875rem; font-weight: 700; line-height: 1;
+.live__title { margin: 0; text-wrap: balance; }
+.live__text { margin: var(--space-1) 0 0; color: var(--text-2); text-wrap: pretty; }
+.live__shot { display: block; width: 100%; max-width: 32rem; height: auto; }
+@media (min-width: 64rem) {
+  .live { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); gap: var(--space-5); padding: var(--space-4); }
 }
-.wcard:first-child { transform: rotate(-6deg); }
-.wcard + .wcard { margin-left: -0.625rem; }
-.wcard img { width: 0.625rem; height: 0.625rem; }
-.widget__info { display: grid; gap: 0.3125rem; min-width: 0; }
-.widget__line { display: flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem; font-weight: 600; white-space: nowrap; }
-.widget__seat { padding: 0.0625rem 0.3125rem; border-radius: var(--r-pill); background: var(--accent-fill); color: var(--accent-fill-ink); font-size: 0.625rem; font-weight: 700; }
-.widget__acts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; }
-.widget__act { padding: 0.1875rem 0; border-radius: 0.375rem; background: var(--act); color: var(--act-ink); font-size: 0.6875rem; font-weight: 700; text-align: center; }
-.widget__act--fold { --act: var(--act-fold); }
-.widget__act--raise { --act: var(--act-raise); }
-
-/* Card 3: the example bankroll line, stretched to the card. site.js's draw
-   slides a cover in the card's colour off it once ([data-draw]). */
-.trend { position: relative; overflow: hidden; }
-.trend__svg { display: block; width: 100%; height: 4.5rem; }
-@media (min-width: 48rem) { .trend__svg { height: 5.25rem; } }
-.trend__base { fill: var(--border); }
-.trend__line { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.trend__cover { position: absolute; inset: 0; background: var(--panel); }
 
 /* ---- Plans (#pricing, redesign SPEC §6.8) ----------------------------------------
    Free and Pro, stacked on a phone, side by side from 768px. The grid stretches

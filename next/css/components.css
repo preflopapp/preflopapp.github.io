@@ -71,11 +71,13 @@ a { color: var(--accent); }
 
 /* ---- Button ---------------------------------------------------------------
    Primary is the action: bright amber fill, its own ink, and the app's slab
-   lip (accentFillEdge) as an inset line along the bottom; a flat fill, no
-   gradient. Secondary is a hairline on the surface. Sizes: --sm 44px, default
-   48px, --lg 52px (full width under 600px). Press dips to --press-scale on the
-   app's press spring; hover changes colour or opacity at once and never moves
-   the button under the pointer. */
+   lip (accentFillEdge) as a 3D edge under it; a flat fill, no gradient.
+   Secondary is a hairline on the surface with a hairline-coloured edge.
+   Sizes: --sm 44px, default 48px, --lg 52px (full width under 600px). A press
+   sinks the button onto its edge (down by --lip less 1px, the edge to 1px) on
+   the app's press spring; hover changes colour or opacity at once and never
+   moves the button under the pointer. The edge is a shadow, so it takes no
+   layout space. */
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1);
@@ -83,14 +85,16 @@ a { color: var(--accent); }
   border: var(--stroke) solid transparent; border-radius: var(--r-button);
   font: var(--fw-button) var(--fs-body)/1.2 var(--font);
   text-decoration: none; cursor: pointer;
-  transition: transform var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
+  --edge: var(--border);
+  box-shadow: 0 var(--lip) 0 var(--edge);
+  transition: transform var(--dur-press) var(--ease-press), box-shadow var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
 }
-.btn:active { transform: scale(var(--press-scale)); opacity: 0.85; }
+.btn:active { transform: translateY(calc(var(--lip) - 1px)); box-shadow: 0 1px 0 var(--edge); }
 
-.btn--primary { background: var(--accent-fill); color: var(--accent-fill-ink); box-shadow: inset 0 -3px 0 var(--accent-edge); }
+.btn--primary { --edge: var(--accent-edge); background: var(--accent-fill); color: var(--accent-fill-ink); }
 .btn--primary:hover { opacity: 0.92; }
 
-.btn--secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn--secondary { background: var(--bg); color: var(--text); border-color: var(--border); }
 .btn--secondary:hover { background: var(--well); }
 
 .btn--sm { min-height: var(--hit); padding: 0.5rem var(--space-2); }

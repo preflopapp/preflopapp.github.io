@@ -245,13 +245,16 @@
   background: var(--act); color: var(--act-ink);
   border: 0; border-radius: calc(var(--r-button) * var(--s));
   font: 600 calc(16px * var(--s))/1 var(--font); letter-spacing: -0.02em;
-  transition: transform var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
+  --lip-d: calc(4px * var(--s));
+  box-shadow: 0 var(--lip-d) 0 color-mix(in srgb, var(--act) 62%, #000);
+  transition: transform var(--dur-press) var(--ease-press), box-shadow var(--dur-press) var(--ease-press), opacity var(--dur-snappy) var(--ease-out);
 }
 @media (max-width: 47.99rem) { .dbtn { min-height: var(--hit); } }
 .dbtn--fold { --act: var(--act-fold); }
 .dbtn--call { --act: var(--act-call); }
 .dbtn--raise { --act: var(--act-raise); }
-.dbtn:not(:disabled):active { transform: scale(var(--press-scale)); opacity: 0.85; }
+.dbtn:not(:disabled):active { transform: translateY(calc(var(--lip-d) - 1px)); box-shadow: 0 1px 0 color-mix(in srgb, var(--act) 62%, #000); }
+.dbtn:disabled { box-shadow: 0 1px 0 var(--border); transform: translateY(calc(var(--lip-d) - 1px)); }
 .dbtn:disabled { cursor: default; }
 .dbtn:disabled:not(.is-revealed) { opacity: 0.45; }
 .dbtn__fill {

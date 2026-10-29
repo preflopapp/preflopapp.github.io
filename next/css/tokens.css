@@ -232,6 +232,7 @@
   --dur-breath: 1500ms;  /* idle swell */
 
   --press-scale: 0.97;   /* big tactile controls dip on the down-stroke */
+  --lip: 4px;            /* a button's 3D edge; a press sinks it to 1px */
   --entrance-rise: 12px;
   --entrance-step: 40ms;
   --entrance-max-delay: 160ms;
