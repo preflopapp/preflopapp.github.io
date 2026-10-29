@@ -350,11 +350,12 @@ a { color: var(--accent); }
 }
 
 /* ---- CTA band --------------------------------------------------------------
-   The mid-page and closing call to action: a panel with a headline, one line
-   and the same [data-cta] button as the nav and hero. */
+   CTA C, at the end of the app gallery (redesign SPEC §4.4): a panel with a
+   headline, one line and the same [data-cta] button as the nav and hero.
+   Stacked with a full-width button on a phone, one row from 48rem. */
 
 .cta-band {
-  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  display: flex; flex-direction: column; align-items: stretch; gap: var(--space-3);
   padding: var(--space-4) var(--space-3);
   background: var(--panel); color: var(--text);
   border: var(--stroke) solid var(--border); border-radius: var(--r-panel);

@@ -1,6 +1,7 @@
 /* Behaviour for /next/ pages: CTA slots, the nav menu, the theme toggle, the
    motion tokens (window.PreflopMotion), picture entrances, the proof
-   figures' count-up and the coverage bars' fill. No library: IntersectionObserver, the Web Animations API
+   figures' count-up, the coverage bars' fill, and Free for everyone's pop
+   and draw. No library: IntersectionObserver, the Web Animations API
    and requestAnimationFrame.
    Everything here is enhancement. With no JS, or with Reduce Motion, the page
    is complete and nothing is hidden. Animates transform and opacity only, with
@@ -228,9 +229,9 @@
     bezier: bezier
   });
 
-  /* ---- Motion: entrance, count and fill -----------------------------------
+  /* ---- Motion: entrance, count, fill, pop and draw ------------------------
      Nothing on the page waits for these, and CSS hides nothing by itself. An
-     element gets a start state (data-enter or data-fill "pending", or a count's 0) only
+     element gets a start state (data-enter, -fill, -pop or -draw "pending", or a count's 0) only
      when all of these hold (redesign SPEC §4.7, rule 5): motion is allowed,
      IntersectionObserver exists, the element is still below the screen now,
      and the observer that reveals it is registered here, in the same task.
@@ -309,6 +310,43 @@
     if (!below(el)) return;
     el.setAttribute("data-fill", "pending");
     waiting.set(el, function () { el.setAttribute("data-fill", "done"); });
+    observer.observe(el);
+  });
+
+  /* Pop: Free for everyone's streak circles and badge discs ([data-pop]) scale
+     up from 0.6 and fade in once, each row's items [data-pop-step] ms apart. */
+  doc.querySelectorAll("[data-pop]").forEach(function (el) {
+    if (!below(el)) return;
+    el.setAttribute("data-pop", "pending");
+    waiting.set(el, function (instant) {
+      el.setAttribute("data-pop", "done");
+      if (instant) return;
+      el.querySelectorAll("[data-pop-step]").forEach(function (row) {
+        var step = parseFloat(row.getAttribute("data-pop-step")) || 0;
+        row.querySelectorAll(":scope > .is-on").forEach(function (item, i) {
+          item.animate([{ opacity: 0, transform: "scale(0.6)" }, { opacity: 1, transform: "none" }],
+            { duration: M.dur.entrance, delay: i * step, easing: M.ease.out, fill: "backwards" });
+        });
+      });
+    });
+    observer.observe(el);
+  });
+
+  /* Draw: a line ([data-draw]) is uncovered left to right once, by a cover in
+     the card's colour sliding off it. The cover exists only while it waits or
+     moves, so without JS or with Reduce Motion there is none. */
+  doc.querySelectorAll("[data-draw]").forEach(function (el) {
+    if (!below(el)) return;
+    var cover = doc.createElement("span");
+    cover.className = "trend__cover";
+    el.appendChild(cover);
+    el.setAttribute("data-draw", "pending");
+    waiting.set(el, function (instant) {
+      el.setAttribute("data-draw", "done");
+      if (instant) { cover.remove(); return; }
+      cover.animate([{ transform: "none" }, { transform: "translateX(101%)" }],
+        { duration: M.dur.emphasis, easing: M.ease.inOut, fill: "forwards" }).onfinish = function () { cover.remove(); };
+    });
     observer.observe(el);
   });
 

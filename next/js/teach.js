@@ -3,7 +3,8 @@
    and the app's own explanation for the spot's hand.
 
    - Without JS the section shows the KTs card (static HTML) and the app's own
-     capture of that chart; this script hides the capture before it loads.
+     capture of that chart. The capture is in <noscript>, so with JS it is
+     never fetched (hiding it from here came after Chromium had requested it).
    - A hand is previewed by the mouse only when the pointer really moves, so a
      wheel scroll under a still pointer changes nothing (EXPL-02). A click or
      tap pins it; arrow keys move the pin and Home returns to the spot's hand.
@@ -20,7 +21,7 @@
 
   var tablist = root.querySelector(".teach__tabs"), tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
   var figure = doc.getElementById("teach-chart"), live = figure.querySelector("[data-chart]"), key = figure.querySelector(".teach__key");
-  var legendBox = figure.querySelector("[data-legend]"), cap = figure.querySelector(".teach__cap"), fallback = figure.querySelector(".teach__static");
+  var legendBox = figure.querySelector("[data-legend]"), cap = figure.querySelector(".teach__cap");
   var card = doc.getElementById("teach-card"), handEl = card.querySelector(".teach__hand"), whereEl = card.querySelector(".teach__where");
   var mixEl = card.querySelector(".teach__mix"), whyEl = card.querySelector(".teach__why"), announce = doc.getElementById("teach-announce");
   var OTHER = "Every hand the app deals you comes with its own explanation. Pick the ringed hand to read this spot’s.";
@@ -156,7 +157,6 @@
   });
 
   /* ---- Enhance ------------------------------------------------------------------ */
-  fallback.hidden = true;
   live.hidden = false;
   key.hidden = false;
   cap.hidden = false;
