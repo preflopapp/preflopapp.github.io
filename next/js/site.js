@@ -29,7 +29,9 @@
      aria-expanded is true, focus moves to the first link, Tab stays inside the
      bar, and the rest of the page is inert. Escape, a click outside, a link,
      or growing to the wide layout closes it and Escape returns focus to the
-     toggle. Without JS the links are a plain row under the bar. */
+     toggle. Without JS the links are a plain row under the bar.
+     Every focus() here passes preventScroll: the nav is sticky, and focusing
+     inside it scrolled the page up ~450 px on each open and close (NAV-01). */
   doc.querySelectorAll("[data-nav]").forEach(function (nav) {
     var toggle = nav.querySelector(".nav__toggle");
     var panel = toggle && doc.getElementById(toggle.getAttribute("aria-controls"));
@@ -53,20 +55,26 @@
     function isOpen() { return nav.hasAttribute("data-open"); }
     function locks() { return getComputedStyle(nav).position === "sticky"; }
 
+    /* The page stays put behind the open menu: overflow hidden on html, and
+       touch-action none on the open bar and scrim (components.css), which
+       cover the whole screen, for iOS. Not on body: with html hidden too,
+       body becomes the sticky nav's scroll container and the nav leaves
+       the screen (found by the harness's menu probe, Phase 0). */
+    function lock(on) { root.style.overflow = on ? "hidden" : ""; }
     function open() {
       nav.setAttribute("data-open", "");
       toggle.setAttribute("aria-expanded", "true");
       setInert(true);
-      if (locks()) root.style.overflow = "hidden";
+      if (locks()) lock(true);
       var first = panel.querySelector("a[href]");
-      if (first) first.focus();
+      if (first) first.focus({ preventScroll: true });
     }
     function close(returnFocus) {
       nav.removeAttribute("data-open");
       toggle.setAttribute("aria-expanded", "false");
       setInert(false);
-      root.style.overflow = "";
-      if (returnFocus) toggle.focus();
+      lock(false);
+      if (returnFocus) toggle.focus({ preventScroll: true });
     }
 
     toggle.addEventListener("click", function () { if (isOpen()) close(true); else open(); });
@@ -81,9 +89,9 @@
       var items = focusables();
       if (!items.length) return;
       var first = items[0], last = items[items.length - 1], at = doc.activeElement;
-      if (!nav.contains(at)) { e.preventDefault(); first.focus(); }
-      else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+      if (!nav.contains(at)) { e.preventDefault(); first.focus({ preventScroll: true }); }
+      else if (e.shiftKey && at === first) { e.preventDefault(); last.focus({ preventScroll: true }); }
+      else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus({ preventScroll: true }); }
     });
     /* Growing past the breakpoint (rotating a tablet) leaves the links inline,
        so a menu left open would hold the page inert for nothing. */
@@ -92,6 +100,12 @@
         if (isOpen() && getComputedStyle(toggle).display === "none") close(false);
       }).observe(nav);
     }
+
+    /* The page you are on. The header is shared by every page, so the markup
+       can't mark it (NAV-02); a link to a part of a page (/#pricing) never is. */
+    nav.querySelectorAll(".nav__links a[href]").forEach(function (a) {
+      if (!a.hash && a.pathname === location.pathname) a.setAttribute("aria-current", "page");
+    });
   });
 
   /* ---- Theme toggle: system by default, data-theme once the visitor picks - */
@@ -100,7 +114,15 @@
   var KEY = "preflop-theme";
   function saved() { try { var v = localStorage.getItem(KEY); return v === "light" || v === "dark" ? v : null; } catch (e) { return null; } }
   function save(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private mode: per page load, as before */ } }
-  if (saved()) root.setAttribute("data-theme", saved());
+  /* Safari tints its bars from <meta name=theme-color>. Both metas follow the
+     system scheme by their media queries, so once the visitor picks a theme
+     both get that theme's --bg, or a dark iPhone set to Light keeps a dark
+     bar over a light page (THEME-01). */
+  function tintBar() {
+    var bg = getComputedStyle(root).getPropertyValue("--bg").trim();
+    if (bg) doc.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute("content", bg); });
+  }
+  if (saved()) { root.setAttribute("data-theme", saved()); tintBar(); }
   var light = matchMedia("(prefers-color-scheme: light)");
   function isDark() {
     var set = root.getAttribute("data-theme");
@@ -114,6 +136,7 @@
       var next = isDark() ? "light" : "dark";
       root.setAttribute("data-theme", next);
       save(next);
+      tintBar();
       label();
     });
   });

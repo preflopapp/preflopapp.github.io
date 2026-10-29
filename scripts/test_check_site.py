@@ -3,6 +3,9 @@ import importlib.util, pathlib, tempfile, textwrap, unittest
 _spec = importlib.util.spec_from_file_location(
     "check_site", pathlib.Path(__file__).with_name("check-site.py"))
 cs = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(cs)
+_spec = importlib.util.spec_from_file_location(
+    "stamp_assets", pathlib.Path(__file__).with_name("stamp-assets.py"))
+st = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(st)
 
 BLOCKS = {n: f"<!-- shared:{n} -->\n<p>{n}</p>\n<!-- /shared:{n} -->" for n in ("head", "header", "footer")}
 
@@ -27,11 +30,14 @@ FACTS = ('{"prices": {"monthly": "7.99", "annual": "39.99", "lifetime": "59.99"}
          ' "lifetimeInMonthsOfAnnual": 18, "dailyFreeHands": 20, "freeHistoryHands": 5}')
 
 class CheckSiteTests(unittest.TestCase):
-    def site(self, files):
+    def site(self, files, stamp=True):
+        """A site in a temp dir. Stamped like a real commit (scripts/stamp-assets.py
+        runs before every commit), unless a test is about the stamps."""
         files = {"facts.json": FACTS, **files}
         tmp = pathlib.Path(tempfile.mkdtemp())
         for rel, text in files.items():
             p = tmp / rel; p.parent.mkdir(parents=True, exist_ok=True); p.write_text(text)
+        if stamp: st.run(tmp, write=True)
         return tmp
 
     def test_clean_site_passes(self):
@@ -162,11 +168,11 @@ class FactsTests(unittest.TestCase):
 TF = "https://testflight.apple.com/join/ayujQfvg"
 CSP = "default-src 'none'; script-src 'self'; style-src 'self'"
 HEADERS = "/next/*\n  ! Content-Security-Policy\n  X-Frame-Options: DENY\n"
-CONFIG = 'window.PreflopConfig = {cta: {mode: "testflight", testflightUrl: "%s"}};' % TF
+CONFIG = 'window.PreflopConfig = {cta: {mode: "testflight", testflightUrl: "%s", label: "Join the beta"}};' % TF
 
 def next_page(head="", body=None, robots="noindex, nofollow", csp=CSP):
     """A /next/ page as the checker expects it: its own head, no shared blocks."""
-    body = body if body is not None else f'<h1>Guide</h1><a data-cta href="{TF}">Join</a>'
+    body = body if body is not None else f'<h1>Guide</h1><a data-cta href="{TF}">Join the beta</a>'
     r = f'<meta name="robots" content="{robots}">' if robots else ""
     c = f'<meta http-equiv="Content-Security-Policy" content="{csp}">' if csp else ""
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Guide</title>'
@@ -226,7 +232,7 @@ class NextTests(unittest.TestCase):
 
     def test_external_links_and_alternates_are_not_assets(self):
         self.assertEqual(cs.check_site(self.site(
-            body=f'<h1>x</h1><a href="https://apple.com">a</a><a data-cta href="{TF}">j</a>',
+            body=f'<h1>x</h1><a href="https://apple.com">a</a><a data-cta href="{TF}">Join the beta</a>',
             head='<link rel="alternate" href="https://example.com/feed">')), [])
 
     def test_stylesheet_may_not_pull_external_urls(self):
@@ -268,6 +274,8 @@ class NextTests(unittest.TestCase):
         img = '<h1>x</h1><img src="/assets/qr/tf.svg" alt="" width="1" height="1">'
         good = f'<!-- qr: {TF} --><svg xmlns="http://www.w3.org/2000/svg"/>'
         self.assertEqual(cs.check_site(self.site(body=img, files={"assets/qr/tf.svg": good})), [])
+        # The QR's URL is stamped like any asset; a stamped QR is still checked.
+        self.assertIn("/assets/qr/tf.svg?v=", (self.site(body=img, files={"assets/qr/tf.svg": good}) / "next/styleguide/index.html").read_text())
         self.errors("encodes https://testflight.apple.com/join/old, next/js/config.js says " + TF, body=img,
                     files={"assets/qr/tf.svg": '<!-- qr: https://testflight.apple.com/join/old --><svg/>'})
         self.errors("has no '<!-- qr: URL -->' stamp", body=img, files={"assets/qr/tf.svg": "<svg/>"})
@@ -406,6 +414,101 @@ class NestingTests(unittest.TestCase):
     def test_an_unclosed_div_is_reported(self):
         probs = cs.nesting_problems("<main><div><p>a</p></main>")
         self.assertTrue(probs, probs)
+
+
+
+class StampTests(unittest.TestCase):
+    """Asset URLs carry ?v=<hash>, so a deploy can't pair new HTML with old CSS (LIVE-02)."""
+    FILES = {"index.html": page(body='<h1>T</h1><img src="/a.png" alt="" width="1" height="1">'
+                                     '<img src="b.png" srcset="/a.png 1x, b.png 2x" alt="" width="1" height="1">').replace(
+                 "</head>", '<link rel="stylesheet" href="/next/css/tokens.css">'
+                            '<link rel="preload" href="/f.woff2" as="font" crossorigin><link rel="icon" href="/a.png"></head>'),
+             "a.png": "A", "b.png": "B", "f.woff2": "F",
+             "next/css/tokens.css": '@font-face{src:url("/f.woff2")} .x{background:url(/a.png)}'}
+
+    def site(self, files=None, stamp=True):
+        return CheckSiteTests.site(self, {**self.FILES, **(files or {})}, stamp=stamp)
+
+    def test_unstamped_assets_fail(self):
+        errs = cs.check_site(self.site(stamp=False))
+        for ref in ("index.html: /a.png has no ?v= stamp", "index.html: b.png has no ?v= stamp",
+                    "index.html: /next/css/tokens.css has no ?v= stamp", "index.html: /f.woff2 has no ?v= stamp",
+                    "next/css/tokens.css: /f.woff2 has no ?v= stamp", "next/css/tokens.css: /a.png has no ?v= stamp"):
+            self.assertTrue(any(ref in e for e in errs), (ref, errs))
+
+    def test_stamped_site_passes_and_stamping_twice_changes_nothing(self):
+        root = self.site()
+        self.assertEqual(cs.check_site(root), [])
+        self.assertEqual(st.run(root, write=True), [])
+
+    def test_stamp_is_the_file_hash_and_font_urls_match(self):
+        import hashlib
+        root = self.site()
+        v = hashlib.sha256(b"F").hexdigest()[:8]
+        self.assertIn(f'href="/f.woff2?v={v}"', (root / "index.html").read_text())
+        self.assertIn(f'url("/f.woff2?v={v}")', (root / "next/css/tokens.css").read_text())
+
+    def test_css_is_stamped_before_the_html_that_names_it(self):
+        import hashlib
+        root = self.site()
+        v = hashlib.sha256((root / "next/css/tokens.css").read_bytes()).hexdigest()[:8]
+        self.assertIn(f"/next/css/tokens.css?v={v}", (root / "index.html").read_text())
+
+    def test_a_changed_file_makes_its_stamp_stale(self):
+        root = self.site()
+        (root / "a.png").write_text("A2")
+        errs = cs.check_site(root)
+        self.assertTrue(any("/a.png?v=" in e and "stale stamp" in e for e in errs), errs)
+
+    def test_links_comments_off_site_and_shared_hand_page_are_left_alone(self):
+        root = self.site({"s/index.html": '<title>S</title><meta name="description" content="d">'
+                                          '<link rel="canonical" href="https://preflopapp.com/s/"><meta property="og:title" content="S">'
+                                          '<meta property="og:description" content="d"><meta property="og:url" content="https://preflopapp.com/s/">'
+                                          '<h1>S</h1><img src="/a.png" alt="" width="1" height="1">',
+                          "faq/index.html": page(canonical="https://preflopapp.com/faq/",
+                                                 body='<h1>F</h1><a href="/a.png">a</a><!-- <img src="/b.png"> -->'
+                                                      '<img src="data:image/png;base64,AAAA" alt="" width="1" height="1">')})
+        self.assertIn('src="/a.png"', (root / "s/index.html").read_text())
+        faq = (root / "faq/index.html").read_text()
+        self.assertIn('href="/a.png"', faq)
+        self.assertIn('<!-- <img src="/b.png"> -->', faq)
+        self.assertEqual(cs.check_site(root), [])
+
+
+class CtaTests(unittest.TestCase):
+    """Every a[data-cta] on every page carries config.js's link and label (SPEC §4.4)."""
+    def site(self, cta, config=CONFIG):
+        return CheckSiteTests.site(self, {"index.html": page(), "next/js/config.js": config,
+            "faq/index.html": page(canonical="https://preflopapp.com/faq/", body=f"<h1>F</h1>{cta}")})
+
+    def test_label_and_link_match(self):
+        self.assertEqual(cs.check_site(self.site(f'<a class="btn" data-cta href="{TF}">Join the beta</a>')), [])
+        self.assertEqual(cs.check_site(self.site(f'<a data-cta href="{TF}">\n  Join   the beta\n</a>')), [])
+
+    def test_other_text_fails(self):
+        errs = cs.check_site(self.site(f'<a data-cta href="{TF}">Join the TestFlight beta</a>'))
+        self.assertTrue(any("faq/index.html: a[data-cta] reads 'Join the TestFlight beta'" in e for e in errs), errs)
+
+    def test_text_pages_links_are_checked_too(self):
+        errs = cs.check_site(self.site('<a data-cta href="https://testflight.apple.com/join/old">Join the beta</a>'))
+        self.assertTrue(any("faq/index.html: a[data-cta] links to https://testflight.apple.com/join/old" in e for e in errs), errs)
+
+    def test_config_needs_a_label(self):
+        no_label = 'window.PreflopConfig = {cta: {mode: "testflight", testflightUrl: "%s"}};' % TF
+        errs = cs.check_site(self.site(f'<a data-cta href="{TF}">Join the beta</a>', config=no_label))
+        self.assertTrue(any("config.js has no label" in e for e in errs), errs)
+
+
+class NotFoundPageTests(unittest.TestCase):
+    """404.html is served under script-src 'none', so it carries no script (LIVE-01)."""
+    def test_script_in_404_fails(self):
+        bad = page(canonical=None).replace("</head>", '<script defer src="/next/js/site.js"></script></head>')
+        errs = cs.check_site(CheckSiteTests.site(self, {"index.html": page(), "404.html": bad, "next/js/site.js": "1"}))
+        self.assertTrue(any("404.html: has a <script>" in e for e in errs), errs)
+
+    def test_404_without_script_passes(self):
+        root = CheckSiteTests.site(self, {"index.html": page(), "404.html": page(canonical=None).replace("</head>", "<!-- <script> --></head>")})
+        self.assertEqual(cs.check_site(root), [])
 
 
 if __name__ == "__main__":

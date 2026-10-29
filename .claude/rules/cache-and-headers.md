@@ -35,3 +35,10 @@ paths:
   `deploy.yml`).
 - **Never commit `.wrangler/`** and never deploy the repo root: Pages publishes
   every file, dotfiles included.
+- **Asset URLs are stamped; run `scripts/stamp-assets.py` after changing any
+  asset.** Pages name CSS, JS, fonts, images and icons as `?v=<sha256[:8]>`,
+  and `/next/css/*` and `/next/js/*` are served `immutable`, so an unstamped
+  or stale URL would be cached for a year. `check-site.py` fails both. CSS is
+  stamped before HTML (a font stamp changes `tokens.css`). Not `/next/*`
+  immutable: that would freeze the style guide's HTML (redesign Phase 0,
+  ISSUES LIVE-02).

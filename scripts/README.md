@@ -122,3 +122,57 @@ Sample profile wherever the page shows them.
 any "N,NNN+" in a page or a `next/js` script that is not the shown figure, and a
 shown figure above the bundled count. The app repo's `check_site_facts.py`
 ignores these keys (confirmed by the app session).
+
+## Asset stamps (`stamp-assets.py`, redesign Phase 0)
+
+Every local asset URL in the pages carries `?v=` and the first 8 hex
+characters of the file's SHA-256: `src`, `srcset`, and stylesheet, preload,
+icon and apple-touch-icon links on every page but `/s/`, plus every `url()` in
+`next/css/*.css`. `_headers` makes `/next/css/*` and `/next/js/*` immutable,
+which is only safe because their URLs change with their bytes (ISSUES LIVE-02:
+live CSS and JS were cached for 4 hours under fixed names).
+
+```sh
+python3 scripts/stamp-assets.py            # after changing any asset, before committing
+python3 scripts/stamp-assets.py --check    # what is stale, without writing
+```
+
+`check-site.py` fails a missing or stale stamp. URLs that JavaScript builds
+(the suits in `demo.js`) are not stamped: rename those files when they change.
+
+## The verification harness (`scroll-pass.js`, redesign SPEC §10)
+
+The redesign is checked the way the last build broke: mid-scroll and after a
+resize, not in full-page screenshots. The harness scrolls a page 0.4 viewport
+at a time, waits 600 ms, then runs the frame probes (overflow, sticky or fixed
+elements, double exposure, half-faded, pending entrances, running animations,
+overlapping text) and takes a viewport screenshot at every step. After the
+pass it records height, section tops, CLS, LCP, TBT, requests, bytes, console
+errors, infinite animations and blur layers, and checks them against
+`scroll-pass.budgets.json` (SPEC §4.3 and §4.9). Each budget has a `from`
+phase; before it, a miss is reported as "due Phase N" instead of failing.
+
+```sh
+NODE_PATH=$(npm root -g) node scripts/scroll-pass.js --out "$TMPDIR/sp"                       # the phase plan (SPEC §10.3)
+NODE_PATH=$(npm root -g) node scripts/scroll-pass.js --no-passes --probes menu,keyfocus,anchors,theme,nojs
+NODE_PATH=$(npm root -g) node scripts/scroll-pass.js --live --viewports 390x844,1440x900       # the deployed site
+```
+
+- It serves the repo itself (`python3 -m http.server 8123`) when nothing
+  answers on a localhost `--base`; `--root DIR` serves another checkout, such
+  as a `git worktree` of `main` for a before-and-after.
+- Modes: `default`, `reduced` (Reduce Motion), `nojs`, `blockedjs` (`/next/js/`
+  aborted) and `iphone` (iPhone UA, DPR 3, touch, 4x CPU, 1.6 Mbps). Always set
+  a scheme: headless Chromium defaults to light.
+- Probes: `menu`, `keyfocus`, `anchors`, `theme`, `nojs`, `resize`, `rotate`,
+  `fastjump`, `axe` and `live`; `demo` and `explorer` arrive with Phases 2
+  and 3. `axe` needs axe-core outside the repo:
+  `npm install --prefix "$TMPDIR/scroll-pass-axe" axe-core`.
+- Output goes to `--out` (default `$TMPDIR/scroll-pass/<stamp>`; it refuses a
+  folder inside the repo): `report.md`, `report.json`, every frame, and a
+  contact sheet per run with failing frames outlined in red. Copy only the
+  chosen evidence into `docs/redesign/shots/phase-N/` (at most 24 PNGs and
+  3 MB; quantise the contact sheets, for example with Pillow's
+  `Image.quantize(256)`).
+- Chromium only. WebKit and iOS Safari can't run here (SPEC §10.4), so every
+  report says what wasn't verified.
