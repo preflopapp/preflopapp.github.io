@@ -138,7 +138,9 @@ python3 scripts/stamp-assets.py --check    # what is stale, without writing
 ```
 
 `check-site.py` fails a missing or stale stamp. URLs that JavaScript builds
-(the suits in `demo.js`) are not stamped: rename those files when they change.
+(`/assets/suits/`, for `demo.js`) are never stamped, not even in the HTML's
+no-JS copy of the first hand, or the same file would download twice: rename
+those files when they change.
 
 ## The verification harness (`scroll-pass.js`, redesign SPEC §10)
 

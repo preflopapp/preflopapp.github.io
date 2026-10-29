@@ -17,7 +17,9 @@ file), so the font downloads once.
 
 The stamp is the first 8 hex characters of the file's SHA-256. Run it after
 changing any asset, before committing; check-site.py fails a missing or stale
-stamp. URLs that JS builds (the suits in demo.js) are not stamped: rename
+stamp. URLs that JS builds (the suits in demo.js) are not stamped, not even
+where the HTML names them too (the no-JS copy of the demo's first hand): a
+stamped copy beside the script's plain URL downloads the file twice. Rename
 those files when they change (.claude/rules/cache-and-headers.md).
 
     python3 scripts/stamp-assets.py [root]           rewrite in place
@@ -28,6 +30,8 @@ import hashlib, pathlib, re, sys
 SKIP_DIRS = {"scripts", "_site", "node_modules", "docs"}
 UNSTAMPED_PAGES = {"s/index.html"}
 STAMP_RELS = {"stylesheet", "preload", "icon", "apple-touch-icon"}
+# Files whose URLs JS builds; kept in step with check-site.py's UNSTAMPED.
+UNSTAMPED = ("assets/suits/",)
 
 TAG = re.compile(r"<(?P<name>[a-zA-Z][\w-]*)\b(?P<attrs>[^>]*)>")
 ATTR = re.compile(r"""(?P<key>[\w:-]+)\s*=\s*(?P<q>["'])(?P<value>.*?)(?P=q)""", re.S)
@@ -64,6 +68,8 @@ def stamped(root, base, url):
     rest, frag = (url.split("#", 1) + [""])[:2]
     path, _, query = rest.partition("?")
     if query and not re.fullmatch(r"v=[0-9a-f]*", query): return url
+    if f.resolve().relative_to(root.resolve()).as_posix().startswith(UNSTAMPED):
+        return path + (f"#{frag}" if frag else "")
     return f"{path}?v={digest(f)}" + (f"#{frag}" if frag else "")
 
 

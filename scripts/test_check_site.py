@@ -460,6 +460,18 @@ class StampTests(unittest.TestCase):
         errs = cs.check_site(root)
         self.assertTrue(any("/a.png?v=" in e and "stale stamp" in e for e in errs), errs)
 
+    def test_files_js_names_stay_unstamped(self):
+        """demo.js builds /assets/suits/*.svg; a stamped copy in the HTML would be a second download."""
+        root = self.site({"assets/suits/heart.svg": "<svg/>", "index.html": self.FILES["index.html"].replace(
+            "</main>", '<img src="/assets/suits/heart.svg" alt="" width="1" height="1"></main>')})
+        self.assertIn('src="/assets/suits/heart.svg"', (root / "index.html").read_text())
+        self.assertEqual(cs.check_site(root), [])
+        text = (root / "index.html").read_text().replace("/assets/suits/heart.svg", "/assets/suits/heart.svg?v=12345678")
+        (root / "index.html").write_text(text)
+        self.assertTrue(any("heart.svg?v=12345678 is stamped" in e for e in cs.check_site(root)))
+        st.run(root, write=True)
+        self.assertIn('src="/assets/suits/heart.svg"', (root / "index.html").read_text())
+
     def test_links_comments_off_site_and_shared_hand_page_are_left_alone(self):
         root = self.site({"s/index.html": '<title>S</title><meta name="description" content="d">'
                                           '<link rel="canonical" href="https://preflopapp.com/s/"><meta property="og:title" content="S">'

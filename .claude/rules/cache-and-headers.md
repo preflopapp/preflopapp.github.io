@@ -40,5 +40,7 @@ paths:
   and `/next/css/*` and `/next/js/*` are served `immutable`, so an unstamped
   or stale URL would be cached for a year. `check-site.py` fails both. CSS is
   stamped before HTML (a font stamp changes `tokens.css`). Not `/next/*`
-  immutable: that would freeze the style guide's HTML (redesign Phase 0,
+  immutable: that would freeze the style guide's HTML. `/assets/suits/` is
+  never stamped: `demo.js` builds those URLs, and a stamped copy in the HTML
+  made the harness see `spade.svg` downloaded twice (redesign Phase 0,
   ISSUES LIVE-02).

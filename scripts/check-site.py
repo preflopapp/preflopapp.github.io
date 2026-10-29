@@ -45,6 +45,10 @@ ASSET_RELS = {"stylesheet", "preload", "modulepreload", "prefetch", "icon",
               "shortcut", "apple-touch-icon", "manifest"}
 # The <link> rels whose href scripts/stamp-assets.py stamps (with src/srcset).
 STAMP_RELS = {"stylesheet", "preload", "icon", "apple-touch-icon"}
+# Files whose URLs JS builds (demo.js's suits): never stamped, or the HTML's
+# copy and the script's URL would download the same file twice. Renamed when
+# they change instead. Kept in step with stamp-assets.py's UNSTAMPED.
+UNSTAMPED = ("assets/suits/",)
 BANNED = ("Preflop Trainer",)
 SKIP_DIRS = {"scripts", "_site", "node_modules"}
 
@@ -371,6 +375,9 @@ def check_stamps(root, pages):
     def problem(where, base, ref):
         f = _local(root, base, ref)
         if not f: return
+        if f.resolve().relative_to(root.resolve()).as_posix().startswith(UNSTAMPED):
+            if "?v=" in ref: errors.append(f"ERROR {where}: {ref} is stamped, but JS builds this file's URL unstamped (it would download twice)")
+            return
         if f not in digests: digests[f] = hashlib.sha256(f.read_bytes()).hexdigest()[:8]
         m = re.search(r"\?v=([0-9a-f]+)$", ref.split("#")[0])
         if not m:
