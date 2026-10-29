@@ -49,9 +49,11 @@ indexable, and takes the shared blocks from the first other page (Phase 5).
 - **Line the hero up with the grid.** The phone is `justify-self: end` so its
   right edge meets the nav button and the proof bar; centred in its column it
   floated. No glow in light: it bands into rings at 8 bits.
-- **Action-button ink is per scheme and per colour.** In light, white on the
-  green raise slab is 3.9:1; dark ink clears it, so `--act-ink-raise` differs
-  from `--act-ink` (Phase 2).
+- **Action-button ink is the `--act-ink` token, near-black in both schemes.**
+  The light fills (fold `#E5514A`, call `#3A89E4`, raise `#28B064`) fail with
+  white labels; `#150F02` clears 4.5:1 on all three. Don't re-add a per-component
+  ink override in `demo.css`/`sections.css` (the old ones drifted from the
+  tokens; light palette change, 2026-10-28).
 - **Headless Chromium defaults to the light scheme.** Set `colorScheme` on the
   context or every "dark" screenshot is light.
 - **A narrow nav with no JS shows brand and button only.** A row of links under

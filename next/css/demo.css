@@ -17,8 +17,7 @@
    a --panel screen, a --well rail, a --bg felt, --panel pods. It sits in the
    page the way a card does, in either scheme, with no colour of its own (the
    app's tan felt and red card backs read as a foreign block, and red is spent
-   on "fold"). Only the action-button ink needs a scheme switch, the same
-   three-way one as tokens.css. */
+   on "fold"). The action-button label is the --act-ink token. */
 .phone {
   --s: 1;
   --rail: var(--well);
@@ -33,13 +32,7 @@
   --card-back: var(--well);
   --dealer-fill: var(--text);
   --dealer-ink: var(--bg);
-  --act-ink: #0e0f14;
-  --act-ink-raise: #0e0f14;
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) .phone { --act-ink: #ffffff; --act-ink-raise: #150f02; }
-}
-[data-theme="light"] .phone { --act-ink: #ffffff; --act-ink-raise: #150f02; }
 
 /* Scale: the frame is 402 * s wide and has to fit the gutter. */
 @media (max-width: 426px) { .phone { --s: 0.9; } }
@@ -266,7 +259,7 @@
 }
 .dbtn--fold { --act: var(--act-fold); }
 .dbtn--call { --act: var(--act-call); }
-.dbtn--raise { --act: var(--act-raise); color: var(--act-ink-raise); }
+.dbtn--raise { --act: var(--act-raise); }
 .dbtn:not(:disabled):active { transform: scale(var(--press-scale)); }
 .dbtn:disabled { cursor: default; }
 .dbtn:disabled:not(.is-revealed) { opacity: 0.45; }

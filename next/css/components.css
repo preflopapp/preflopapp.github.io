@@ -278,15 +278,18 @@ a { color: var(--accent); }
 .footer__grid { display: grid; gap: var(--space-4) var(--space-3); grid-template-columns: repeat(2, 1fr); }
 .footer__about { grid-column: 1 / -1; max-width: 22rem; }
 .footer__brand {
-  display: inline-flex; align-items: center; gap: var(--space-1);
+  display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--hit);
   color: var(--text); text-decoration: none;
   font-size: var(--fs-section); font-weight: 700; letter-spacing: -0.02em;
 }
 .footer__line { margin: var(--space-1) 0 0; color: var(--text-2); }
 .footer__group { margin: 0; padding: 0; list-style: none; }
 .footer__head { margin: 0 0 var(--space-1); color: var(--text-3); }
+/* Hit area is 44px square at least: the padding widens a short word's target and
+   the equal negative margin keeps the text where it was. */
 .footer__group a {
-  display: inline-flex; align-items: center; min-height: var(--hit);
+  display: inline-flex; align-items: center; min-height: var(--hit); min-width: var(--hit);
+  padding-inline: var(--space-1); margin-inline: calc(var(--space-1) * -1);
   color: var(--text-2); text-decoration: none;
 }
 .footer__group a:hover { color: var(--text); text-decoration: underline; }
@@ -297,7 +300,7 @@ a { color: var(--accent); }
   color: var(--text-2); font-size: var(--fs-meta);
 }
 .footer__base p { margin: 0; }
-.footer__base a { color: var(--text-2); }
+.footer__base a { display: inline-flex; align-items: center; min-height: var(--hit); color: var(--text-2); }
 .footer__base a:hover { color: var(--text); }
 .footer__base .btn { margin-left: auto; }
 @media (min-width: 48rem) {

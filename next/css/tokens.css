@@ -13,10 +13,14 @@
    Rules that carry over:
    - No gradients. No dashed or dotted lines; a quiet edge is a solid hairline.
    - Two ambers. --accent-fill is bright and carries a label (buttons, chips).
-     --accent is amber drawn as text, a stroke or a dot; in light it is dark.
+     --accent is amber drawn as text, a stroke or a dot. In dark the two are the
+     same amber; in light --accent is a deeper gold (#946200, the brightest amber
+     that still reads as 4.5:1 text on white) and --accent-fill stays bright.
    - Never white text on a panel: use --text, which is the scheme's own ink.
    - Green and red are spent colours: --good/--bad say correct or wrong, the
-     --act-* trio says raise/call/fold. Never chrome. */
+     --act-* trio says raise/call/fold. Never chrome. --act-ink is the label on
+     an --act-* fill: near-black in both schemes (white fails contrast on the
+     light fills). */
 
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Regular.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/assets/fonts/HankenGrotesk-Medium.woff2") format("woff2"); }
@@ -50,6 +54,7 @@
   --act-call: #4f93e0;
   --act-fold: #e0574f;
   --act-allin: #a97be8;
+  --act-ink: #0e0f14;
   --badge-bronze: #b87333;
   --badge-silver: #b8bcc0;
   --badge-gold: #d4a02c;
@@ -67,17 +72,18 @@
     --text: #3c3d48;
     --text-2: #565762;
     --text-3: #666772;
-    --accent: #8f6006;
-    --accent-fill: #f2ae2e;
+    --accent: #946200;
+    --accent-fill: #f0a50f;
     --accent-fill-ink: #150f02;
     --celebration: #4f3dbb;
     --good: #177644;
     --mid: #9e7112;
     --bad: #b93830;
-    --act-raise: #219459;
-    --act-call: #2f72be;
-    --act-fold: #c8443c;
+    --act-raise: #28b064;
+    --act-call: #3a89e4;
+    --act-fold: #e5514a;
     --act-allin: #9a6ede;
+    --act-ink: #150f02;
     --badge-bronze: #a2602a;
     --badge-silver: #6e747b;
     --badge-gold: #a37100;
@@ -95,17 +101,18 @@
   --text: #3c3d48;
   --text-2: #565762;
   --text-3: #666772;
-  --accent: #8f6006;
-  --accent-fill: #f2ae2e;
+  --accent: #946200;
+  --accent-fill: #f0a50f;
   --accent-fill-ink: #150f02;
   --celebration: #4f3dbb;
   --good: #177644;
   --mid: #9e7112;
   --bad: #b93830;
-  --act-raise: #219459;
-  --act-call: #2f72be;
-  --act-fold: #c8443c;
+  --act-raise: #28b064;
+  --act-call: #3a89e4;
+  --act-fold: #e5514a;
   --act-allin: #9a6ede;
+  --act-ink: #150f02;
   --badge-bronze: #a2602a;
   --badge-silver: #6e747b;
   --badge-gold: #a37100;
