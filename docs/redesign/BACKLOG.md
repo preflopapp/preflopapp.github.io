@@ -19,19 +19,22 @@ Done and removed from this list:
   - The widget card in "Free for everyone" is drawn from the app's
     `widget-layouts.json`, with a caption saying so.
   - The site never mentions the Live Activity.
-- **Needs from Stan:** captures from a device or the simulator, in light and
-  dark:
-  - the small and medium widgets on the Home Screen, plus any Lock Screen
-    widget;
-  - the Live Activity on the Lock Screen and in the Dynamic Island, both
-    compact and expanded.
-  - Full-resolution PNGs are best; the site makes its own WebP copies.
+- **Captured (2026-10-29):** real PNGs, light and dark, in
+  `docs/app-handoff/captures/` (its README lists each file):
+  - Home Screen with the small and medium widgets, crops of each, and the
+    Add Widget sheet for small, medium and large;
+  - the Live Activity on the Lock Screen and in the Dynamic Island, compact
+    and expanded, full frame and cropped.
+  - There is no Lock Screen widget in the app (system sizes only).
+  - The Home Screen and gallery shots carry the Dev build's "PT Dev" label;
+    the crops don't.
+- **Free or Pro:** the Live Activity and the widget are both free
+  (`docs/AppStorePlan.md` §4a lists neither; no entitlement check in code).
 - **Then:**
   - swap the drawn widgets for the real ones, or keep the drawing and add the
     capture to the press kit;
-  - add a Live Activity mention to "Free for everyone" or to the gallery, if it
-    is free;
-  - check the Free/Pro split against the app repo's `docs/AppStorePlan.md` §4a.
+  - add a Live Activity mention to "Free for everyone" or to the gallery (it
+    is free).
 
 ### 2. Bankroll tracker and bankroll management
 - **Wanted:** the site should talk about the bankroll tracker. On the live
@@ -39,10 +42,16 @@ Done and removed from this list:
 - **Status:** Phase 4 (live now) added a "A bankroll tracker" card to "Free
   for everyone": a drawn example line captioned "An example line, not real
   results". It also added a bankroll tracker line to the Free list.
-- **Open:**
-  - Is that enough, or does it want its own section, or a gallery screen,
-    showing what the tracker records (sessions, results, graph)?
-  - Does the app teach bankroll *management* (rules, stakes advice), or only
-    track results? The site must not claim more than the app does.
-- **Needs:** a real screenshot of the tracker (it is not among the five
-  gallery shots), and the app's own feature description.
+- **Answered (2026-10-29):** the app **tracks** results; it doesn't teach
+  bankroll management. No lessons or stakes advice. Its one rule of thumb is
+  the Insights "Bankroll health" gauge: the roll in buy-ins, labelled "Under
+  15: step down", "Holding", "30+: take shots". It also has a goal with a
+  pace. Free, with its Live Activity. Details in
+  `docs/app-handoff/captures/README.md`.
+- **Captured (2026-10-29):** the tracker's overview, history, insights and
+  live session screens over the app's sample data, light and dark, in
+  `docs/app-handoff/captures/bankroll-*.png`.
+- **Open:** is the "Free for everyone" card enough, or does it want its own
+  section or a gallery screen, using those captures? The site may say it
+  tracks results and shows how many buy-ins you have, not that it teaches
+  bankroll management.
