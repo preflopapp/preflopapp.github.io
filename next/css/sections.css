@@ -179,12 +179,15 @@
 .trend__line { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .trend__cover { position: absolute; inset: 0; background: var(--panel); }
 
-/* ---- Plans ---------------------------------------------------------------------- */
+/* ---- Plans (#pricing, redesign SPEC §6.8) ----------------------------------------
+   Free and Pro, stacked on a phone, side by side from 768px. The grid stretches
+   the two cards to one height, and six list items each keep their bottoms level:
+   Free's button (CTA D, the card's full width) and Pro's status line both sit at
+   the bottom (margin-top: auto). */
 
 .plans { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
-@media (min-width: 48rem) { .plans { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); } }
 .plan {
-  display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4);
+  display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3);
   background: var(--panel); color: var(--text); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
 }
 .plan--pro { border-color: var(--accent); }
@@ -202,36 +205,60 @@
   border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg);
 }
 .plan__list b { font-weight: 600; }
-.plan .btn, .plan .badge-soon { margin-top: auto; align-self: flex-start; }
+.plan .btn, .plan .badge-soon { margin-top: auto; }
+@media (min-width: 48rem) {
+  .plans { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .plan { padding: var(--space-4); }
+}
+.plan__status { margin: auto 0 0; padding-top: var(--space-1); color: var(--text-2); font-size: var(--fs-meta); }
 .plans__fine { margin: var(--space-3) auto 0; max-width: var(--measure); color: var(--text-3); font-size: var(--fs-meta); text-align: center; }
 
-/* ---- FAQ -------------------------------------------------------------------------- */
-
-.faqs { display: grid; gap: var(--space-5); }
-.faqs__aside p { margin: var(--space-2) 0 0; color: var(--text-2); }
+/* ---- FAQ (#faq, redesign SPEC §6.9) ------------------------------------------------
+   Six of /faq/'s questions, the first open; the aside above the list until
+   1024px, beside it from there (not sticky). */
+.faqs { display: grid; gap: var(--space-4); }
+.faqs__aside p:last-child { margin: var(--space-2) 0 0; color: var(--text-2); }
 @media (min-width: 64rem) {
   .faqs { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-7); }
   .faqs__aside { align-self: start; }
 }
 
-/* ---- Closing ------------------------------------------------------------------------
-   One big panel: the line, the button, the QR on a desktop, and the phone coming
-   up from the bottom edge. */
+/* ---- Closing (redesign SPEC §6.10) --------------------------------------------------
+   One panel: the line, CTA E (button and note, the QR on a desktop with a
+   pointer) and the demo's first hand, A and 5 of hearts, fanned at -8 and +6
+   degrees and overlapping by 30%. Copy above the cards on a phone, side by side
+   from 600px. The cards are dealt once (site.js); without JS they are simply
+   there. */
 
 .closing {
-  position: relative; display: grid; gap: var(--space-4); overflow: hidden;
-  padding: var(--space-5) var(--space-3) 0;
+  display: grid; gap: var(--space-4); padding: var(--space-4) var(--space-3);
   background: var(--panel); color: var(--text); border: var(--stroke) solid var(--border); border-radius: var(--r-panel);
 }
-.closing__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding-bottom: var(--space-3); }
+.closing__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
 .closing__line { margin: 0; max-width: 24rem; color: var(--text-2); font-size: var(--fs-section); }
-.closing__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-.closing__phone { --shot-w: 15rem; justify-self: center; height: 20rem; overflow: hidden; }
-.closing__phone .shot { border-bottom: 0; border-radius: 38px 38px 0 0; }
-@media (min-width: 60rem) {
-  .closing { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: var(--space-6) var(--space-6) 0; gap: var(--space-6); }
-  .closing__copy { padding-bottom: var(--space-6); }
-  .closing__phone { --shot-w: 17rem; height: 26rem; align-self: end; }
+.closing__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); align-self: stretch; }
+.closing__cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+@media (max-width: 37.49rem) { .closing__cta { width: 100%; } }
+.closing__cards { --card-w: 6rem; display: flex; justify-content: center; padding-block: var(--space-1); }
+.bigcard {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25em;
+  width: var(--card-w); aspect-ratio: 96 / 136; flex: none;
+  background: var(--card-face); color: var(--suit-red);
+  border: var(--stroke) solid var(--border); border-radius: calc(var(--card-w) * 0.1);
+  font-size: calc(var(--card-w) * 0.42); font-weight: 700; line-height: 1;
+  transform: rotate(-8deg);
+}
+.bigcard + .bigcard { margin-left: calc(var(--card-w) * -0.3); transform: rotate(6deg); }
+.bigcard__suit { width: 0.8em; height: 0.8em; }
+[data-deal="pending"] > .bigcard { opacity: 0; }
+@media (min-width: 37.5rem) {
+  .closing { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: var(--space-5); }
+  .closing__cards { --card-w: 7rem; padding-inline: var(--space-3); }
+}
+@media (min-width: 64rem) {
+  .closing { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); padding: var(--space-6); }
+  .closing__copy { grid-column: 1 / 9; }
+  .closing__cards { --card-w: 8rem; grid-column: 9 / 13; }
 }
 
 .mix__bar--v0 { --f: 0; } .mix__bar--v33 { --f: 0.33; } .mix__bar--v35 { --f: 0.35; } .mix__bar--v65 { --f: 0.65; } .mix__bar--v67 { --f: 0.67; }

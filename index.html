@@ -25,11 +25,11 @@
 <link rel="preload" href="/assets/fonts/HankenGrotesk-SemiBold.woff2?v=58f23b7a" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/HankenGrotesk-Regular.woff2?v=787b3fdd" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/next/css/tokens.css?v=b1d77f9f">
-<link rel="stylesheet" href="/next/css/components.css?v=c1e40934">
+<link rel="stylesheet" href="/next/css/components.css?v=cefcb379">
 <link rel="stylesheet" href="/next/css/demo.css?v=3898a329">
-<link rel="stylesheet" href="/next/css/sections.css?v=dd24e18f">
+<link rel="stylesheet" href="/next/css/sections.css?v=8fc0dc01">
 <script defer src="/next/js/config.js?v=2357ec70"></script>
-<script defer src="/next/js/site.js?v=a972821e"></script>
+<script defer src="/next/js/site.js?v=daef9445"></script>
 <script defer src="/next/js/app-data.js?v=10ba747d"></script>
 <script defer src="/next/js/chart.js?v=09a6fc2a"></script>
 <script defer src="/next/js/demo.js?v=3b641b52"></script>
@@ -43,7 +43,7 @@
 <a class="nav__brand" href="/"><img class="nav__mark" src="/assets/mark-v2.svg?v=3429e5d9" alt="" width="24" height="24"><span translate="no">Preflop</span></a>
 <div class="nav__panel" id="nav-menu">
 <nav class="nav__links" aria-label="Main">
-<a href="#features">Features</a>
+<a href="#features">How it works</a>
 <a href="#pricing">Pricing</a>
 <a href="#faq">FAQ</a>
 </nav>
@@ -266,44 +266,45 @@
 <div><p class="t-label plan__tier">Free</p><p class="plan__price">$0</p><p class="plan__alt">No account, no card.</p></div>
 <ul class="plan__list">
 <li><b><!-- fact:dailyFreeHands -->20<!-- /fact --> hands</b> every day</li>
-<li>The answer, the chart&rsquo;s mix and the reason, after every hand</li>
+<li>The answer, the chart&rsquo;s mix and the reason after every hand</li>
+<li>The full range chart after every hand</li>
 <li>Streak, XP, levels and badges</li>
+<li>A Home Screen widget and reminders</li>
 <li>A bankroll tracker</li>
 </ul>
-<a class="btn btn--secondary" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<a class="btn btn--primary" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
 </article>
 <article class="plan plan--pro">
-<div><p class="t-label plan__tier">Preflop Pro</p><p class="plan__price">$<!-- fact:lifetime -->59.99<!-- /fact --><span class="plan__per"> once</span></p><p class="plan__alt">Yours for good, or <b>$<!-- fact:monthly -->7.99<!-- /fact --> a month</b>, cancel any time.</p></div>
+<div><p class="t-label plan__tier">Preflop Pro</p><p class="plan__price">$<!-- fact:lifetime -->59.99<!-- /fact --><span class="plan__per"> once</span></p><p class="plan__alt">or <b>$<!-- fact:monthly -->7.99<!-- /fact --> a month</b></p></div>
 <p class="plan__lead">Everything in Free, plus:</p>
 <ul class="plan__list">
 <li><b>Unlimited hands</b>, no daily cap</li>
-<li><b>Your stats</b> by situation and by seat, with your leaks named</li>
-<li><b>Practice Filters</b> to drill any spot</li>
-<li><b>Your Home dashboard</b>: accuracy and its trend, the spot to fix next</li>
-<li><b>Your full hand history</b>, filterable, with every explanation</li>
+<li><b>Your stats and leaks</b>, by situation and seat</li>
+<li><b>Practice Filters</b>: drill any spot</li>
+<li><b>Every hand saved</b>, with filters</li>
+<li><b>Your Home dashboard</b>: accuracy, its trend, and the spot to fix next</li>
 <li><b>A daily goal</b> you set yourself</li>
 </ul>
-<span class="badge-soon">Available at launch</span>
+<p class="plan__status">Available in the app at launch.</p>
 </article>
 </div>
-<p class="plans__fine">US prices. The App Store shows the price for your country before you buy, and every purchase happens in the app. The free plan has no time limit: use it as long as you like before you decide.</p>
+<p class="plans__fine">US prices. The App Store shows your country&rsquo;s price before you buy, and every purchase happens in the app. The free plan has no time limit.</p>
 </div>
 </section>
 <section class="section" id="faq" aria-labelledby="faq-title">
 <div class="wrap faqs">
 <div class="faqs__aside">
 <p class="t-label section-header__eyebrow">FAQ</p>
-<h2 class="t-headline" id="faq-title">Before you download.</h2>
-<p>More answers on the <a href="/faq/">full FAQ</a>.</p>
+<h2 class="t-headline" id="faq-title">Before you join.</h2>
+<p>More answers in the <a href="/faq/">full FAQ</a>.</p>
 </div>
 <div class="faqs__list">
 <details class="faq" open><summary class="faq__q">Is this gambling?</summary><p class="faq__a">No. There is no real money, no wagering and nothing to win. It is a training app, the way a chess puzzle app is.</p></details>
+<details class="faq"><summary class="faq__q">How do I join the beta?</summary><p class="faq__a">Tap Join the beta on your iPhone. If you don&rsquo;t have Apple&rsquo;s TestFlight app yet, the page sends you to the App Store for it first. Then accept the invite in TestFlight and install Preflop. It needs iOS 17 or later, and there is no iPad or Android version.</p></details>
 <details class="faq"><summary class="faq__q">Where do the answers come from?</summary><p class="faq__a">Every spot is drawn from a fixed preflop range chart for that seat, situation and table size. After you answer you see the full frequency mix for your hand and can open the chart it came from.</p></details>
 <details class="faq"><summary class="faq__q">Why does it sometimes say &ldquo;Mixed&rdquo;?</summary><p class="faq__a">Because a hand the chart raises 54% of the time and folds 46% does not have one right answer. An action within ten points of the most frequent one, or any action the chart takes at least a quarter of the time, is graded Mixed. It counts as correct for your streak, XP and accuracy, and the explanation names the action the chart takes most often.</p></details>
-<details class="faq"><summary class="faq__q">What exactly is free?</summary><p class="faq__a"><!-- fact:dailyFreeHands -->20<!-- /fact --> hands every day, with the answer, the chart&rsquo;s mix and the reason after every hand. Your streak, XP, levels and badges are free too. Pro adds unlimited hands, your stats, your dashboard, Practice Filters, your full hand history and a daily goal.</p></details>
+<details class="faq"><summary class="faq__q">What&rsquo;s free, and what does Pro add?</summary><p class="faq__a"><!-- fact:dailyFreeHands -->20<!-- /fact --> hands every day, with the answer, the chart&rsquo;s mix and the reason after every hand. Your streak, XP, levels and badges are free too. Pro adds unlimited hands, your stats, your dashboard, Practice Filters, your full hand history and a daily goal.</p></details>
 <details class="faq"><summary class="faq__q">Do I need an account?</summary><p class="faq__a">No. Your practice stays on your device, with no analytics, no ads and no tracking. The only thing we receive is feedback you choose to send.</p></details>
-<details class="faq"><summary class="faq__q">I already use a solver. Is this for me?</summary><p class="faq__a">As a supplement, not a replacement. A solver is for deep study at a desk. Preflop is for the few minutes between sessions, keeping your preflop sharp. It computes no equity or EV of its own.</p></details>
-<details class="faq"><summary class="faq__q">What do I need to run it?</summary><p class="faq__a">An iPhone running iOS 17 or later. There is no iPad or Android version.</p></details>
 </div>
 </div>
 </section>
@@ -312,16 +313,19 @@
 <div class="closing">
 <div class="closing__copy">
 <h2 class="t-headline" id="closing-title">Start with a hand.</h2>
-<p class="closing__line">Join the beta on TestFlight. No account needed.</p>
+<p class="closing__line">Join the beta on TestFlight. Free, with no account.</p>
 <div class="closing__actions">
+<div class="closing__cta">
 <a class="btn btn--primary btn--lg" data-cta href="https://testflight.apple.com/join/ayujQfvg">Join the beta</a>
+<p class="hero__note">Free on TestFlight · iPhone, iOS 17 or later</p>
+</div>
 <figure class="qr" data-cta-qr>
 <img class="qr__img" src="/assets/qr/testflight.svg?v=95fbe51f" alt="QR code that opens the Preflop beta on TestFlight" width="104" height="104" loading="lazy">
 <figcaption class="qr__cap">On a computer? Scan with your iPhone.</figcaption>
 </figure>
 </div>
 </div>
-<div class="closing__phone" aria-hidden="true"><figure class="shot"><img src="/assets/screens/play.webp?v=04778d57" alt="" width="600" height="1304" loading="lazy" decoding="async"></figure></div>
+<div class="closing__cards" aria-hidden="true" data-deal><span class="bigcard">A<img class="bigcard__suit" src="/assets/suits/heart-v2.svg" alt="" width="26" height="26"></span><span class="bigcard">5<img class="bigcard__suit" src="/assets/suits/heart-v2.svg" alt="" width="26" height="26"></span></div>
 </div>
 </div>
 </section>
@@ -334,7 +338,7 @@
 <p class="footer__line">Every preflop decision, explained.</p>
 </div>
 <nav aria-label="Product"><h2 class="t-label footer__head">Product</h2><ul class="footer__group">
-<li><a href="#features">Features</a></li>
+<li><a href="#features">How it works</a></li>
 <li><a href="#pricing">Pricing</a></li>
 <li><a href="#faq">FAQ</a></li>
 </ul></nav>
